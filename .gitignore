@@ -9,3 +9,4 @@ README.*
 *.Rcheck
 inst/doc
 Dockerfile
+.idea
