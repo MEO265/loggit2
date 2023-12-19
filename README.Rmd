@@ -19,8 +19,6 @@ options(width = 150)
 
 Easy-to-use, dependencyless Logger for R
 ==================================
-Ryan Price <ryapric@gmail.com>
-
 <!-- badges: start -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/loggit)](https://cran.r-project.org/package=loggit)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit)](https://cran.r-project.org/package=loggit)
