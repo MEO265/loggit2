@@ -1,5 +1,3 @@
-context("Handler replacements")
-
 test_that("message works as it does in base R", {
   expect_message(base::message("this is a message test"))
   expect_message(loggit::message("this is also a message test", echo = FALSE))
@@ -10,6 +8,7 @@ test_that("message works as it does in base R", {
   )
   expect_true(grepl('this should be concatenated in the log', captured_output))
 })
+
 
 test_that("warning works as it does in base R", {
   expect_warning(base::warning("this is a warning test"))
@@ -23,6 +22,7 @@ test_that("warning works as it does in base R", {
   )
   expect_true(grepl('this should be concatenated in the log', captured_output))
 })
+
 
 test_that("stop works as it does in base R", {
   expect_error(base::stop("this is a stop test"))

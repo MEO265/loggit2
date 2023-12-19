@@ -1,6 +1,3 @@
-# ===
-context("loggit handlers")
-
 test_that("loggit writes handler messages to file", {
   msg <- "this is a message"
   warn <- "this is a warning"
@@ -19,9 +16,6 @@ test_that("loggit writes handler messages to file", {
 cleanup()
 
 
-# ===
-context("Custom log levels")
-
 test_that("loggit custom levels behave as expected", {
   expect_error(loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE))
   # There isn't really anything to test here, so just run it and let it succeed
@@ -29,9 +23,6 @@ test_that("loggit custom levels behave as expected", {
 })
 cleanup()
 
-
-# ===
-context("Log file can be returned as data.frame")
 
 test_that("Log file is returned via read_logs()", {
   message("msg", echo = FALSE)
