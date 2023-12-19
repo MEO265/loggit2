@@ -1,6 +1,3 @@
-context("JSON functions")
-
-
 # Testing both the ability to write to, and read from ndjson here, since it
 # would be hard to test that the file is ndjson without reading it back in
 # anyway
@@ -27,6 +24,7 @@ test_that("write_logs() and read_logs() work in tandem", {
   expect_equal(log_df_want, log_df_got)
 })
 cleanup()
+
 
 test_that("write_logs() and read_logs() work with disallowed JSON characters via santizers", {
   loggit("INFO", 'default { } , " \r \n sanitizer', echo = FALSE)
@@ -58,6 +56,7 @@ test_that("write_logs() and read_logs() work with disallowed JSON characters via
   expect_equal(log_df_want, log_df_got)
 })
 cleanup()
+
 
 test_that("read_logs() works with unsanitizers", {
   loggit("INFO", 'default { } , " \r \n unsanitizer', echo = FALSE)
