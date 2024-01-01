@@ -17,20 +17,20 @@ knitr::opts_chunk$set(
 options(width = 150)
 ```
 
-Modern Logging for the R Ecosystem
+Easy-to-use, dependencyless Logger for R
 ==================================
 Ryan Price <ryapric@gmail.com>
 
 <!-- badges: start -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/loggit)](https://cran.r-project.org/package=loggit)
-[![Monthly downloads](https://cranlogs.r-pkg.org/badges/loggit)](https://cran.r-project.org/package=loggit)
+[![Monthly downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit)](https://cran.r-project.org/package=loggit)
 [![R-CMD-check](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/MEO265/loggit_private/graph/badge.svg?token=DGPQGD4DUH)](https://codecov.io/gh/MEO265/loggit_private)
 <!-- badges: end -->
 
 ------------------------------------------------------------------------
 
-`loggit` is an [`ndJSON`](https://github.com/ndjson/ndjson-spec) logging library for R software,
+`loggit` is an easy-to-use [`ndJSON`](https://github.com/ndjson/ndjson-spec) logging library for R software,
 with _zero_ external dependencies.
 
 Please see below for some quick examples, and read the [vignettes](https://cran.r-project.org/web/packages/loggit/vignettes/) for the
@@ -47,9 +47,7 @@ Why use `loggit`?
 - _Zero_ external dependencies
 
 Additionally, the boilerplate to get going with `loggit` is minimal at worst.
-If deploying your R code in a container ecosystem, you don't even need to do that,
-since `loggit` will echo its formatted logs to `stdout`. No need to write custom formatters,
-handlers, levels, etc. -- ***just loggit!***
+No need to write custom formatters, handlers, levels, etc. -- ***just loggit!***
 
 Usage
 --------------
@@ -77,7 +75,7 @@ loggit::warning("This is another warning", echo = FALSE)
 loggit::stop("This is another error", echo = FALSE)
 ```
 
-You can also use the `loggit()` function directly to compose much more custom
+You can also use `loggit()` directly to compose much more custom
 logs, including ***entirely custom fields*** (and prevent throwing actual conditions).
 `loggit` doesn't require that you set custom logger objects or anything like that:
 just throw whatever you want at it, and it'll become a structured log.
@@ -98,6 +96,6 @@ You can install the latest CRAN release of `loggit` via
 
     install.packages("loggit")
 
-Or, to get the latest development version from GitHub via [devtools](https://github.com/hadley/devtools):
+or, get the latest development version from GitHub via
 
     devtools::install_github("ryapric/loggit")

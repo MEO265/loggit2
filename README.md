@@ -1,4 +1,4 @@
-# Modern Logging for the R Ecosystem
+# Easy-to-use, dependencyless Logger for R
 
 Ryan Price <ryapric@gmail.com>
 
@@ -6,15 +6,16 @@ Ryan Price <ryapric@gmail.com>
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/loggit)](https://cran.r-project.org/package=loggit)
 [![Monthly
-downloads](https://cranlogs.r-pkg.org/badges/loggit)](https://cran.r-project.org/package=loggit)
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit)](https://cran.r-project.org/package=loggit)
 [![R-CMD-check](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/MEO265/loggit_private/graph/badge.svg?token=DGPQGD4DUH)](https://codecov.io/gh/MEO265/loggit_private)
 <!-- badges: end -->
 
 ------------------------------------------------------------------------
 
-`loggit` is an [`ndJSON`](https://github.com/ndjson/ndjson-spec) logging
-library for R software, with *zero* external dependencies.
+`loggit` is an easy-to-use
+[`ndJSON`](https://github.com/ndjson/ndjson-spec) logging library for R
+software, with *zero* external dependencies.
 
 Please see below for some quick examples, and read the
 [vignettes](https://cran.r-project.org/web/packages/loggit/vignettes/)
@@ -31,9 +32,7 @@ for the Getting Started guide.
 - *Zero* external dependencies
 
 Additionally, the boilerplate to get going with `loggit` is minimal at
-worst. If deploying your R code in a container ecosystem, you don’t even
-need to do that, since `loggit` will echo its formatted logs to
-`stdout`. No need to write custom formatters, handlers, levels, etc. –
+worst. No need to write custom formatters, handlers, levels, etc. –
 ***just loggit!***
 
 ## Usage
@@ -49,13 +48,13 @@ the desired locations.
 
 ``` r
 loggit::message("This is a message")
-#> {"timestamp": "2023-12-19T15:37:20+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
+#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
 #> This is a message
 loggit::warning("This is a warning")
-#> {"timestamp": "2023-12-19T15:37:20+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning in loggit::warning("This is a warning"): This is a warning
 loggit::stop("This is an error")
-#> {"timestamp": "2023-12-19T15:37:20+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in loggit::stop("This is an error"): This is an error
 ```
 
@@ -72,26 +71,26 @@ loggit::stop("This is another error", echo = FALSE)
 #> Error in loggit::stop("This is another error", echo = FALSE): This is another error
 ```
 
-You can also use the `loggit()` function directly to compose much more
-custom logs, including ***entirely custom fields*** (and prevent
-throwing actual conditions). `loggit` doesn’t require that you set
-custom logger objects or anything like that: just throw whatever you
-want at it, and it’ll become a structured log.
+You can also use `loggit()` directly to compose much more custom logs,
+including ***entirely custom fields*** (and prevent throwing actual
+conditions). `loggit` doesn’t require that you set custom logger objects
+or anything like that: just throw whatever you want at it, and it’ll
+become a structured log.
 
 ``` r
 loggit::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2023-12-19T15:37:20+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit::read_logs()
 #>                  timestamp log_lvl                 log_msg       anything_else
-#> 1 2023-12-19T15:37:20+0100    INFO       This is a message                    
-#> 2 2023-12-19T15:37:20+0100    WARN       This is a warning                    
-#> 3 2023-12-19T15:37:20+0100   ERROR        This is an error                    
-#> 4 2023-12-19T15:37:20+0100    INFO This is another message                    
-#> 5 2023-12-19T15:37:20+0100    WARN This is another warning                    
-#> 6 2023-12-19T15:37:20+0100   ERROR   This is another error                    
-#> 7 2023-12-19T15:37:20+0100   ERROR  This will log an error you want to include
+#> 1 2024-01-01T21:31:12+0100    INFO       This is a message                    
+#> 2 2024-01-01T21:31:12+0100    WARN       This is a warning                    
+#> 3 2024-01-01T21:31:12+0100   ERROR        This is an error                    
+#> 4 2024-01-01T21:31:12+0100    INFO This is another message                    
+#> 5 2024-01-01T21:31:12+0100    WARN This is another warning                    
+#> 6 2024-01-01T21:31:12+0100   ERROR   This is another error                    
+#> 7 2024-01-01T21:31:12+0100   ERROR  This will log an error you want to include
 ```
 
 Check out the
@@ -104,7 +103,6 @@ You can install the latest CRAN release of `loggit` via
 
     install.packages("loggit")
 
-Or, to get the latest development version from GitHub via
-[devtools](https://github.com/hadley/devtools):
+or, get the latest development version from GitHub via
 
     devtools::install_github("ryapric/loggit")
