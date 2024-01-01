@@ -25,10 +25,9 @@ for the Getting Started guide.
 
 `loggit` takes a modern approach to logging in R:
 
-- Opting to use the JSON format, which is parsable by most modern
-  software
-- Designed with highly flexible log streams in mind
-- Ability to log data, then analyze that log data on the same host.
+- Opting to use the JSON format
+- Highly flexible log streams
+- Enables log data analysis on the same host
 - *Zero* external dependencies
 
 Additionally, the boilerplate to get going with `loggit` is minimal at
@@ -48,13 +47,13 @@ the desired locations.
 
 ``` r
 loggit::message("This is a message")
-#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
+#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
 #> This is a message
 loggit::warning("This is a warning")
-#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning in loggit::warning("This is a warning"): This is a warning
 loggit::stop("This is an error")
-#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in loggit::stop("This is an error"): This is an error
 ```
 
@@ -79,18 +78,18 @@ become a structured log.
 
 ``` r
 loggit::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-01-01T21:31:12+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit::read_logs()
 #>                  timestamp log_lvl                 log_msg       anything_else
-#> 1 2024-01-01T21:31:12+0100    INFO       This is a message                    
-#> 2 2024-01-01T21:31:12+0100    WARN       This is a warning                    
-#> 3 2024-01-01T21:31:12+0100   ERROR        This is an error                    
-#> 4 2024-01-01T21:31:12+0100    INFO This is another message                    
-#> 5 2024-01-01T21:31:12+0100    WARN This is another warning                    
-#> 6 2024-01-01T21:31:12+0100   ERROR   This is another error                    
-#> 7 2024-01-01T21:31:12+0100   ERROR  This will log an error you want to include
+#> 1 2024-01-01T21:34:03+0100    INFO       This is a message                    
+#> 2 2024-01-01T21:34:03+0100    WARN       This is a warning                    
+#> 3 2024-01-01T21:34:03+0100   ERROR        This is an error                    
+#> 4 2024-01-01T21:34:03+0100    INFO This is another message                    
+#> 5 2024-01-01T21:34:03+0100    WARN This is another warning                    
+#> 6 2024-01-01T21:34:03+0100   ERROR   This is another error                    
+#> 7 2024-01-01T21:34:03+0100   ERROR  This will log an error you want to include
 ```
 
 Check out the

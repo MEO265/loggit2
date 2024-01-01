@@ -41,9 +41,9 @@ Why use `loggit`?
 
 `loggit` takes a modern approach to logging in R:
 
-- Opting to use the JSON format, which is parsable by most modern software
-- Designed with highly flexible log streams in mind
-- Ability to log data, then analyze that log data on the same host.
+- Opting to use the JSON format
+- Highly flexible log streams
+- Enables log data analysis on the same host
 - _Zero_ external dependencies
 
 Additionally, the boilerplate to get going with `loggit` is minimal at worst.
