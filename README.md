@@ -5,8 +5,7 @@ Ryan Price <ryapric@gmail.com>
 <!-- badges: start -->
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/loggit)](https://cran.r-project.org/package=loggit)
-[![Monthly
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit)](https://cran.r-project.org/package=loggit)
+[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit)](https://cran.r-project.org/package=loggit)
 [![R-CMD-check](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MEO265/loggit_private/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/MEO265/loggit_private/graph/badge.svg?token=DGPQGD4DUH)](https://codecov.io/gh/MEO265/loggit_private)
 <!-- badges: end -->
@@ -47,13 +46,13 @@ the desired locations.
 
 ``` r
 loggit::message("This is a message")
-#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
+#> {"timestamp": "2024-01-02T23:24:05+0100", "log_lvl": "INFO", "log_msg": "This is a message"}
 #> This is a message
 loggit::warning("This is a warning")
-#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-01-02T23:24:05+0100", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning in loggit::warning("This is a warning"): This is a warning
 loggit::stop("This is an error")
-#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-01-02T23:24:05+0100", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in loggit::stop("This is an error"): This is an error
 ```
 
@@ -78,18 +77,18 @@ become a structured log.
 
 ``` r
 loggit::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-01-01T21:34:03+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-01-02T23:24:05+0100", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit::read_logs()
 #>                  timestamp log_lvl                 log_msg       anything_else
-#> 1 2024-01-01T21:34:03+0100    INFO       This is a message                    
-#> 2 2024-01-01T21:34:03+0100    WARN       This is a warning                    
-#> 3 2024-01-01T21:34:03+0100   ERROR        This is an error                    
-#> 4 2024-01-01T21:34:03+0100    INFO This is another message                    
-#> 5 2024-01-01T21:34:03+0100    WARN This is another warning                    
-#> 6 2024-01-01T21:34:03+0100   ERROR   This is another error                    
-#> 7 2024-01-01T21:34:03+0100   ERROR  This will log an error you want to include
+#> 1 2024-01-02T23:24:05+0100    INFO       This is a message                    
+#> 2 2024-01-02T23:24:05+0100    WARN       This is a warning                    
+#> 3 2024-01-02T23:24:05+0100   ERROR        This is an error                    
+#> 4 2024-01-02T23:24:05+0100    INFO This is another message                    
+#> 5 2024-01-02T23:24:05+0100    WARN This is another warning                    
+#> 6 2024-01-02T23:24:05+0100   ERROR   This is another error                    
+#> 7 2024-01-02T23:24:05+0100   ERROR  This will log an error you want to include
 ```
 
 Check out the
