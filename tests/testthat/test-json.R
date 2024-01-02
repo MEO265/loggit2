@@ -2,6 +2,7 @@
 # would be hard to test that the file is ndjson without reading it back in
 # anyway
 test_that("write_logs() and read_logs() work in tandem", {
+  stop("An error")
   loggit("INFO", "msg1", echo = FALSE)
   loggit("INFO", "msg2", echo = FALSE)
   loggit("INFO", "msg3", echo = FALSE)
