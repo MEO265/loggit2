@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(width = 200)
 ```
 
 ```{r setup, include = FALSE}
@@ -97,10 +98,10 @@ library(loggit)
 
 set_logfile("/path/to/my/log/directory/loggit.log") # loggit enforces no specific file extension
 ```
-```{r handlers}
+```{r handlers, error = TRUE}
 message("This is a message")
 warning("This is a warning")
-# stop("This is a critical error, so I'm not actually going to run it in this vignette")
+stop("This is a critical error")
 ```
 
 You can see that the handlers will pring both the `loggit`-generated log entry,
@@ -121,7 +122,7 @@ function is also exported for use by the developer:
 ```{r loggit_func}
 loggit("INFO", "This is also a message")
 loggit("WARN", "This is also a warning")
-loggit("ERROR", "This is an error, but it won't stop your code from running like `stop()` does")
+loggit("ERROR", "This is an error, but it won't stop")
 ```
 
 *"But why wouldn't I just use the handlers instead?"*
@@ -177,12 +178,12 @@ The other helpful utilities are as follows:
 Things to keep in mind
 ----------------------
 
-- `loggit` will default to writing to an R temporary directory. As per CRAN
-  policies, ***a package cannot write*** to a user's "home filespace" without
-  approval. Therefore, you need to set the log file before any logs are written
-  to disk, using `set_logfile(logfile)` (I recommend in your working directory,
-  and naming it "loggit.log"). If you are using loggit in your own package, you
-  can wrap this in a call to `.onLoad()`, so that logging is set on package
-  load. If not, then make the set call as soon as possible (e.g. at the top of
-  your script(s), right after your calls to `library()`); otherwise, no logs
-  will be written to persistent storage!
+`loggit` will default to writing to an R temporary directory. As per CRAN
+policies, ***a package cannot write*** to a user's "home filespace" without
+approval. Therefore, you need to set the log file before any logs are written
+to disk, using `set_logfile(logfile)` (I recommend in your working directory,
+and naming it "loggit.log"). If you are using loggit in your own package, you
+can wrap this in a call to `.onLoad()`, so that logging is set on package
+load. If not, then make the set call as soon as possible (e.g. at the top of
+your script(s), right after your calls to `library()`); otherwise, no logs
+will be written to persistent storage!
