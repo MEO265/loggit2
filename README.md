@@ -38,7 +38,8 @@ nothing.
 
 `loggit` provides a set of wrappings for base R’s `message()`,
 `warning()`, and `stop()` functions that maintain identical
-functionality, making it sufficient to import the `loggit` namespace,
+functionality, apart from an additional output to `stdout` and writing to a log file. 
+Making it sufficient to import the `loggit` namespace,
 for example by using `library("loggit")`, or by prefixing `loggit::` at
 the desired locations.
 
@@ -54,6 +55,7 @@ loggit::stop("This is an error")
 #> Error in loggit::stop("This is an error"): This is an error
 ```
 
+The additional output to `stdout` allows easy logging, especially in container environments.
 You can suppress the additional console output by using `echo = FALSE`
 and you won’t notice any difference to the base functions (except that
 the log will be filled in the background).
