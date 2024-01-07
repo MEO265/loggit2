@@ -11,3 +11,4 @@ Jenkinsfile
 Makefile
 ^\.travis\.yml
 ^\.github$
+^\.covrignore$
