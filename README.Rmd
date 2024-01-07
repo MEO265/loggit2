@@ -99,3 +99,9 @@ You can install the latest CRAN release of `loggit` via
 or, get the latest development version from GitHub via
 
     devtools::install_github("ryapric/loggit")
+
+Acknowledgments
+-----------
+This package is based on the [eponymous package by Ryan Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
+
+Due to technical reasons, this repository is not a GitHub fork of [Ryan's repository](https://github.com/ryapric/loggit).
