@@ -1,6 +1,8 @@
 # loggit DEV
 
-* Fix typo in `README.Rmd` (PR #22, h/t @chuvanan)
+## Other:
+* The maintainership of `loggit` has been transferred from "Ryan Price" to "Matthias Ollech"
+
 
 # loggit 2.1.1
 
