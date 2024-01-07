@@ -96,7 +96,7 @@ You can install the latest CRAN release of `loggit` via
 
 or, get the latest development version from GitHub via
 
-    devtools::install_github("ryapric/loggit")
+    devtools::install_github("MEO265/loggit")
 
 Acknowledgments
 -----------

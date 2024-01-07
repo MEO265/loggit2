@@ -9,7 +9,7 @@ Description:
     only require additions to fully leverage the power of the logging system.
 Version: 2.1.1.9999
 Authors@R: c(
-    person("Matthias", "Ollech", role = c("cre", "aut"), email = ""), #TODO: Create a publicly usable email addressF
+    person("Matthias", "Ollech", role = c("cre", "aut"), email = "ollech@gmx.com"),
     person("Ryan", "Price", role = c("fnd", "aut"))
   )
 License: MIT + file LICENSE
@@ -18,8 +18,8 @@ Suggests:
     knitr (>= 1.19),
     rmarkdown (>= 1.8),
     testthat (>= 3.0.0)
-URL: #TODO: Complete as soon as it is publicly available
-BugReports: #TODO: Complete as soon as it is publicly available
+URL: https://github.com/MEO265/loggit
+BugReports: https://github.com/MEO265/loggit/issues
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
