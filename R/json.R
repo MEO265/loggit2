@@ -35,22 +35,22 @@
 default_ndjson_sanitizer <- function(string, sanitize = TRUE) {
   # String map; will dispatch left-vs.-right replacement based on `sanitize` bool
   map <- list(
-    "\\{" = "__LEFTBRACE__",
-    "\\}" = "__RIGHTBRACE__",
+    "{" = "__LEFTBRACE__",
+    "}" = "__RIGHTBRACE__",
     '"' = "__DBLQUOTE__",
     "," = "__COMMA__",
     "\r" = "__CR__",
     "\n" = "__LF__"
   )
-  
+
   for (k in names(map)) {
     if (sanitize) {
-      string <- gsub(k, map[k], string)
+      string <- gsub(k, map[k], string, fixed = TRUE)
     } else {
-      string <- gsub(map[k], k, string)
+      string <- gsub(map[k], k, string, fixed = TRUE)
     }
   }
-  
+
   string
 }
 
