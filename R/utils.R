@@ -17,16 +17,10 @@
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile, unsanitizer) {
-  if (missing(unsanitizer)) {
-    unsanitizer <- default_ndjson_unsanitizer
-  }
-  
-  if (missing(logfile)) logfile <- get_logfile()
-  if (!file.exists(logfile)) {
-    base::stop("Log file does not exist")
-  }
-  
+read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer) {
+
+  stopifnot("Log file does not exist" = file.exists(logfile))
+
   read_ndjson(logfile, unsanitizer = unsanitizer)
 }
 
@@ -57,9 +51,8 @@ read_logs <- function(logfile, unsanitizer) {
 #'   rotate_logs(250, another_log)
 #'
 #' @export
-rotate_logs <- function(rotate_lines = 100000, logfile) {
-  if (missing(logfile)) logfile <- get_logfile()
+rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   log_df <- read_logs(logfile)
-  log_df <- log_df[(nrow(log_df) - rotate_lines + 1):nrow(log_df), ]
+  log_df <- log_df[(nrow(log_df) - rotate_lines + 1L):nrow(log_df),]
   write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
 }
