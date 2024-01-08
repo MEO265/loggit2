@@ -35,7 +35,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE) {
 #' Get Log File
 #'
 #' Return the log file that loggit will write to.
-#' 
+#'
 #' @examples get_logfile()
 #'
 #' @export
@@ -72,9 +72,9 @@ set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TR
 
 
 #' Get Timestamp Format
-#' 
+#'
 #' Get timestamp format for use in output logs.
-#' 
+#'
 #' @examples get_timestamp_format()
 #'
 #' @export

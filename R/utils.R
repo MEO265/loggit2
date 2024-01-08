@@ -1,25 +1,3 @@
-# Helper function to append rows 
-bind_rows_loggit <- function(df1, df2) {
-  stopifnot('data.frame' %in% class(df1))
-  stopifnot('data.frame' %in% class(df2))
-  
-  headers1 <- colnames(df1)
-  headers2 <- colnames(df2)
-  headers <- union(headers1, headers2)
-  
-  for (header in headers) {
-    if (!(header %in% headers1)) {
-      df1[, header] <- NA
-    }
-    if (!(header %in% headers2)) {
-      df2[, header] <- NA
-    }
-  }
-  
-  rbind(df1, df2)
-}
-
-
 #' Return log file as an R data frame
 #'
 #' This function returns a `data.frame` containing all the logs in the provided
@@ -39,26 +17,20 @@ bind_rows_loggit <- function(df1, df2) {
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile, unsanitizer) {
-  if (missing(unsanitizer)) {
-    unsanitizer <- default_ndjson_unsanitizer
-  }
-  
-  if (missing(logfile)) logfile <- get_logfile()
-  if (!file.exists(logfile)) {
-    base::stop("Log file does not exist")
-  }
-  
+read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer) {
+
+  stopifnot("Log file does not exist" = file.exists(logfile))
+
   read_ndjson(logfile, unsanitizer = unsanitizer)
 }
 
 
 #' Rotate log file
-#' 
-#' Truncates the log file to the line count provided as `rotate_lines`. 
-#' 
+#'
+#' Truncates the log file to the line count provided as `rotate_lines`.
+#'
 #' `loggit` makes no assumptions nor enforcement of calling this function; that
-#' is to say, the onus of log rotation is up to the developer. You 
+#' is to say, the onus of log rotation is up to the developer.
 #'
 #' @param rotate_lines The number of log entries to keep in the logfile.
 #'   Defaults to 100,000.
@@ -70,7 +42,7 @@ read_logs <- function(logfile, unsanitizer) {
 #'   set_logfile()
 #'   for (i in 1:150) {loggit("INFO", i, echo = FALSE)}
 #'   rotate_logs(100)
-#'   
+#'
 #'   # Truncate a different log file to 250 lines
 #'   another_log <- file.path(tempdir(), "another.log")
 #'   set_logfile(another_log)
@@ -79,9 +51,8 @@ read_logs <- function(logfile, unsanitizer) {
 #'   rotate_logs(250, another_log)
 #'
 #' @export
-rotate_logs <- function(rotate_lines = 100000, logfile) {
-  if (missing(logfile)) logfile <- get_logfile()
+rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   log_df <- read_logs(logfile)
-  log_df <- log_df[(nrow(log_df) - rotate_lines + 1):nrow(log_df), ]
+  log_df <- log_df[(nrow(log_df) - rotate_lines + 1L):nrow(log_df),]
   write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
 }

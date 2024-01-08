@@ -35,22 +35,22 @@
 #'   sure = "why not?", like = 2, or = 10, what = "ever")
 #'
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, sanitizer) {
+loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, sanitizer = default_ndjson_sanitizer) {
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
-  if (!(log_lvl %in% log_lvls) && !custom_log_lvl) {
-    base::stop(paste0("Nonstandard log_lvl ('", log_lvl, "').\n",
-                      "Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.\n",
-                      "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
-    ))
+  if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
+    base::stop(
+      "Nonstandard log_lvl ('", log_lvl, "').\n",
+      "Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.\n",
+      "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
+    )
   }
-  
+
   timestamp <- format(Sys.time(), format = .config$ts_format)
-  
-  dots <- list(...)
-  
-  if (length(dots) > 0) {
-    if (any(unlist(lapply(dots, length)) > 1)) {
+
+  if (...length() > 0L) {
+    dots <- list(...)
+    if (any(lengths(dots) > 1L)) {
       base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
     }
     log_df <- data.frame(
@@ -68,17 +68,10 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, s
       stringsAsFactors = FALSE
     )
   }
-  
-  # Sanitize
-  if (missing(sanitizer)) {
-    sanitize <- default_ndjson_sanitizer
-  } else {
-    sanitize <- sanitizer
-  }
-  
+
   for (field in colnames(log_df)) {
-    log_df[, field] <- sanitize(log_df[, field])
+    log_df[, field] <- sanitizer(log_df[, field])
   }
-  
+
   write_ndjson(log_df, echo = echo)
 }

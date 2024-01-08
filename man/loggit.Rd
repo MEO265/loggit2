@@ -4,7 +4,14 @@
 \alias{loggit}
 \title{Log entries to file}
 \usage{
-loggit(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, sanitizer)
+loggit(
+  log_lvl,
+  log_msg,
+  ...,
+  echo = TRUE,
+  custom_log_lvl = FALSE,
+  sanitizer = default_ndjson_sanitizer
+)
 }
 \arguments{
 \item{log_lvl}{Level of log output. In actual practice, one of "DEBUG",

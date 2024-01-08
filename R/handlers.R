@@ -13,18 +13,17 @@ NULL
 
 
 #' @rdname handlers
-#' 
+#'
 #' @inheritParams base::message
-#' 
+#'
 #' @examples
 #'   if (2 < 1) message("Don't say such silly things!")
 #'
 #' @export
 message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE) {
   args <- paste(list(...), collapse = "")
-  if(.loggit) {
-    loggit(log_lvl = "INFO", log_msg = args, echo = echo)
-  }
+  if (.loggit) loggit(log_lvl = "INFO", log_msg = args[[1]], echo = echo)
+
   base::message(unlist(args), domain = domain, appendLF = appendLF)
 }
 
@@ -32,34 +31,31 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 #' @rdname handlers
 #'
 #' @inheritParams base::warning
-#' 
+#'
 #' @examples
 #'   if (2 < 1) warning("You may want to review that math, and so this is your warning")
-#' 
+#'
 #' @export
-warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE, 
+warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
                     domain = NULL, .loggit = TRUE, echo = TRUE) {
   args <- paste(list(...), collapse = "")
-  if (.loggit) {
-    loggit(log_lvl = "WARN", log_msg = args[[1]], echo = echo)
-  }
+  if (.loggit) loggit(log_lvl = "WARN", log_msg = args[[1L]], echo = echo)
   base::warning(unlist(args), call. = call., immediate. = immediate.,
                 noBreaks. = noBreaks., domain = domain)
 }
 
 
 #' @rdname handlers
-#' 
+#'
 #' @inheritParams base::stop
-#' 
+#'
 #' @examples
 #'   if (2 < 1) stop("This is a completely false condition, which throws an error")
-#' 
+#'
 #' @export
 stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
   args <- paste(list(...), collapse = "")
-  if (.loggit) {
-    loggit(log_lvl = "ERROR", log_msg = args[[1]], echo = echo)
-  }
+  if (.loggit) loggit(log_lvl = "ERROR", log_msg = args[[1L]], echo = echo)
+
   base::stop(unlist(args), call. = call., domain = domain)
 }
