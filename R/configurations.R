@@ -28,7 +28,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE) {
   } else {
     .config$logfile <- logfile
   }
-  if (confirm) print(paste0("Log file set to ", logfile))
+  if (confirm) message("Log file set to ", logfile)
 }
 
 
@@ -65,8 +65,10 @@ get_logfile <- function() {
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {
   .config$ts_format <- ts_format
   if (confirm) {
-    print(paste0("Timestamp format set to ", ts_format))
-    print(paste0("Current time in this format: ", format(Sys.time(), format = ts_format)))
+    message(
+      "Timestamp format set to ", ts_format, "\n",
+      "Current time in this format: ", format(Sys.time(), format = ts_format)
+    )
   }
 }
 
