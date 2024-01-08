@@ -1,5 +1,9 @@
 # loggit DEV
 
+## Minor changes
+* All `set_*` functions use `message` instead of `print` for confirmation.
+  This ensures that the confirmations no longer interfere with the log via echo.
+
 ## Other:
 * The maintainership of `loggit` has been transferred from "Ryan Price" to "Matthias Ollech"
 

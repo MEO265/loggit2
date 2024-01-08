@@ -10,8 +10,8 @@
 #' your system's temporary directory.
 #'
 #' A suggested use of this function would be to call it early, to log to the
-#' current working directory, as follows: `set_logfile(paste0(getwd(),
-#' "/loggit.log"))`. If you are using `loggit` in your package, you can wrap
+#' current working directory, as follows: `set_logfile("./loggit.log"))`.
+#' If you are using `loggit` in your package, you can wrap
 #' this function in `.onLoad()` so that the logfile is set when your package
 #' loads.
 #'
@@ -28,7 +28,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE) {
   } else {
     .config$logfile <- logfile
   }
-  if (confirm) print(paste0("Log file set to ", logfile))
+  if (confirm) message("Log file set to ", logfile)
 }
 
 
@@ -65,8 +65,10 @@ get_logfile <- function() {
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {
   .config$ts_format <- ts_format
   if (confirm) {
-    print(paste0("Timestamp format set to ", ts_format))
-    print(paste0("Current time in this format: ", format(Sys.time(), format = ts_format)))
+    message(
+      "Timestamp format set to ", ts_format, "\n",
+      "Current time in this format: ", format(Sys.time(), format = ts_format)
+    )
   }
 }
 
