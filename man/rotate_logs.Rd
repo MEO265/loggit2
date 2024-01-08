@@ -4,7 +4,7 @@
 \alias{rotate_logs}
 \title{Rotate log file}
 \usage{
-rotate_logs(rotate_lines = 1e+05, logfile)
+rotate_logs(rotate_lines = 100000L, logfile = get_logfile())
 }
 \arguments{
 \item{rotate_lines}{The number of log entries to keep in the logfile.
