@@ -20,7 +20,8 @@ your system's temporary directory.
 }
 \details{
 A suggested use of this function would be to call it early, to log to the
-current working directory, as follows: \code{set_logfile(paste0(getwd(), "/loggit.log"))}. If you are using \code{loggit} in your package, you can wrap
+current working directory, as follows: \verb{set_logfile("./loggit.log"))}.
+If you are using \code{loggit} in your package, you can wrap
 this function in \code{.onLoad()} so that the logfile is set when your package
 loads.
 }

@@ -10,8 +10,8 @@
 #' your system's temporary directory.
 #'
 #' A suggested use of this function would be to call it early, to log to the
-#' current working directory, as follows: `set_logfile(paste0(getwd(),
-#' "/loggit.log"))`. If you are using `loggit` in your package, you can wrap
+#' current working directory, as follows: `set_logfile("./loggit.log"))`.
+#' If you are using `loggit` in your package, you can wrap
 #' this function in `.onLoad()` so that the logfile is set when your package
 #' loads.
 #'
