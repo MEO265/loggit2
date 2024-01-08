@@ -18,14 +18,14 @@ Truncates the log file to the line count provided as \code{rotate_lines}.
 }
 \details{
 \code{loggit} makes no assumptions nor enforcement of calling this function; that
-is to say, the onus of log rotation is up to the developer. You
+is to say, the onus of log rotation is up to the developer.
 }
 \examples{
   # Truncate "default" log file to 100 lines
   set_logfile()
   for (i in 1:150) {loggit("INFO", i, echo = FALSE)}
   rotate_logs(100)
-  
+
   # Truncate a different log file to 250 lines
   another_log <- file.path(tempdir(), "another.log")
   set_logfile(another_log)
