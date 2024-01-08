@@ -45,7 +45,7 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, s
       "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
     )
   }
-  
+
   timestamp <- format(Sys.time(), format = .config$ts_format)
 
   if (...length() > 0L) {
@@ -68,10 +68,10 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, s
       stringsAsFactors = FALSE
     )
   }
-  
+
   for (field in colnames(log_df)) {
     log_df[, field] <- sanitizer(log_df[, field])
   }
-  
+
   write_ndjson(log_df, echo = echo)
 }

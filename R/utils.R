@@ -26,11 +26,11 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 
 
 #' Rotate log file
-#' 
-#' Truncates the log file to the line count provided as `rotate_lines`. 
-#' 
+#'
+#' Truncates the log file to the line count provided as `rotate_lines`.
+#'
 #' `loggit` makes no assumptions nor enforcement of calling this function; that
-#' is to say, the onus of log rotation is up to the developer. You 
+#' is to say, the onus of log rotation is up to the developer.
 #'
 #' @param rotate_lines The number of log entries to keep in the logfile.
 #'   Defaults to 100,000.
@@ -42,7 +42,7 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 #'   set_logfile()
 #'   for (i in 1:150) {loggit("INFO", i, echo = FALSE)}
 #'   rotate_logs(100)
-#'   
+#'
 #'   # Truncate a different log file to 250 lines
 #'   another_log <- file.path(tempdir(), "another.log")
 #'   set_logfile(another_log)

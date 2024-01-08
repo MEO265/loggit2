@@ -8,10 +8,10 @@
 #' [loggit()], which takes a single string and returns an
 #' (optionally-transformed) string, where each string is an individual element
 #' of the log data.
-#' 
+#'
 #' The default string patterns and their replacements are currently mapped as
 #' follows:
-#' 
+#'
 #'  | Character | Replacement in log file |
 #'  |:--------- | :---------------------- |
 #'  | `{`       | `__LEFTBRACE__`         |
@@ -28,7 +28,7 @@
 #'   ***take and return a single string*** as its argument.
 #' @param sanitize Whether the operation will sanitize, or unsanitize the log
 #'   data. Defaults to `TRUE`, for sanitization on write.
-#' 
+#'
 #' @return A single string.
 #'
 #' @name sanitizers
