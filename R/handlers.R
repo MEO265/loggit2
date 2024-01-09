@@ -65,3 +65,34 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 
   base::stop(unlist(args), call. = call., domain = domain)
 }
+
+#' Conditional Stop Function Log Handler
+#'
+#' This function is identical to base R's [`stopifnot`](base::stopifnot),
+#' but it includes logging of the exception message via `loggit()`.
+#'
+#' @inherit base::stopifnot params return
+#' @inheritParams message
+#'
+#' @family handlers
+#'
+#' @examples
+#'   stopifnot("This is a completely false condition, which throws an error" = TRUE)
+#'
+#' @export
+stopifnot <- function(..., exprObject, local, echo = TRUE) {
+  # Since no calling function can be detected within tryCatch from base::stopifnot
+  call <- if (p <- sys.parent(1L)) sys.call(p)
+  # Required to avoid early (and simultaneous) evaluation of the arguments.
+  # Also handles the case of 'missing' at the same time.
+  call_args <- as.list(match.call()[-1L])
+  call_args <- call_args[names(call_args) != "echo"]
+  stop_call <- as.call(c(quote(base::stopifnot), call_args))
+  tryCatch({
+    eval.parent(stop_call, 1L)
+  }, error = function(e) {
+    cond <- simpleError(message = e$message, call = call)
+    loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
+    signalCondition(cond = cond)
+  })
+}

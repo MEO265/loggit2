@@ -32,6 +32,7 @@ but it includes logging of the exception message via \code{loggit()}.
 \seealso{
 Other handlers: 
 \code{\link{message}()},
+\code{\link{stopifnot}()},
 \code{\link{warning}()}
 }
 \concept{handlers}
