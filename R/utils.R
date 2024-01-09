@@ -19,7 +19,7 @@
 #' @export
 read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer) {
 
-  stopifnot("Log file does not exist" = file.exists(logfile))
+  base::stopifnot("Log file does not exist" = file.exists(logfile))
 
   read_ndjson(logfile, unsanitizer = unsanitizer)
 }
