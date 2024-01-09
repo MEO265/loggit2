@@ -1,20 +1,14 @@
-#' loggit's Exception Handlers
+#' Diagnostic Messages Log Handler
 #'
-#' These exception handlers are identical to base R's [message][base::message],
-#' [warning][base::warning], and [stop][base::stop], but with included logging
-#' of the exception messages via `loggit()`.
+#' This function is identical to base R's [`message`](base::message),
+#' but it includes logging of the exception message via `loggit()`.
+#'
+#' @inherit base::message params return
 #'
 #' @param .loggit Should loggit function execute? Defaults to `TRUE`.
-#' @param echo Should loggit's log entry be echoed to the console, as well?
-#'   Defaults to `TRUE`.
+#' @param echo Should loggit's log entry be echoed to the console, as well? Defaults to `TRUE`.
 #'
-#' @name handlers
-NULL
-
-
-#' @rdname handlers
-#'
-#' @inheritParams base::message
+#' @family handlers
 #'
 #' @examples
 #'   if (2 < 1) message("Don't say such silly things!")
@@ -28,9 +22,15 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 }
 
 
-#' @rdname handlers
+#' Warning Messages Log Handler
 #'
-#' @inheritParams base::warning
+#' This function is identical to base R's [`warning`](base::warning),
+#' but it includes logging of the exception message via `loggit()`.
+#'
+#' @inherit base::warning params return
+#' @inheritParams message
+#'
+#' @family handlers
 #'
 #' @examples
 #'   if (2 < 1) warning("You may want to review that math, and so this is your warning")
@@ -45,9 +45,15 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 }
 
 
-#' @rdname handlers
+#' Stop Function Log Handler
 #'
-#' @inheritParams base::stop
+#' This function is identical to base R's [`stop`](base::stop),
+#' but it includes logging of the exception message via `loggit()`.
+#'
+#' @inherit base::stop params
+#' @inheritParams message
+#'
+#' @family handlers
 #'
 #' @examples
 #'   if (2 < 1) stop("This is a completely false condition, which throws an error")
