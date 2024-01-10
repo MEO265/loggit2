@@ -86,7 +86,7 @@ stopifnot <- function(..., exprObject, local, echo = TRUE) {
   # Required to avoid early (and simultaneous) evaluation of the arguments.
   # Also handles the case of 'missing' at the same time.
   call_args <- as.list(match.call()[-1L])
-  call_args <- call_args[names(call_args) != "echo"]
+  if(!is.null(names(call_args))) call_args <- call_args[names(call_args) != "echo"]
   stop_call <- as.call(c(quote(base::stopifnot), call_args))
   tryCatch({
     eval.parent(stop_call, 1L)
