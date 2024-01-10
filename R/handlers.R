@@ -1,6 +1,6 @@
 #' Diagnostic Messages Log Handler
 #'
-#' This function is identical to base R's [`message`](base::message),
+#' This function is identical to base R's [`message`][base::message],
 #' but it includes logging of the exception message via `loggit()`.
 #'
 #' @inherit base::message params return
@@ -24,7 +24,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 
 #' Warning Messages Log Handler
 #'
-#' This function is identical to base R's [`warning`](base::warning),
+#' This function is identical to base R's [`warning`][base::warning],
 #' but it includes logging of the exception message via `loggit()`.
 #'
 #' @inherit base::warning params return
@@ -47,7 +47,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 
 #' Stop Function Log Handler
 #'
-#' This function is identical to base R's [`stop`](base::stop),
+#' This function is identical to base R's [`stop`][base::stop],
 #' but it includes logging of the exception message via `loggit()`.
 #'
 #' @inherit base::stop params
@@ -68,7 +68,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 
 #' Conditional Stop Function Log Handler
 #'
-#' This function is identical to base R's [`stopifnot`](base::stopifnot),
+#' This function is identical to base R's [`stopifnot`][base::stopifnot],
 #' but it includes logging of the exception message via `loggit()`.
 #'
 #' @inherit base::stopifnot params return

@@ -22,7 +22,7 @@ message(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE)
 \item{echo}{Should loggit's log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
 }
 \description{
-This function is identical to base R's \href{base::message}{\code{message}},
+This function is identical to base R's \code{\link[base:message]{message}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{

@@ -28,7 +28,7 @@ stopifnot(..., exprObject, local, echo = TRUE)
 (\code{\link[base]{NULL}} if all statements in \code{\dots} are \code{TRUE}.)
 }
 \description{
-This function is identical to base R's \href{base::stopifnot}{\code{stopifnot}},
+This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{

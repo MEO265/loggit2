@@ -39,7 +39,7 @@ warning(
 The warning message as \code{\link[base]{character}} string, invisibly.
 }
 \description{
-This function is identical to base R's \href{base::warning}{\code{warning}},
+This function is identical to base R's \code{\link[base:warning]{warning}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{
