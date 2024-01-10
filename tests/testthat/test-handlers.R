@@ -46,6 +46,9 @@ test_that("stopifnot",{
   expect_identical_error(stopifnot(f(x = FALSE)), base::stopifnot(f(x = FALSE)))
   g <- function () f(FALSE)
   expect_identical_error(stopifnot(4 == 4, g()), base::stopifnot(4==4, g()))
+  expect_identical_error(stopifnot(4 == 4, "Test" = g()), base::stopifnot(4==4, "Test" = g()))
+  expect_identical_error(stopifnot(exprs = {TRUE; FALSE}), base::stopifnot(exprs = {TRUE; FALSE}))
+  expect_identical_error(stopifnot(exprObject = {TRUE; FALSE}), base::stopifnot(exprObject = {TRUE; FALSE}))
   expect_no_error(stopifnot(TRUE, 3 == 3))
 })
 
