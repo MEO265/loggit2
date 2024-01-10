@@ -38,3 +38,15 @@ test_that("stop works as it does in base R", {
 })
 
 cleanup()
+
+test_that("stopifnot",{
+  # stopifnot works as in base R
+  expect_identical_error(stopifnot(FALSE),base::stopifnot(FALSE))
+  f <- function (x, ...) x
+  expect_identical_error(stopifnot(f(x = FALSE)), base::stopifnot(f(x = FALSE)))
+  g <- function () f(FALSE)
+  expect_identical_error(stopifnot(4 == 4, g()), base::stopifnot(4==4, g()))
+  expect_no_error(stopifnot(TRUE, 3 == 3))
+})
+
+cleanup()
