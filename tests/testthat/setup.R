@@ -4,9 +4,18 @@ cleanup <- function() {
   file.remove(.config$logfile)
 }
 
-expect_identical_error <- function(actual, expected) {
-  actual <- testthat::capture_error(actual)
-  expected <- testthat::capture_error(expected)
+expect_identical_condition <- function(actual, expected, type = c("message", "warning", "error")) {
+  type <- match.arg(type)
+
+  capture <- switch(
+    type,
+    message = testthat::capture_message,
+    warning = testthat::capture_warning,
+    error = testthat::capture_error
+  )
+
+  actual <- capture(actual)
+  expected <- capture(expected)
 
   if(is.null(actual)){
     testthat::fail("Actual don't throws an error.")
@@ -34,3 +43,9 @@ expect_identical_error <- function(actual, expected) {
   testthat::succeed()
   return(invisible())
 }
+
+expect_identical_error <- function (actual, expected) expect_identical_condition(actual, expected, type = "error")
+
+expect_identical_warning <- function (actual, expected) expect_identical_condition(actual, expected, type = "warning")
+
+expect_identical_message <- function (actual, expected) expect_identical_condition(actual, expected, type = "message")
