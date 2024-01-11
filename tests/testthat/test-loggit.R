@@ -2,13 +2,13 @@ test_that("loggit writes handler messages to file", {
   msg <- "this is a message"
   warn <- "this is a warning"
   err <- "this is an error"
-  
+
   expect_message(message(msg, echo = FALSE))
   expect_warning(warning(warn, echo = FALSE))
   expect_error(stop(err, echo = FALSE))
-  
+
   logs_json <- read_logs()
-  
+
   expect_equal(nrow(logs_json), 3)
   expect_equal(logs_json$log_lvl, c("INFO", "WARN", "ERROR"))
   expect_equal(logs_json$log_msg, c(msg, warn, err))
