@@ -38,7 +38,7 @@ expect_identical_condition <- function(actual, expected, type = c("message", "wa
     }
   }
 
-  if (actual$call != expected$call) {
+  if (deparse(actual$call) != deparse(expected$call)) {
     fail(sprintf("Actual has call '%s', but expected has '%s'", deparse(actual$call), deparse(expected$call)))
   }
 
