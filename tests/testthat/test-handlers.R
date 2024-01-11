@@ -41,6 +41,7 @@ cleanup()
 
 test_that("stopifnot", {
   # stopifnot works as in base R (with echo = TRUE)
+  expect_no_error(stopifnot())
   expect_identical_error(stopifnot(FALSE), base::stopifnot(FALSE))
   f <- function(x, ...) x
   expect_identical_error(stopifnot(f(x = FALSE)), base::stopifnot(f(x = FALSE)))
@@ -52,12 +53,13 @@ test_that("stopifnot", {
   expect_no_error(stopifnot(TRUE, 3 == 3))
 
   # stopifnot works as in base R (with echo = FALSE)
+  expect_no_error(stopifnot(echo = FALSE))
   expect_identical_error(stopifnot(FALSE, echo = FALSE), base::stopifnot(FALSE))
   f <- function(x, ...) x
   expect_identical_error(stopifnot(f(x = FALSE), echo = FALSE), base::stopifnot(f(x = FALSE)))
   g <- function() f(FALSE)
   expect_identical_error(stopifnot(4 == 4, g(), echo = FALSE), base::stopifnot(4 == 4, g()))
-  expect_identical_error(stopifnot(4 == 4, "Test" = g(), echo = FALSE), base::stopifnot(4 == 4, "Test" = g()))
+  expect_identical_error(stopifnot(4 == 4, "A Test" = g(), echo = FALSE), base::stopifnot(4 == 4, "A Test" = g()))
   expect_identical_error(stopifnot(exprs = { TRUE; FALSE }, echo = FALSE), base::stopifnot(exprs = { TRUE; FALSE }))
   expect_identical_error(stopifnot(exprObject = { TRUE; FALSE }, echo = FALSE), base::stopifnot(exprObject = { TRUE; FALSE }))
   expect_no_error(stopifnot(TRUE, 3 == 3, echo = FALSE))
@@ -65,8 +67,14 @@ test_that("stopifnot", {
   cleanup()
 
   # Test for logging
-
-
+  expect_output(try(stopifnot("This is a stop if not error" = FALSE), silent = TRUE))
+  expect_silent(try(stopifnot("Should not echo" = FALSE, echo = FALSE), silent = TRUE))
+  stopifnot("Should not show" = TRUE)
+  log_actual <- read_logs()
+  expect_setequal(names(log_actual), c("timestamp", "log_lvl", "log_msg"))
+  log_actual$timestamp <- NULL
+  log_expected <- data.frame(log_lvl = "ERROR", log_msg = c("This is a stop if not error", "Should not echo"))
+  expect_equal(log_actual, log_expected)
 })
 
-#cleanup()
+cleanup()
