@@ -25,15 +25,25 @@ test_that("warning works as it does in base R", {
 
 
 test_that("stop works as it does in base R", {
-  expect_error(base::stop("this is a stop test"))
-  expect_error(loggit::stop("this is also a stop test", echo = FALSE))
+  # stop works as in base R (with echo = TRUE)
+  expect_identical_error(stop(), base::stop())
+  expect_identical_error(stop("this is a stop test"), base::stop("this is a stop test"))
+  expect_identical_error(stop("this", "is a", "stop test"), base::stop("this", "is a", "stop test"))
+  expect_identical_error(stop("Some numbers", 3, 1:5, "!"), base::stop("Some numbers", 3, 1:5, "!"))
+
+  # stop works as in base R (with echo = FALSE)
+  expect_identical_error(stop(echo = FALSE), base::stop())
+  expect_identical_error(stop("this is a stop test", echo = FALSE), base::stop("this is a stop test"))
+  expect_identical_error(stop("this", "is a", "stop test", echo = FALSE), base::stop("this", "is a", "stop test"))
+  expect_identical_error(stop("Some numbers", c(3.12, 1L, 2L), 1:5, "!", echo = FALSE), base::stop("Some numbers", c(3.12, 1L, 2L), 1:5, "!"))
 
   # Multiple args are concatenated
   # Test looks different to get around the stop() call
-  expect_error(loggit::stop("this should be ", "concatenated ", "in the log", echo = FALSE))
+  expect_output(try(stop("this should be ", "concatenated ", "in the log"), silent = TRUE))
+  expect_silent(try(stop("this should be ", "concatenated ", "in the log", echo = FALSE), silent = TRUE))
   logdata <- read_logs()
-  logdata <- logdata[logdata$log_lvl == "ERROR",]
   logdata <- logdata[nrow(logdata),]
+  expect_true(logdata$log_lvl == "ERROR")
   expect_true(logdata$log_msg == "this should be concatenated in the log")
 })
 
