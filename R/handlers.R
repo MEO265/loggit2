@@ -80,19 +80,19 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #'   stopifnot("This is a completely false condition, which throws an error" = TRUE)
 #'
 #' @export
-stopifnot <- function(..., exprObject, local, echo = TRUE) {
+stopifnot <- function(..., exprObject, local, .loggit = TRUE ,echo = TRUE) {
   # Since no calling function can be detected within tryCatch from base::stopifnot
   call <- if (p <- sys.parent(1L)) sys.call(p)
   # Required to avoid early (and simultaneous) evaluation of the arguments.
   # Also handles the case of 'missing' at the same time.
   call_args <- as.list(match.call()[-1L])
-  if(!is.null(names(call_args))) call_args <- call_args[names(call_args) != "echo"]
+  if (!is.null(names(call_args))) call_args <- call_args[!names(call_args) %in% c("echo", ".loggit")]
   stop_call <- as.call(c(quote(base::stopifnot), call_args))
   tryCatch({
     eval.parent(stop_call, 1L)
   }, error = function(e) {
     cond <- simpleError(message = e$message, call = call)
-    loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
+    if(.loggit) loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
     signalCondition(cond = cond)
   })
 }
