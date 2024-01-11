@@ -1,5 +1,8 @@
 # loggit DEV
 
+## New features
+* New `stopifnot()` handler. 
+
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.
   This ensures that the confirmations no longer interfere with the log via echo.
