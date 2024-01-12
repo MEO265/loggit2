@@ -15,10 +15,30 @@
 #'
 #' @export
 message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE) {
-  args <- paste(list(...), collapse = "")
-  if (.loggit) loggit(log_lvl = "INFO", log_msg = args[[1]], echo = echo)
+  # If the input is a condition, the base function does not allow additional input
+  # If the input is not a condition, the call of the message must be set manually
+  # to avoid loggit::message being displayed as a call
+  is_condition <- (...length() == 1L && inherits(..1, "condition"))
+  call <- sys.call()
 
-  base::message(unlist(args), domain = domain, appendLF = appendLF)
+  if (is_condition) {
+    tryCatch({
+      base::message(..1)
+    }, message = function(m) {
+      if (.loggit) loggit(log_lvl = "INFO", log_msg = m$message, echo = echo)
+      # If signalCondition was used there would be no output to the console
+      base::message(m)
+    })
+  } else {
+    tryCatch({
+      base::message(..., domain = domain, appendLF = appendLF)
+    }, error = function(m) {
+      m <- simpleMessage(message = m$message, call = call)
+      if (.loggit) loggit(log_lvl = "INFO", log_msg = m$message, echo = echo)
+      # If signalCondition was used there would be no output to the console
+      base::message(m)
+    })
+  }
 }
 
 
@@ -49,7 +69,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
       base::warning(..1)
     }, warning = function(w) {
       if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
-      # If signal condition was used there would be no output to the console
+      # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
   } else {
@@ -58,7 +78,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     }, warning = function(w) {
       w <- simpleWarning(message = w$message, call = call)
       if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
-      # If signal condition was used there would be no output to the console
+      # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
   }
