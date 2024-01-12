@@ -64,7 +64,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
   # If the input is not a condition, the call of the error must be set manually
   # to avoid loggit::stop being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
-  call <- findCall()
+  call <- find_call()
 
   if (is_condition) {
     tryCatch({
