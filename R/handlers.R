@@ -38,12 +38,31 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 #' @export
 warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
                     domain = NULL, .loggit = TRUE, echo = TRUE) {
-  args <- paste(list(...), collapse = "")
-  if (.loggit) loggit(log_lvl = "WARN", log_msg = args[[1L]], echo = echo)
-  base::warning(unlist(args), call. = call., immediate. = immediate.,
-                noBreaks. = noBreaks., domain = domain)
-}
+  # If the input is a condition, the base function does not allow additional input
+  # If the input is not a condition, the call of the warning must be set manually
+  # to avoid loggit::warning being displayed as a call
+  is_condition <- (...length() == 1L && inherits(..1, "condition"))
+  call <- find_call()
 
+  if (is_condition) {
+    tryCatch({
+      base::warning(..1)
+    }, warning = function(w) {
+      if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
+      # If signal condition was used there would be no output to the console
+      base::warning(w)
+    })
+  } else {
+    tryCatch({
+      base::warning(..., call. = call., immediate. = immediate., noBreaks. = noBreaks., domain = domain)
+    }, warning = function(w) {
+      w <- simpleWarning(message = w$message, call = call)
+      if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
+      # If signal condition was used there would be no output to the console
+      base::warning(w)
+    })
+  }
+}
 
 #' Stop Function Log Handler
 #'
