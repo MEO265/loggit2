@@ -3,7 +3,7 @@ test_that("loggit writes handler messages to file", {
   warn <- "this is a warning"
   err <- "this is an error"
 
-  expect_message(message(msg, echo = FALSE))
+  expect_message(message(msg, echo = FALSE, appendLF = FALSE))
   expect_warning(warning(warn, echo = FALSE))
   expect_error(stop(err, echo = FALSE))
 
