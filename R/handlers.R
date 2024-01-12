@@ -60,19 +60,30 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #'
 #' @export
 stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
-  if (...length() == 1L && inherits(..1, "condition")) {
+  # If the input is a condition, the base function does not allow additional input
+  # If the input is not a condition, the call of the error must be set manually
+  # to avoid loggit::stop being displayed as a call
+  is_condition <- (...length() == 1L && inherits(..1, "condition"))
+  call <- findCall()
+
+  if (is_condition) {
     tryCatch({
-      stop(..1)
+      base::stop(..1)
     }, error = function(e) {
       if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
       signalCondition(e)
     })
   } else {
-    msg <- .makeMessage(..., domain = domain)
-    loggit(log_lvl = "ERROR", log_msg = msg, echo = echo)
-    .Internal(stop(call., msg))
+    tryCatch({
+      base::stop(..., call. = call., domain = domain)
+    }, error = function(e) {
+      e <- simpleError(message = e$message, call = call)
+      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
+      signalCondition(e)
+    })
   }
 }
+
 
 #' Conditional Stop Function Log Handler
 #'

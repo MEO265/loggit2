@@ -56,3 +56,15 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   log_df <- log_df[(nrow(log_df) - rotate_lines + 1L):nrow(log_df),]
   write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
 }
+
+
+findCall <- function() {
+  parents <- sys.parents()
+
+  if (length(parents) <= 2L) return(NULL)
+
+  id <- match(0, parents)
+  if (id >= length(parents) - 1L) return(NULL)
+
+  return(sys.call(-2L))
+}
