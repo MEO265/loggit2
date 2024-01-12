@@ -60,10 +60,18 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #'
 #' @export
 stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
-  args <- paste(list(...), collapse = "")
-  if (.loggit) loggit(log_lvl = "ERROR", log_msg = args[[1L]], echo = echo)
-
-  base::stop(unlist(args), call. = call., domain = domain)
+  if (...length() == 1L && inherits(..1, "condition")) {
+    tryCatch({
+      stop(..1)
+    }, error = function(e) {
+      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
+      signalCondition(e)
+    })
+  } else {
+    msg <- .makeMessage(..., domain = domain)
+    loggit(log_lvl = "ERROR", log_msg = msg, echo = echo)
+    .Internal(stop(call., msg))
+  }
 }
 
 #' Conditional Stop Function Log Handler
@@ -80,7 +88,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #'   stopifnot("This is a completely false condition, which throws an error" = TRUE)
 #'
 #' @export
-stopifnot <- function(..., exprObject, local, .loggit = TRUE ,echo = TRUE) {
+stopifnot <- function(..., exprObject, local, .loggit = TRUE, echo = TRUE) {
   # Since no calling function can be detected within tryCatch from base::stopifnot
   call <- if (p <- sys.parent(1L)) sys.call(p)
   # Required to avoid early (and simultaneous) evaluation of the arguments.
@@ -92,7 +100,7 @@ stopifnot <- function(..., exprObject, local, .loggit = TRUE ,echo = TRUE) {
     eval.parent(stop_call, 1L)
   }, error = function(e) {
     cond <- simpleError(message = e$message, call = call)
-    if(.loggit) loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
+    if (.loggit) loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
     signalCondition(cond = cond)
   })
 }
