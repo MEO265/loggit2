@@ -68,8 +68,13 @@ you won't notice any difference to the base functions (except that the log
 will be filled in the background).
 
 ```{r, error = TRUE}
+base::message("This is another message")
 loggit::message("This is another message", echo = FALSE)
+
+base::warning("This is another warning")
 loggit::warning("This is another warning", echo = FALSE)
+
+base::stop("This is another error")
 loggit::stop("This is another error", echo = FALSE)
 ```
 
