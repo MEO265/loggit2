@@ -32,7 +32,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
   } else {
     tryCatch({
       base::message(..., domain = domain, appendLF = appendLF)
-    }, error = function(m) {
+    }, message = function(m) {
       m <- simpleMessage(message = m$message, call = call)
       if (.loggit) loggit(log_lvl = "INFO", log_msg = m$message, echo = echo)
       # If signalCondition was used there would be no output to the console
