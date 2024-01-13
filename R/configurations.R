@@ -9,15 +9,16 @@
 #' Therefore, the default behavior is to create a file named `loggit.log` in
 #' your system's temporary directory.
 #'
-#' A suggested use of this function would be to call it early, to log to the
+#' @param logfile Absolut or relative path to log file.
+#' An attempt is made to convert the path into a canonical absolute form using [normalizePath()].
+#' If `NULL` will set to `<tmpdir>/loggit.log`.
+#' @param confirm Print confirmation of log file setting? Defaults to `TRUE`.
+#'
+#' @details A suggested use of this function would be to call it early, to log to the
 #' current working directory, as follows: `set_logfile("./loggit.log"))`.
 #' If you are using `loggit` in your package, you can wrap
 #' this function in `.onLoad()` so that the logfile is set when your package
 #' loads.
-#'
-#' @param logfile Full or relative path to log file. If not provided, will write
-#'   to `<tmpdir>/loggit.log`.
-#' @param confirm Print confirmation of log file setting? Defaults to `TRUE`.
 #'
 #' @examples set_logfile(file.path(tempdir(), "loggit.log"))
 #'

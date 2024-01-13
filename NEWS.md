@@ -1,5 +1,13 @@
 # loggit DEV
 
+## Bugfixes 
+* `set_logfile()` now attempts to convert relative paths to absolute paths.  
+  This prevents the logfile from being inadvertently changed when switching
+  (even temporarily) the Working Directory. If this unintended side effect was used
+  intentionally, the same effect can be achieved by explicitly resetting the path.
+* `set_logfile()` now correctly outputs the randomly generated temporary file as 
+  the new path in its confirmation message, when `NULL` is given as an argument.
+
 ## New features
 * New `stopifnot()` handler. 
 

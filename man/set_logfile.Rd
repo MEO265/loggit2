@@ -7,8 +7,9 @@
 set_logfile(logfile = NULL, confirm = TRUE)
 }
 \arguments{
-\item{logfile}{Full or relative path to log file. If not provided, will write
-to \verb{<tmpdir>/loggit.log}.}
+\item{logfile}{Absolut or relative path to log file.
+An attempt is made to convert the path into a canonical absolute form using \code{\link[=normalizePath]{normalizePath()}}.
+If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
 
 \item{confirm}{Print confirmation of log file setting? Defaults to \code{TRUE}.}
 }
