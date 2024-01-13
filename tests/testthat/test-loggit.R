@@ -3,23 +3,26 @@ test_that("loggit writes handler messages to file", {
   warn <- "this is a warning"
   err <- "this is an error"
   
-  expect_message(message(msg, echo = FALSE))
-  expect_warning(warning(warn, echo = FALSE))
-  expect_error(stop(err, echo = FALSE))
+  expect_message(message(msg, echo = FALSE), regexp = msg)
+  expect_warning(warning(warn, echo = FALSE), regexp = warn)
+  expect_error(stop(err, echo = FALSE), regexp = err)
   
   logs_json <- read_logs()
   
-  expect_equal(nrow(logs_json), 3)
-  expect_equal(logs_json$log_lvl, c("INFO", "WARN", "ERROR"))
-  expect_equal(logs_json$log_msg, c(msg, warn, err))
+  expect_identical(nrow(logs_json), 3L)
+  expect_identical(logs_json$log_lvl, c("INFO", "WARN", "ERROR"))
+  expect_identical(logs_json$log_msg, c(msg, warn, err))
 })
 cleanup()
 
 
 test_that("loggit custom levels behave as expected", {
-  expect_error(loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE))
+  expect_error(
+    loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE),
+    regexp = "^Nonstandard log_lvl .*"
+  )
   # There isn't really anything to test here, so just run it and let it succeed
-  loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE, custom_log_lvl = TRUE)
+  expect_no_error(loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE, custom_log_lvl = TRUE))
 })
 cleanup()
 
