@@ -1,5 +1,9 @@
 # loggit DEV
 
+## New features
+* `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
+* New `stopifnot()` handler. 
+
 ## Bugfixes 
 * `message()`, `warning()`, and `stop()` now use the same call in their messages and 
   their Condition objects as their base R equivalents and no longer give themselves as the call.  
@@ -11,10 +15,6 @@
   intentionally, the same effect can be achieved by explicitly resetting the path.
 * `set_logfile()` now correctly outputs the randomly generated temporary file as 
   the new path in its confirmation message, when `NULL` is given as an argument.
-
-## New features
-* `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
-* New `stopifnot()` handler. 
 
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.
