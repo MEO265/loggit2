@@ -24,11 +24,10 @@
 #' @export
 set_logfile <- function(logfile = NULL, confirm = TRUE) {
   if (is.null(logfile)) {
-    .config$logfile <- file.path(tempdir(), "loggit.log")
-  } else {
-    .config$logfile <- logfile
+    logfile <- file.path(tempdir(), "loggit.log")
   }
-  if (confirm) message("Log file set to ", logfile)
+  .config$logfile <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
+  if (confirm) base::message("Log file set to ", .config$logfile)
 }
 
 
@@ -65,8 +64,8 @@ get_logfile <- function() {
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {
   .config$ts_format <- ts_format
   if (confirm) {
-    message(
-      "Timestamp format set to ", ts_format, "\n",
+    base::message(
+      "Timestamp format set to ", ts_format, ".\n",
       "Current time in this format: ", format(Sys.time(), format = ts_format)
     )
   }
