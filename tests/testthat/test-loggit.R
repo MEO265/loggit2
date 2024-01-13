@@ -24,6 +24,14 @@ test_that("loggit custom levels behave as expected", {
   # There isn't really anything to test here, so just run it and let it succeed
   expect_no_error(loggit(log_lvl = "foo", log_msg = "bar", echo = FALSE, custom_log_lvl = TRUE))
 })
+
+
+test_that("loggit multiplies values with warning", {
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", value = 1:3, echo = FALSE),
+    regexp = "^Each custom log field should be of length one, or else your logs will be multiplied!$"
+  )
+})
 cleanup()
 
 
