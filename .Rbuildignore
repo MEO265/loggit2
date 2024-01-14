@@ -12,3 +12,4 @@ Makefile
 ^\.travis\.yml
 ^\.github$
 ^\.covrignore$
+^\.idea$
