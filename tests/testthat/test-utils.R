@@ -1,14 +1,24 @@
 test_that("rotate_logs works on default log file", {
-  for (i in 1:100) {
+  for (i in seq_len(100L)) {
     loggit("INFO", paste0("log_", i), echo = FALSE)
   }
-  
-  rotate_lines <- 50
-  rotate_logs(rotate_lines)
-  
+
+  rotate_lines <- 150L
+  rotate_logs(rotate_lines = rotate_lines)
   log_df <- read_logs()
+  expect_identical(nrow(log_df), 100L)
   
-  expect_true(nrow(log_df) == rotate_lines)
+  rotate_lines <- 50L
+  rotate_logs(rotate_lines = rotate_lines)
+  log_df <- read_logs()
+  expect_identical(nrow(log_df), rotate_lines)
+
+  rotate_lines <- 0L
+  rotate_logs(rotate_lines = rotate_lines)
+  log_df <- read_logs()
+  expect_identical(nrow(log_df), rotate_lines)
+
+  expect_error(rotate_logs(-1L))
 })
 cleanup()
 
@@ -25,11 +35,23 @@ test_that("rotate_logs works on non-default log file", {
   set_logfile(confirm = FALSE)
   loggit("INFO", "shouldn't be seen", echo = FALSE)
   
-  rotate_lines <- 50
-  rotate_logs(rotate_lines, other_logfile)
-  
+  rotate_lines <- 150L
+  rotate_logs(rotate_lines = rotate_lines, other_logfile)
   log_df <- read_logs(other_logfile)
-  
-  expect_true(nrow(log_df) == rotate_lines)
+  expect_identical(nrow(log_df), 100L)
+
+  rotate_lines <- 50L
+  rotate_logs(rotate_lines = rotate_lines, other_logfile)
+  log_df <- read_logs(other_logfile)
+  expect_identical(nrow(log_df), rotate_lines)
+
+  rotate_lines <- 0L
+  rotate_logs(rotate_lines = rotate_lines, other_logfile)
+  log_df <- read_logs(other_logfile)
+  expect_identical(nrow(log_df), rotate_lines)
+
+  #Check untouched log
+  log_df <- read_logs()
+  expect_identical(nrow(log_df), 1L)
 })
 cleanup()

@@ -7,6 +7,8 @@
   intentionally, the same effect can be achieved by explicitly resetting the path.
 * `set_logfile()` now correctly outputs the randomly generated temporary file as 
   the new path in its confirmation message, when `NULL` is given as an argument.
+* `rotate_logs(rotate_lines = 0L)` now empties the log as expected. 
+  Additionally, an error is thrown for negative values.
 
 ## New features
 * New `stopifnot()` handler. 
