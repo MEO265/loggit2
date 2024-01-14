@@ -54,7 +54,7 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(rotate_lines >= 0L)
   log_df <- read_logs(logfile)
-  if(nrow(log_df) <= rotate_lines) return(invisible(NULL))
-  log_df <- log_df[seq_len(rotate_lines) + nrow(log_df) - rotate_lines ,]
+  if (nrow(log_df) <= rotate_lines) return(invisible(NULL))
+  log_df <- log_df[seq.int(from = nrow(log_df) - rotate_lines + 1L, length.out = rotate_lines),]
   write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
 }
