@@ -1,5 +1,5 @@
 Package: loggit
-Title: Easy-to-use, dependencyless Logger for R
+Title: Easy-to-Use, Dependencyless Logger for R
 Description:
     An easy-to-use 'ndjson' (newline-delimited 'JSON') logger.
     It provides a set of wrappings for base R's message(), warning(), and
