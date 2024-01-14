@@ -54,7 +54,7 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(rotate_lines >= 0L)
   if (rotate_lines == 0L) {
-    cat(NULL, file = get_logfile())
+    cat(NULL, file = logfile)
     return(invisible(NULL))
   }
   log_df <- read_logs(logfile)
