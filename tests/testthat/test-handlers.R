@@ -1,12 +1,36 @@
 test_that("message works as it does in base R", {
-  expect_message(base::message("this is a message test"))
-  expect_message(message("this is also a message test", echo = FALSE))
+# message works as in base R (with echo = TRUE)
+  expect_identical_message(message(), base::message())
+  expect_identical_message(message("this is a message test"), base::message("this is a message test"))
+  expect_identical_message(message("this", "is a", "message test"), base::message("this", "is a", "message test"))
+  expect_identical_message(message("Some numbers", 3, 1:5, "!"), base::message("Some numbers", 3, 1:5, "!"))
+
+  # message works as in base R (with echo = FALSE)
+  expect_identical_message(message(echo = FALSE), base::message(), ignore_call = TRUE)
+  expect_identical_message(
+    message("this is a message test", echo = FALSE),
+    base::message("this is a message test"),
+    ignore_call = TRUE
+  )
+  expect_identical_message(
+    message("this", "is a", "message test", echo = FALSE),
+    base::message("this", "is a", "message test"),
+    ignore_call = TRUE
+  )
+  expect_identical_message(
+    message("Some numbers", c(3.12, 1L, 2L), 1:5, "!", echo = FALSE),
+    base::message("Some numbers", c(3.12, 1L, 2L), 1:5, "!"),
+    ignore_call = TRUE
+  )
 
   # Multiple args are concatenated
-  captured_output <- capture_output(
-    message("this should be ", "concatenated ", "in the log")
-  )
-  expect_true(grepl("this should be concatenated in the log", captured_output))
+  # Test looks different to get around the message() call
+  expect_output(suppressMessages(message("this should be ", "concatenated ", "in the log")))
+  expect_silent(suppressMessages(message("this should be ", "concatenated ", "in the log", echo = FALSE)))
+  logdata <- read_logs()
+  logdata <- logdata[nrow(logdata),]
+  expect_true(logdata$log_lvl == "INFO")
+  expect_true(logdata$log_msg == "this should be concatenated in the log\n")
 })
 
 cleanup()
