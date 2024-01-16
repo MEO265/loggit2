@@ -9,19 +9,32 @@ test_that("message works as it does in base R", {
   expect_true(grepl("this should be concatenated in the log", captured_output))
 })
 
+cleanup()
 
 test_that("warning works as it does in base R", {
-  expect_warning(base::warning("this is a warning test"))
-  expect_warning(warning("this is also a warning test", echo = FALSE))
+  # warning works as in base R (with echo = TRUE)
+  expect_identical_warning(warning(), base::warning())
+  expect_identical_warning(warning("this is a warning test"), base::warning("this is a warning test"))
+  expect_identical_warning(warning("this", "is a", "warning test"), base::warning("this", "is a", "warning test"))
+  expect_identical_warning(warning("Some numbers", 3, 1:5, "!"), base::warning("Some numbers", 3, 1:5, "!"))
+
+  # warning works as in base R (with echo = FALSE)
+  expect_identical_warning(warning(echo = FALSE), base::warning())
+  expect_identical_warning(warning("this is a warning test", echo = FALSE), base::warning("this is a warning test"))
+  expect_identical_warning(warning("this", "is a", "warning test", echo = FALSE), base::warning("this", "is a", "warning test"))
+  expect_identical_warning(warning("Some numbers", c(3.12, 1L, 2L), 1:5, "!", echo = FALSE), base::warning("Some numbers", c(3.12, 1L, 2L), 1:5, "!"))
 
   # Multiple args are concatenated
-  suppressWarnings(
-    captured_output <- capture_output(
-      warning("this should be ", "concatenated ", "in the log")
-    )
-  )
-  expect_true(grepl("this should be concatenated in the log", captured_output))
+  # Test looks different to get around the warning() call
+  expect_output(suppressWarnings(warning("this should be ", "concatenated ", "in the log")))
+  expect_silent(suppressWarnings(warning("this should be ", "concatenated ", "in the log", echo = FALSE)))
+  logdata <- read_logs()
+  logdata <- logdata[nrow(logdata),]
+  expect_true(logdata$log_lvl == "WARN")
+  expect_true(logdata$log_msg == "this should be concatenated in the log")
 })
+
+cleanup()
 
 
 test_that("stop works as it does in base R", {
