@@ -118,9 +118,10 @@ read_ndjson <- function(logfile, unsanitizer) {
   # List first; easier to add to dynamically
   log_df <- list()
 
-  # Split out the log data into individual pieces, which will include JSON keys
-  # AND values
-  log_kvs <- strsplit(logdata, '\\{|"|", |: |\\}')
+  # Split out the log data into individual pieces, which will include JSON keys AND values
+  logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
+  logdata <- strsplit(logdata, '", "', fixed = TRUE)
+  log_kvs <- lapply(logdata, FUN = function(x) unlist(strsplit(x, '": "', fixed = FALSE), use.names = FALSE))
 
   rowcount <- length(log_kvs)
   for (lognum in seq_len(rowcount)) {
