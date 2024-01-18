@@ -110,7 +110,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
       base::stop(..1)
     }, error = function(e) {
       if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
-      signalCondition(e)
+      base::stop(e)
     })
   } else {
     tryCatch({
