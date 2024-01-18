@@ -1,6 +1,14 @@
 # loggit DEV
 
+## New features
+* `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
+* New `stopifnot()` handler. 
+
 ## Bugfixes 
+* `message()`, `warning()`, and `stop()` now use the same call in their messages and 
+  their condition objects as their base R equivalents and no longer give themselves as the call.  
+  For `warning()` and `stop()`, there can be deviations in very rare cases, as the function that 
+  determines the call for these in base R is not provided at the R or C level, nor the necessary C header.
 * `set_logfile()` now attempts to convert relative paths to absolute paths.  
   This prevents the logfile from being inadvertently changed when switching
   (even temporarily) the Working Directory. If this unintended side effect was used
@@ -9,9 +17,6 @@
   the new path in its confirmation message, when `NULL` is given as an argument.
 * `rotate_logs(rotate_lines = 0L)` now empties the log as expected. 
   Additionally, an error is thrown for negative values.
-
-## New features
-* New `stopifnot()` handler. 
 
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.

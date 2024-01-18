@@ -64,3 +64,21 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   log_df <- log_df[seq.int(from = nrow(log_df) - rotate_lines + 1L, length.out = rotate_lines),]
   write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
 }
+
+#' Find the Call of a Parent Function in the Call Hierarchy
+#'
+#' This function is designed to inspect the call hierarchy and identify the call of a parent function.
+#' Any wrapper environments above the global R environment that some IDEs cause are ignored.
+#'
+#' @return Returns the call of the parent function, or `NULL` if no such call is found.
+# Some parts cannot be tested in testthat
+find_call <- function() {
+  parents <- sys.parents()
+  # If there are fewer than 3 calls, it means there's no parent call to return
+  if (length(parents) <= 2L) return(NULL) # nocov
+  # Ignore any wrapper environments above the global R environment
+  # For example necessary in JetBrains IDEs
+  id <- match(0L, parents)
+  if (id >= length(parents) - 1L) return(NULL) # nocov
+  return(sys.call(-2L))
+}

@@ -7,15 +7,16 @@ test_that("rotate_logs works on default log file", {
   rotate_logs(rotate_lines = rotate_lines)
   log_df <- read_logs()
   expect_identical(nrow(log_df), 100L)
-  
+
   rotate_lines <- 50L
   rotate_logs(rotate_lines = rotate_lines)
-  log_df <- read_logs()
+log_df <- read_logs()
   expect_identical(nrow(log_df), rotate_lines)
 
   rotate_lines <- 0L
   rotate_logs(rotate_lines = rotate_lines)
   log_df <- read_logs()
+
   expect_identical(nrow(log_df), rotate_lines)
 
   expect_error(rotate_logs(-1L))
@@ -26,24 +27,24 @@ cleanup()
 test_that("rotate_logs works on non-default log file", {
   other_logfile <- file.path(tempdir(), "another.log")
   set_logfile(other_logfile, confirm = FALSE)
-  
+
   for (i in 1:100) {
     loggit("INFO", paste0("log_", i), echo = FALSE)
   }
-  
+
   # Now loggit is pointing to default log file, and has a dummy message
   set_logfile(confirm = FALSE)
   loggit("INFO", "shouldn't be seen", echo = FALSE)
-  
+
   rotate_lines <- 150L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)
-  log_df <- read_logs(other_logfile)
-  expect_identical(nrow(log_df), 100L)
+  log_df <- read_logs( other_logfile)
+expect_identical(nrow(log_df), 100L)
 
   rotate_lines <- 50L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)
   log_df <- read_logs(other_logfile)
-  expect_identical(nrow(log_df), rotate_lines)
+expect_identical(nrow(log_df), rotate_lines)
 
   rotate_lines <- 0L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)

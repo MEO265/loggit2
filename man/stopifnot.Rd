@@ -4,7 +4,7 @@
 \alias{stopifnot}
 \title{Conditional Stop Function Log Handler}
 \usage{
-stopifnot(..., exprObject, local, echo = TRUE)
+stopifnot(..., exprObject, local, .loggit = TRUE, echo = TRUE)
 }
 \arguments{
 \item{...}{zero or more objects which can be coerced to character
@@ -21,6 +21,8 @@ stopifnot(..., exprObject, local, echo = TRUE)
     \code{\link[base]{environment}} in which the expressions should be
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
+
+\item{.loggit}{Should loggit function execute? Defaults to \code{TRUE}.}
 
 \item{echo}{Should loggit's log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
 }
