@@ -31,6 +31,10 @@ test_that("message works as it does in base R", {
   logdata <- logdata[nrow(logdata),]
   expect_identical(logdata$log_lvl, "INFO")
   expect_identical(logdata$log_msg, "this should be concatenated in the log\n")
+
+  # Condition is accepted as input
+  sm <- simpleMessage(message = "Test message", call = str2lang("base::print(x)"))
+  expect_identical_message(message(sm), base::message(sm))
 })
 
 cleanup()
@@ -56,6 +60,10 @@ test_that("warning works as it does in base R", {
   logdata <- logdata[nrow(logdata),]
   expect_identical(logdata$log_lvl, "WARN")
   expect_identical(logdata$log_msg, "this should be concatenated in the log")
+
+  # Condition is accepted as input
+  sw <- simpleWarning(message = "Test message", call = str2lang("base::print(x)"))
+  expect_identical_warning(warning(sw), base::warning(sw))
 })
 
 cleanup()
@@ -82,6 +90,10 @@ test_that("stop works as it does in base R", {
   logdata <- logdata[nrow(logdata),]
   expect_identical(logdata$log_lvl, "ERROR")
   expect_identical(logdata$log_msg, "this should be concatenated in the log")
+
+  # Condition is accepted as input
+  se <- simpleError(message = "Test message", call = str2lang("base::print(x)"))
+  expect_identical_error(stop(se), base::stop(se))
 })
 
 cleanup()
