@@ -6,7 +6,7 @@
 
 ## Bugfixes 
 * `message()`, `warning()`, and `stop()` now use the same call in their messages and 
-  their Condition objects as their base R equivalents and no longer give themselves as the call.  
+  their condition objects as their base R equivalents and no longer give themselves as the call.  
   For `warning()` and `stop()`, there can be deviations in very rare cases, as the function that 
   determines the call for these in base R is not provided at the R or C level, nor the necessary C header.
 * `set_logfile()` now attempts to convert relative paths to absolute paths.  
