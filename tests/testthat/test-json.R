@@ -5,11 +5,11 @@ test_that("write_logs() and read_logs() work in tandem", {
   loggit("INFO", "msg1", echo = FALSE)
   loggit("INFO", "msg2", echo = FALSE)
   loggit("INFO", "msg3", echo = FALSE)
-  loggit("INFO", "msg4", extra = "fields", echo = FALSE)
+  loggit("INFO", "msg4: should: be :displayed:", extra = "fields", echo = FALSE)
 
   log_df_want <- data.frame(
     log_lvl = "INFO",
-    log_msg = c("msg1", "msg2", "msg3", "msg4"),
+    log_msg = c("msg1", "msg2", "msg3", "msg4: should: be :displayed:"),
     extra = c("", "", "", "fields"),
     stringsAsFactors = FALSE
   )
