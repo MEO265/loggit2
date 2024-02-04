@@ -5,6 +5,8 @@
 * New `stopifnot()` handler. 
 
 ## Bugfixes 
+* `read_logs()` processes entries with `": "` correctly. 
+  Previously, entries were truncated and/or assigned to incorrect columns.
 * `message()`, `warning()`, and `stop()` now use the same call in their messages and 
   their condition objects as their base R equivalents and no longer give themselves as the call.  
   For `warning()` and `stop()`, there can be deviations in very rare cases, as the function that 
