@@ -16,7 +16,7 @@ options(width = 200)
 ```
 
 ```{r setup, include = FALSE}
-library(loggit)
+library(loggit2)
 ```
 
 `loggit` is an easy-to-use, yet powerful, [`ndjson`](https://github.com/ndjson)
