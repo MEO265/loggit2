@@ -5,9 +5,9 @@
 #' will return a data frame of the log file currently pointed to by the `loggit`
 #' functions.
 #'
-#' @param logfile Path to log file. Will default to currently-set log file.
-#' @param unsanitizer Unsanitizer function to use. For more info on sanitizers,
-#'   please see the [sanitizers] section of the package documentation.
+#' @param logfile Path to log file.
+#' @param unsanitizer [Unsanitizer function][sanitizers] to run over elements in log.
+#'   Defaults to [default_ndjson_unsanitizer()]
 #'
 #' @return A `data.frame`.
 #'
@@ -29,13 +29,8 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 #'
 #' Truncates the log file to the line count provided as `rotate_lines`.
 #'
-#' `loggit` makes no assumptions nor enforcement of calling this function; that
-#' is to say, the onus of log rotation is up to the developer.
-#'
 #' @param rotate_lines The number of log entries to keep in the logfile.
-#'   Defaults to 100,000.
-#' @param logfile Log file to truncate. Defaults to the currently-configured log
-#'   file.
+#' @param logfile Log file to truncate.
 #'
 #' @examples
 #'   # Truncate "default" log file to 100 lines
@@ -71,6 +66,8 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
 #' Any wrapper environments above the global R environment that some IDEs cause are ignored.
 #'
 #' @return Returns the call of the parent function, or `NULL` if no such call is found.
+#'
+#' @keywords internal
 # Some parts cannot be tested in testthat
 find_call <- function() {
   parents <- sys.parents()

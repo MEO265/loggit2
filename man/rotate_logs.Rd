@@ -7,18 +7,12 @@
 rotate_logs(rotate_lines = 100000L, logfile = get_logfile())
 }
 \arguments{
-\item{rotate_lines}{The number of log entries to keep in the logfile.
-Defaults to 100,000.}
+\item{rotate_lines}{The number of log entries to keep in the logfile.}
 
-\item{logfile}{Log file to truncate. Defaults to the currently-configured log
-file.}
+\item{logfile}{Log file to truncate.}
 }
 \description{
 Truncates the log file to the line count provided as \code{rotate_lines}.
-}
-\details{
-\code{loggit} makes no assumptions nor enforcement of calling this function; that
-is to say, the onus of log rotation is up to the developer.
 }
 \examples{
   # Truncate "default" log file to 100 lines

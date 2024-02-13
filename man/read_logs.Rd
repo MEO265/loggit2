@@ -7,10 +7,10 @@
 read_logs(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer)
 }
 \arguments{
-\item{logfile}{Path to log file. Will default to currently-set log file.}
+\item{logfile}{Path to log file.}
 
-\item{unsanitizer}{Unsanitizer function to use. For more info on sanitizers,
-please see the \link{sanitizers} section of the package documentation.}
+\item{unsanitizer}{\link[=sanitizers]{Unsanitizer function} to run over elements in log.
+Defaults to \code{\link[=default_ndjson_unsanitizer]{default_ndjson_unsanitizer()}}}
 }
 \value{
 A \code{data.frame}.
