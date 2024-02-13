@@ -69,6 +69,8 @@ default_ndjson_unsanitizer <- function(string) {
 #' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
 #' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
 #'   so will append new log entries to the log file.
+#'
+#' @keywords internal
 write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
 
   # logdata will be built into a character vector where each element is a valid
@@ -108,6 +110,8 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
 #' @param unsanitizer Unsanitizer function passed in from [read_logs()].
+#'
+#' @keywords internal
 #'
 #' @return A `data.frame`
 read_ndjson <- function(logfile, unsanitizer) {

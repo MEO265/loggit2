@@ -17,3 +17,4 @@ A \code{data.frame}
 \description{
 Read ndJSON-formatted log file
 }
+\keyword{internal}
