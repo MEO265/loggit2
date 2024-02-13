@@ -1,4 +1,14 @@
-#' Default sanitization for ndJSON.
+sanitizer_map <- list(
+  "{" = "__LEFTBRACE__",
+  "}" = "__RIGHTBRACE__",
+  '"' = "__DBLQUOTE__",
+  "," = "__COMMA__",
+  "\r" = "__CR__",
+  "\n" = "__LF__"
+)
+
+
+#' Sanitization for ndJSON.
 #'
 #' This is the default ndJSON sanitizer function for log data being read into
 #' the R session by [read_logs()]. This type of function is needed because since
@@ -9,7 +19,7 @@
 #' (optionally-transformed) string, where each string is an individual element
 #' of the log data.
 #'
-#' The default string patterns and their replacements are currently mapped as
+#' @details The default string patterns and their replacements are currently mapped as
 #' follows:
 #'
 #'  | Character | Replacement in log file |
@@ -32,23 +42,13 @@
 #' @return A single string.
 #'
 #' @name sanitizers
-default_ndjson_sanitizer <- function(string, sanitize = TRUE) {
-  # String map; will dispatch left-vs.-right replacement based on `sanitize` bool
-  map <- list(
-    "{" = "__LEFTBRACE__",
-    "}" = "__RIGHTBRACE__",
-    '"' = "__DBLQUOTE__",
-    "," = "__COMMA__",
-    "\r" = "__CR__",
-    "\n" = "__LF__"
-  )
+NULL
 
-  for (k in names(map)) {
-    if (sanitize) {
-      string <- gsub(k, map[k], string, fixed = TRUE)
-    } else {
-      string <- gsub(map[k], k, string, fixed = TRUE)
-    }
+
+#' @rdname sanitizers
+default_ndjson_sanitizer <- function(string) {
+  for (k in names(sanitizer_map)) {
+    string <- gsub(pattern = k, replacement =  sanitizer_map[[k]], string, fixed = TRUE)
   }
 
   string
@@ -56,7 +56,11 @@ default_ndjson_sanitizer <- function(string, sanitize = TRUE) {
 
 #' @rdname sanitizers
 default_ndjson_unsanitizer <- function(string) {
-  default_ndjson_sanitizer(string, sanitize = FALSE)
+  for (k in names(sanitizer_map)) {
+    string <- gsub(pattern = sanitizer_map[[k]], replacement = k, string, fixed = TRUE)
+  }
+
+  string
 }
 
 
@@ -114,7 +118,7 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #' @keywords internal
 #'
 #' @return A `data.frame`
-read_ndjson <- function(logfile, unsanitizer) {
+read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
 
   # Read in lines of log data
   logdata <- readLines(logfile)

@@ -4,9 +4,9 @@
 \alias{sanitizers}
 \alias{default_ndjson_sanitizer}
 \alias{default_ndjson_unsanitizer}
-\title{Default sanitization for ndJSON.}
+\title{Sanitization for ndJSON.}
 \usage{
-default_ndjson_sanitizer(string, sanitize = TRUE)
+default_ndjson_sanitizer(string)
 
 default_ndjson_unsanitizer(string)
 }
