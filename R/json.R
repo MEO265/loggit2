@@ -10,19 +10,15 @@ sanitizer_map <- list(
 
 #' Sanitization for ndJSON.
 #'
-#' This is the default ndJSON sanitizer function for log data being read into
-#' the R session by [read_logs()]. This type of function is needed because since
-#' `loggit` reimplements its own string-based JSON parser, and not a fancy one
-#' built from an AST or something, it's very easy to have bad patterns break
-#' your logs. You may also specify your own sanitizer function to pass to
-#' [loggit()], which takes a single string and returns an
-#' (optionally-transformed) string, where each string is an individual element
-#' of the log data.
+#' *Sanitizers* and *unsanitizers* are functions, with one parameter, that convert a character vector into another.
+#' Associated *sanitizer* and *unsanitizer* should be constructed in such a way that the concatenation
+#' `unsanitizer(sanitizer())` corresponds to the identity function.
 #'
-#' @details The default string patterns and their replacements are currently mapped as
-#' follows:
 #'
-#'  | Character | Replacement in log file |
+#' @details
+#' The default sanatizer and unsanatizer are based on the following mapping:
+#'
+#'  | Character | Replacement |
 #'  |:--------- | :---------------------- |
 #'  | `{`       | `__LEFTBRACE__`         |
 #'  | `}`       | `__RIGHTBRACE__`        |
@@ -31,15 +27,12 @@ sanitizer_map <- list(
 #'  | `\r`      | `__CR__`                |
 #'  | `\n`      | `__LF__`                |
 #'
-#' @param string Each element of the log data to operate on. Note that this is
-#'   *each element*, not each line in the logs. For example, each entry in the
-#'   `log_msg` field across all logs will be sanitized/unsanitized individually.
-#'   This is important because if writing your own sanitizer function, it must
-#'   ***take and return a single string*** as its argument.
-#' @param sanitize Whether the operation will sanitize, or unsanitize the log
-#'   data. Defaults to `TRUE`, for sanitization on write.
+#' This type of function is needed because because some characters in a JSON cannot appear unescaped and
+#' since `loggit` reimplements its own very simple string-based JSON parser.
 #'
-#' @return A single string.
+#' @param string A character vector
+#'
+#' @return A character vector
 #'
 #' @name sanitizers
 NULL
