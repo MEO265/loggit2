@@ -1,9 +1,6 @@
 #' Return log file as an R data frame
 #'
-#' This function returns a `data.frame` containing all the logs in the provided
-#' `ndjson` log file. If no explicit log file is provided, calling this function
-#' will return a data frame of the log file currently pointed to by the `loggit`
-#' functions.
+#' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
 #' @param logfile Path to log file.
 #' @param unsanitizer [Unsanitizer function][sanitizers] to run over elements in log.

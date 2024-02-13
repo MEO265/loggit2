@@ -16,10 +16,7 @@ Defaults to \code{\link[=default_ndjson_unsanitizer]{default_ndjson_unsanitizer(
 A \code{data.frame}.
 }
 \description{
-This function returns a \code{data.frame} containing all the logs in the provided
-\code{ndjson} log file. If no explicit log file is provided, calling this function
-will return a data frame of the log file currently pointed to by the \code{loggit}
-functions.
+This function returns a \code{data.frame} containing all the logs in the provided \code{ndjson} log file.
 }
 \examples{
   set_logfile(file.path(tempdir(), "loggit.log"), confirm = FALSE)
