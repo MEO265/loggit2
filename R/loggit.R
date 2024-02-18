@@ -1,34 +1,17 @@
 #' Log entries to file
 #'
-#' This function executes immediately before the function definitions for the
-#' base handler functions ([message][base::message], [warning][base::warning],
-#' and [stop][base::stop], and logs their timestamped output (a bit more
-#' verbosely) to a log file. The log file is an
-#' [ndjson](https://github.com/ndjson) file, which is a portable, JSON-based
-#' format that is easily parsed by many line-processing systems.
+#' Log entries to a [ndjson](https://github.com/ndjson) log file, defined by [set_logfile()].
 #'
-#' @param log_lvl Level of log output. In actual practice, one of "DEBUG",
-#'   "INFO", "WARN", and "ERROR" are common, but any string may be supplied if
-#'   `custom_log_lvl` is TRUE. Will be coerced to class `character`.
+#' @param log_lvl Log level coerceable to `character`. For details see parameter `custom_log_lvl`.
 #' @param log_msg Main log message. Will be coerced to class `character`.
-#' @param ... A named `list` or named `vector` (each element of length one) of
-#'   other custom fields you wish to log. You do not need to explicitly provide
-#'   these fields as a formal list or vector, as shown in the example; R handles
-#'   the coercion.
+#' @param ... Named arguments, each a atomic vector of length one, you wish to log.
+#'   The names of the arguments are treated as column names in the log.
 #' @param echo Should the log file entry be printed to the console as well?
-#'   Defaults to `TRUE`, and will print out the `ndjson` line to be logged. This
-#'   argument is passed as `FALSE` when called from `loggit`'s handlers, since
-#'   they still call base R's handlers at the end of execution, all of which
-#'   print to the console as well.
+#'   Defaults to `TRUE`.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN",
-#'   and "ERROR"? Defaults to `FALSE`, to prevent possible typos by the
-#'   developer, and to limit the variation in structured log contents. Overall,
-#'   setting this to `TRUE`` is not recommended, but is an option for
-#'   consistency with other frameworks the user may work with.
-#' @param sanitizer Sanitizer function to run over elements in log data. The
-#'   default sanitizer, if not specified, is [default_ndjson_sanitizer()]. See
-#'   the [sanitizers] documentation for information on how to write your own
-#'   (un)sanitizer functions.
+#'   and "ERROR"? Defaults to `FALSE`.
+#' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
+#'   Defaults to [default_ndjson_sanitizer()].
 #'
 #' @examples
 #'   loggit("INFO", "This is a message", but_maybe = "you want more fields?",

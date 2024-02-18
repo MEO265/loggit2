@@ -4,39 +4,26 @@
 \alias{sanitizers}
 \alias{default_ndjson_sanitizer}
 \alias{default_ndjson_unsanitizer}
-\title{Default sanitization for ndJSON.}
+\title{Sanitization for ndJSON.}
 \usage{
-default_ndjson_sanitizer(string, sanitize = TRUE)
+default_ndjson_sanitizer(string)
 
 default_ndjson_unsanitizer(string)
 }
 \arguments{
-\item{string}{Each element of the log data to operate on. Note that this is
-\emph{each element}, not each line in the logs. For example, each entry in the
-\code{log_msg} field across all logs will be sanitized/unsanitized individually.
-This is important because if writing your own sanitizer function, it must
-\emph{\strong{take and return a single string}} as its argument.}
-
-\item{sanitize}{Whether the operation will sanitize, or unsanitize the log
-data. Defaults to \code{TRUE}, for sanitization on write.}
+\item{string}{A character vector}
 }
 \value{
-A single string.
+A character vector
 }
 \description{
-This is the default ndJSON sanitizer function for log data being read into
-the R session by \code{\link[=read_logs]{read_logs()}}. This type of function is needed because since
-\code{loggit} reimplements its own string-based JSON parser, and not a fancy one
-built from an AST or something, it's very easy to have bad patterns break
-your logs. You may also specify your own sanitizer function to pass to
-\code{\link[=loggit]{loggit()}}, which takes a single string and returns an
-(optionally-transformed) string, where each string is an individual element
-of the log data.
+\emph{Sanitizers} and \emph{unsanitizers} are functions, with one parameter, that convert a character vector into another.
+Associated \emph{sanitizer} and \emph{unsanitizer} should be constructed in such a way that the concatenation
+\code{unsanitizer(sanitizer())} corresponds to the identity function.
 }
 \details{
-The default string patterns and their replacements are currently mapped as
-follows:\tabular{ll}{
-   Character \tab Replacement in log file \cr
+The default sanatizer and unsanatizer are based on the following mapping:\tabular{ll}{
+   Character \tab Replacement \cr
    \verb{\{} \tab \verb{__LEFTBRACE__} \cr
    \verb{\}} \tab \verb{__RIGHTBRACE__} \cr
    \verb{"} \tab \verb{__DBLQUOTE__} \cr
@@ -44,4 +31,8 @@ follows:\tabular{ll}{
    \verb{\\r} \tab \verb{__CR__} \cr
    \verb{\\n} \tab \verb{__LF__} \cr
 }
+
+
+This type of function is needed because because some characters in a JSON cannot appear unescaped and
+since \code{loggit} reimplements its own very simple string-based JSON parser.
 }

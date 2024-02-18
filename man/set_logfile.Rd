@@ -14,17 +14,11 @@ If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
 \item{confirm}{Print confirmation of log file setting? Defaults to \code{TRUE}.}
 }
 \description{
-Set the log file that loggit will write to. No logs outside of a temporary
-directory will be written until this is set explicitly, as per CRAN policy.
-Therefore, the default behavior is to create a file named \code{loggit.log} in
-your system's temporary directory.
+Set the log file that loggit will write to.
 }
 \details{
-A suggested use of this function would be to call it early, to log to the
-current working directory, as follows: \verb{set_logfile("./loggit.log"))}.
-If you are using \code{loggit} in your package, you can wrap
-this function in \code{.onLoad()} so that the logfile is set when your package
-loads.
+No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
+Therefore, the default behavior is to create a file named \code{loggit.log} in your system's temporary directory.
 }
 \examples{
 set_logfile(file.path(tempdir(), "loggit.log"))

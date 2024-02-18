@@ -4,7 +4,7 @@
 \alias{read_ndjson}
 \title{Read ndJSON-formatted log file}
 \usage{
-read_ndjson(logfile, unsanitizer)
+read_ndjson(logfile, unsanitizer = default_ndjson_unsanitizer)
 }
 \arguments{
 \item{logfile}{Log file to read from, and convert to a \code{data.frame}.}
@@ -17,3 +17,4 @@ A \code{data.frame}
 \description{
 Read ndJSON-formatted log file
 }
+\keyword{internal}

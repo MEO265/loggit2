@@ -23,6 +23,12 @@
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.
   This ensures that the confirmations no longer interfere with the log via echo.
+* `default ndjson sanitizer()`, which was not exported but is visible in the documentation, 
+  now follows the rules for sanitizer
+
+## Documentation
+* Functions that were only for internal use (and were not exported) were marked as such
+  and are no longer visible in the index
 
 ## Other:
 * The maintainership of `loggit` has been transferred from "Ryan Price" to "Matthias Ollech"

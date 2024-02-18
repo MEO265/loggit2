@@ -21,3 +21,4 @@ so will append new log entries to the log file.}
 \description{
 Write ndJSON-formatted log file
 }
+\keyword{internal}

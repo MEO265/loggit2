@@ -14,41 +14,24 @@ loggit(
 )
 }
 \arguments{
-\item{log_lvl}{Level of log output. In actual practice, one of "DEBUG",
-"INFO", "WARN", and "ERROR" are common, but any string may be supplied if
-\code{custom_log_lvl} is TRUE. Will be coerced to class \code{character}.}
+\item{log_lvl}{Log level coerceable to \code{character}. For details see parameter \code{custom_log_lvl}.}
 
 \item{log_msg}{Main log message. Will be coerced to class \code{character}.}
 
-\item{...}{A named \code{list} or named \code{vector} (each element of length one) of
-other custom fields you wish to log. You do not need to explicitly provide
-these fields as a formal list or vector, as shown in the example; R handles
-the coercion.}
+\item{...}{Named arguments, each a atomic vector of length one, you wish to log.
+The names of the arguments are treated as column names in the log.}
 
 \item{echo}{Should the log file entry be printed to the console as well?
-Defaults to \code{TRUE}, and will print out the \code{ndjson} line to be logged. This
-argument is passed as \code{FALSE} when called from \code{loggit}'s handlers, since
-they still call base R's handlers at the end of execution, all of which
-print to the console as well.}
+Defaults to \code{TRUE}.}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN",
-and "ERROR"? Defaults to \code{FALSE}, to prevent possible typos by the
-developer, and to limit the variation in structured log contents. Overall,
-setting this to `TRUE`` is not recommended, but is an option for
-consistency with other frameworks the user may work with.}
+and "ERROR"? Defaults to \code{FALSE}.}
 
-\item{sanitizer}{Sanitizer function to run over elements in log data. The
-default sanitizer, if not specified, is \code{\link[=default_ndjson_sanitizer]{default_ndjson_sanitizer()}}. See
-the \link{sanitizers} documentation for information on how to write your own
-(un)sanitizer functions.}
+\item{sanitizer}{\link[=sanitizers]{Sanitizer function} to run over elements in log data.
+Defaults to \code{\link[=default_ndjson_sanitizer]{default_ndjson_sanitizer()}}.}
 }
 \description{
-This function executes immediately before the function definitions for the
-base handler functions (\link[base:message]{message}, \link[base:warning]{warning},
-and \link[base:stop]{stop}, and logs their timestamped output (a bit more
-verbosely) to a log file. The log file is an
-\href{https://github.com/ndjson}{ndjson} file, which is a portable, JSON-based
-format that is easily parsed by many line-processing systems.
+Log entries to a \href{https://github.com/ndjson}{ndjson} log file, defined by \code{\link[=set_logfile]{set_logfile()}}.
 }
 \examples{
   loggit("INFO", "This is a message", but_maybe = "you want more fields?",
