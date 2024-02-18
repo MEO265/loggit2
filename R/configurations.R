@@ -4,21 +4,15 @@
 
 #' Set Log File
 #'
-#' Set the log file that loggit will write to. No logs outside of a temporary
-#' directory will be written until this is set explicitly, as per CRAN policy.
-#' Therefore, the default behavior is to create a file named `loggit.log` in
-#' your system's temporary directory.
+#' Set the log file that loggit will write to.
 #'
 #' @param logfile Absolut or relative path to log file.
 #' An attempt is made to convert the path into a canonical absolute form using [normalizePath()].
 #' If `NULL` will set to `<tmpdir>/loggit.log`.
 #' @param confirm Print confirmation of log file setting? Defaults to `TRUE`.
 #'
-#' @details A suggested use of this function would be to call it early, to log to the
-#' current working directory, as follows: `set_logfile("./loggit.log"))`.
-#' If you are using `loggit` in your package, you can wrap
-#' this function in `.onLoad()` so that the logfile is set when your package
-#' loads.
+#' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
+#' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
 #'
 #' @examples set_logfile(file.path(tempdir(), "loggit.log"))
 #'
@@ -46,9 +40,10 @@ get_logfile <- function() {
 
 #' Set Timestamp Format
 #'
-#' Set timestamp format for use in output logs. This function performs no time
-#' format validations, but will echo out the current time in the provided format
-#' for manual validation.
+#' Set timestamp format for use in output logs.
+#'
+#' @details This function performs no time format validations, but will echo out the current time in
+#' the provided format for manual validation.
 #'
 #' This function provides no means of setting a timezone, and instead relies on
 #' the host system's time configuration to provide this. This is to enforce

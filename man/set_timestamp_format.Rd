@@ -14,11 +14,12 @@ set_timestamp_format(ts_format = "\%Y-\%m-\%dT\%H:\%M:\%S\%z", confirm = TRUE)
 \code{TRUE}.}
 }
 \description{
-Set timestamp format for use in output logs. This function performs no time
-format validations, but will echo out the current time in the provided format
-for manual validation.
+Set timestamp format for use in output logs.
 }
 \details{
+This function performs no time format validations, but will echo out the current time in
+the provided format for manual validation.
+
 This function provides no means of setting a timezone, and instead relies on
 the host system's time configuration to provide this. This is to enforce
 consistency across software running on the host.
