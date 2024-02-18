@@ -11,7 +11,7 @@ test_that("test logfile configuration", {
     set_logfile(old, confirm = TRUE),
     regexp = "^Log file set to .*\n$"
   )
-  expect_identical(get_logfile(), expected = normalizePath(old, mustWork = FALSE))
+  expect_identical(get_logfile(), expected = normalizePath(old, mustWork = FALSE, winslash = "/"))
 })
 
 cleanup()
