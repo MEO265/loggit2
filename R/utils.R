@@ -44,7 +44,7 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 #'
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
-  base::stopifnot(rotate_lines >= 0L)
+  base::stopifnot(rotate_lines >= 0L, "Log file does not exist" = file.exists(logfile))
   if (rotate_lines == 0L) {
     cat(NULL, file = logfile)
     return(invisible(NULL))

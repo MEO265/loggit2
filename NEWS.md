@@ -3,6 +3,7 @@
 ## New features
 * `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
 * New `stopifnot()` handler. 
+* `set_logfile()` has a new argument `create` that allows the user to create the file if it does not exist.
 
 ## Bugfixes 
 * `read_logs()` processes entries with `": "` correctly. 

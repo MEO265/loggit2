@@ -10,6 +10,7 @@
 #' An attempt is made to convert the path into a canonical absolute form using [normalizePath()].
 #' If `NULL` will set to `<tmpdir>/loggit.log`.
 #' @param confirm Print confirmation of log file setting? Defaults to `TRUE`.
+#' @param create Create the log file if it does not exist? Defaults to `TRUE`.
 #'
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
@@ -17,10 +18,11 @@
 #' @examples set_logfile(file.path(tempdir(), "loggit.log"))
 #'
 #' @export
-set_logfile <- function(logfile = NULL, confirm = TRUE) {
+set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
+  if(create && !file.exists(logfile)) file.create(logfile)
   .config$logfile <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
   if (confirm) base::message("Log file set to ", .config$logfile)
 }
