@@ -4,7 +4,7 @@
 \alias{set_logfile}
 \title{Set Log File}
 \usage{
-set_logfile(logfile = NULL, confirm = TRUE)
+set_logfile(logfile = NULL, confirm = TRUE, create = TRUE)
 }
 \arguments{
 \item{logfile}{Absolut or relative path to log file.
@@ -12,6 +12,8 @@ An attempt is made to convert the path into a canonical absolute form using \cod
 If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
 
 \item{confirm}{Print confirmation of log file setting? Defaults to \code{TRUE}.}
+
+\item{create}{Create the log file if it does not exist? Defaults to \code{TRUE}.}
 }
 \description{
 Set the log file that loggit will write to.
