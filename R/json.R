@@ -10,7 +10,8 @@ sanitizer_map <- list(
 
 #' Sanitization for ndJSON.
 #'
-#' *Sanitizers* and *unsanitizers* are functions, with one parameter, that convert a character vector into another.
+#' *Sanitizers* and *unsanitizers* are functions, with one parameter, that convert a
+#' character vector (of any length) into another (of the same length).
 #' Associated *sanitizer* and *unsanitizer* should be constructed in such a way that the concatenation
 #' `unsanitizer(sanitizer())` corresponds to the identity function.
 #'
