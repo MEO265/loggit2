@@ -7,7 +7,7 @@
 get_logfile()
 }
 \description{
-Return the log file that loggit will write to.
+Return the log file that \code{loggit()} will write to.
 }
 \examples{
 get_logfile()

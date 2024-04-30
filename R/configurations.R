@@ -30,7 +30,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
 
 #' Get Log File
 #'
-#' Return the log file that loggit will write to.
+#' Return the log file that `loggit()` will write to.
 #'
 #' @examples get_logfile()
 #'

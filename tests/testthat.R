@@ -1,4 +1,4 @@
 library(testthat)
-library(loggit)
+library(loggit2)
 
-test_check("loggit")
+test_check("loggit2")

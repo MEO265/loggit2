@@ -34,5 +34,5 @@ The default sanatizer and unsanatizer are based on the following mapping:\tabula
 
 
 This type of function is needed because because some characters in a JSON cannot appear unescaped and
-since \code{loggit} reimplements its own very simple string-based JSON parser.
+since \code{loggit2} reimplements its own very simple string-based JSON parser.
 }
