@@ -1,4 +1,4 @@
-# loggit2 2.2.0
+# loggit2 2.2.1
 
 ## Breaking changes
 * Custom sanitizers and unsanitizers must be able to process character vectors. 
@@ -28,16 +28,14 @@
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.
   This ensures that the confirmations no longer interfere with the log via echo.
-* `default ndjson sanitizer()`, which was not exported but is visible in the documentation, 
+* `default_ndjson_sanitizer()`, which was not exported but is visible in the documentation, 
   now follows the rules for sanitizer
 
 ## Documentation
 * Functions that were only for internal use (and were not exported) were marked as such
   and are no longer visible in the index
 
-## Fork:
+## Fork
 * The name changed from `loggit` to `loggit2`
 * The maintainership has been transferred from "Ryan Price" to "Matthias Ollech"
-
-# Previous versions 
-For older versions, see Ryan Price's `loggit` package
+* For news of older versions, see Ryan Price's `loggit` package
