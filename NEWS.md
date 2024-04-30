@@ -1,6 +1,6 @@
 # loggit2 DEV
 
-# Breaking changes
+## Breaking changes
 * Custom sanitizers and unsanitizers must be able to process character vectors. 
   Previously, only the processing of vectors of length one was explicitly required.
 
