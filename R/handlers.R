@@ -5,8 +5,8 @@
 #'
 #' @inherit base::message params return
 #'
-#' @param .loggit Should loggit function execute? Defaults to `TRUE`.
-#' @param echo Should loggit's log entry be echoed to the console, as well? Defaults to `TRUE`.
+#' @param .loggit Should `loggit()` execute? Defaults to `TRUE`.
+#' @param echo Should `loggit()`'s log entry be echoed to the console, as well? Defaults to `TRUE`.
 #'
 #' @family handlers
 #'
@@ -17,7 +17,7 @@
 message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the message must be set manually
-  # to avoid loggit::message being displayed as a call
+  # to avoid loggit2::message being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
   call <- sys.call()
 
@@ -60,7 +60,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
                     domain = NULL, .loggit = TRUE, echo = TRUE) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the warning must be set manually
-  # to avoid loggit::warning being displayed as a call
+  # to avoid loggit2::warning being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
   call <- find_call()
 
@@ -101,7 +101,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the error must be set manually
-  # to avoid loggit::stop being displayed as a call
+  # to avoid loggit2::stop being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
   call <- find_call()
 

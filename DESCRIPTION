@@ -1,4 +1,4 @@
-Package: loggit
+Package: loggit2
 Title: Easy-to-Use, Dependencyless Logger for R
 Description:
     An easy-to-use 'ndjson' (newline-delimited 'JSON') logger.
@@ -18,8 +18,8 @@ Suggests:
     knitr (>= 1.19),
     rmarkdown (>= 1.8),
     testthat (>= 3.0.0)
-URL: https://github.com/MEO265/loggit
-BugReports: https://github.com/MEO265/loggit/issues
+URL: https://github.com/MEO265/loggit2
+BugReports: https://github.com/MEO265/loggit2/issues
 RoxygenNote: 7.3.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

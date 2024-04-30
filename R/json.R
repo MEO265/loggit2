@@ -28,7 +28,7 @@ sanitizer_map <- list(
 #'  | `\n`      | `__LF__`                |
 #'
 #' This type of function is needed because because some characters in a JSON cannot appear unescaped and
-#' since `loggit` reimplements its own very simple string-based JSON parser.
+#' since `loggit2` reimplements its own very simple string-based JSON parser.
 #'
 #' @param string A character vector
 #'

@@ -22,9 +22,9 @@ stopifnot(..., exprObject, local, .loggit = TRUE, echo = TRUE)
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
 
-\item{.loggit}{Should loggit function execute? Defaults to \code{TRUE}.}
+\item{.loggit}{Should \code{loggit()} execute? Defaults to \code{TRUE}.}
 
-\item{echo}{Should loggit's log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
+\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
 }
 \value{
 (\code{\link[base]{NULL}} if all statements in \code{\dots} are \code{TRUE}.)
