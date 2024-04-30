@@ -1,4 +1,4 @@
-# loggit2 DEV
+# loggit2 2.2.0
 
 ## Breaking changes
 * Custom sanitizers and unsanitizers must be able to process character vectors. 
