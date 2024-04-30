@@ -17,7 +17,8 @@ default_ndjson_unsanitizer(string)
 A character vector
 }
 \description{
-\emph{Sanitizers} and \emph{unsanitizers} are functions, with one parameter, that convert a character vector into another.
+\emph{Sanitizers} and \emph{unsanitizers} are functions, with one parameter, that convert a
+character vector (of any length) into another (of the same length).
 Associated \emph{sanitizer} and \emph{unsanitizer} should be constructed in such a way that the concatenation
 \code{unsanitizer(sanitizer())} corresponds to the identity function.
 }

@@ -1,5 +1,9 @@
 # loggit2 DEV
 
+# Breaking changes
+* Custom sanitizers and unsanitizers must be able to process character vectors. 
+  Previously, only the processing of vectors of length one was explicitly required.
+
 ## New features
 * `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
 * New `stopifnot()` handler. 
