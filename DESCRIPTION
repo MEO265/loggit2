@@ -7,7 +7,7 @@ Description:
     the handler message to an 'ndjson' log file.
     No change in existing code is necessary to use this package, and should
     only require additions to fully leverage the power of the logging system.
-Version: 2.1.1.9999
+Version: 2.2.0
 Authors@R: c(
     person("Matthias", "Ollech", role = c("cre", "aut"), email = "ollech@gmx.com"),
     person("Ryan", "Price", role = c("fnd", "aut"))
