@@ -49,7 +49,7 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- read_logs(logfile)
+  log_df <- read_logs(logfile, unsanitizer = identity)
   if (nrow(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }
