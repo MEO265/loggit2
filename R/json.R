@@ -42,7 +42,7 @@ NULL
 #' @rdname sanitizers
 default_ndjson_sanitizer <- function(string) {
   for (k in names(sanitizer_map)) {
-    string <- gsub(pattern = k, replacement =  sanitizer_map[[k]], string, fixed = TRUE)
+    string <- gsub(pattern = k, replacement = sanitizer_map[[k]], string, fixed = TRUE)
   }
 
   # Explicit NAs must be marked so that no new ones are inserted when rotating the log
@@ -72,9 +72,16 @@ default_ndjson_unsanitizer <- function(string) {
 #' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
 #' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
 #'   so will append new log entries to the log file.
+#' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
+#'   Defaults to [default_ndjson_sanitizer()].
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE,
+                         sanitizer = default_ndjson_sanitizer) {
+
+  for (field in colnames(log_df)) {
+    log_df[, field] <- sanitizer(log_df[, field])
+  }
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
