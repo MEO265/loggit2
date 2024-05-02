@@ -11,6 +11,9 @@ rotate_logs(rotate_lines = 100000L, logfile = get_logfile())
 
 \item{logfile}{Log file to truncate.}
 }
+\value{
+Invisible \code{NULL}.
+}
 \description{
 Truncates the log file to the line count provided as \code{rotate_lines}.
 }

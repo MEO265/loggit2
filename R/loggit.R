@@ -13,6 +13,8 @@
 #' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
 #'   Defaults to [default_ndjson_sanitizer()].
 #'
+#' @return Invisible `NULL`.
+#'
 #' @examples
 #'   loggit("INFO", "This is a message", but_maybe = "you want more fields?",
 #'   sure = "why not?", like = 2, or = 10, what = "ever")

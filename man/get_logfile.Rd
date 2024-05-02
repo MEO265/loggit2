@@ -6,6 +6,9 @@
 \usage{
 get_logfile()
 }
+\value{
+The log file path.
+}
 \description{
 Return the log file that \code{loggit()} will write to.
 }

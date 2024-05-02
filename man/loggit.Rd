@@ -30,6 +30,9 @@ and "ERROR"? Defaults to \code{FALSE}.}
 \item{sanitizer}{\link[=sanitizers]{Sanitizer function} to run over elements in log data.
 Defaults to \code{\link[=default_ndjson_sanitizer]{default_ndjson_sanitizer()}}.}
 }
+\value{
+Invisible \code{NULL}.
+}
 \description{
 Log entries to a \href{https://github.com/ndjson}{ndjson} log file, defined by \code{\link[=set_logfile]{set_logfile()}}.
 }
