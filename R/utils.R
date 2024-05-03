@@ -99,7 +99,7 @@ find_call <- function() {
 convert_to_csv <- function (file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
   log <- read_logs(logfile = logfile)
 
-  if(!remove_message_lf) {
+  if(remove_message_lf) {
     msg_flag <- log$log_lvl == "INFO"
     msg <- log$log_msg[msg_flag]
     log$log_msg[msg_flag] <- gsub("\n$", "", msg)
