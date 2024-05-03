@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-options(width = 150)
+old <- options(width = 150)
 ```
 
 Easy-to-use, dependencyless Logger for R
@@ -105,6 +105,10 @@ or, get the latest development version from GitHub via
 
 Acknowledgments
 -----------
-This package is based on the [eponymous package by Ryan Price](https://github.com/ryapric/loggit2), specifically version 2.1.1.
+This package is based on the [eponymous package by Ryan Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
 
-Due to technical reasons, this repository is not a GitHub fork of [Ryan's repository](https://github.com/ryapric/loggit2).
+Due to technical reasons, this repository is not a GitHub fork of [Ryan's repository](https://github.com/ryapric/loggit).
+
+```{r, include = FALSE}
+options(old)
+```

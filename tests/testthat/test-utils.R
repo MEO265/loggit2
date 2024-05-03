@@ -10,7 +10,7 @@ test_that("rotate_logs works on default log file", {
 
   rotate_lines <- 50L
   rotate_logs(rotate_lines = rotate_lines)
-log_df <- read_logs()
+  log_df <- read_logs()
   expect_identical(nrow(log_df), rotate_lines)
 
   rotate_lines <- 0L
@@ -38,13 +38,13 @@ test_that("rotate_logs works on non-default log file", {
 
   rotate_lines <- 150L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)
-  log_df <- read_logs( other_logfile)
-expect_identical(nrow(log_df), 100L)
+  log_df <- read_logs(other_logfile)
+  expect_identical(nrow(log_df), 100L)
 
   rotate_lines <- 50L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)
   log_df <- read_logs(other_logfile)
-expect_identical(nrow(log_df), rotate_lines)
+  expect_identical(nrow(log_df), rotate_lines)
 
   rotate_lines <- 0L
   rotate_logs(rotate_lines = rotate_lines, other_logfile)
@@ -56,3 +56,17 @@ expect_identical(nrow(log_df), rotate_lines)
   expect_identical(nrow(log_df), 1L)
 })
 cleanup()
+
+test_that("rotate_logs preserves sanitization", {
+
+  tmp_log <- file.path(tempdir(), "test.loggit")
+  file.copy("testdata/test.loggit", tmp_log)
+  on.exit(file.remove(tmp_log))
+
+  bevor <- read_logs(tmp_log)
+
+  rotate_lines <- 3L
+  rotate_logs(rotate_lines = rotate_lines, logfile = tmp_log)
+  expect_snapshot_file(tmp_log)
+
+})

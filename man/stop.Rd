@@ -21,6 +21,9 @@ stop(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE)
 
 \item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
 }
+\value{
+No return value.
+}
 \description{
 This function is identical to base R's \code{\link[base:stop]{stop}},
 but it includes logging of the exception message via \code{loggit()}.

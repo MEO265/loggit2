@@ -15,6 +15,8 @@
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
 #'
+#' @return Invisible `NULL`.
+#'
 #' @examples set_logfile(file.path(tempdir(), "loggit.log"))
 #'
 #' @export
@@ -22,15 +24,18 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  if(create && !file.exists(logfile)) file.create(logfile)
+  if (create && !file.exists(logfile)) file.create(logfile)
   .config$logfile <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
   if (confirm) base::message("Log file set to ", .config$logfile)
+  invisible(NULL)
 }
 
 
 #' Get Log File
 #'
 #' Return the log file that `loggit()` will write to.
+#'
+#' @return The log file path.
 #'
 #' @examples get_logfile()
 #'
@@ -56,6 +61,8 @@ get_logfile <- function() {
 #' @param confirm Print confirmation message of timestamp format? Defaults to
 #'   `TRUE`.
 #'
+#' @return Invisible `NULL`.
+#'
 #' @examples set_timestamp_format("%Y-%m-%d %H:%M:%S")
 #'
 #' @export
@@ -67,12 +74,15 @@ set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TR
       "Current time in this format: ", format(Sys.time(), format = ts_format)
     )
   }
+  invisible(NULL)
 }
 
 
 #' Get Timestamp Format
 #'
 #' Get timestamp format for use in output logs.
+#'
+#' @return The timestamp format.
 #'
 #' @examples get_timestamp_format()
 #'

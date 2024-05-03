@@ -3,10 +3,12 @@
 #' This function is identical to base R's [`message`][base::message],
 #' but it includes logging of the exception message via `loggit()`.
 #'
-#' @inherit base::message params return
+#' @inherit base::message params
 #'
 #' @param .loggit Should `loggit()` execute? Defaults to `TRUE`.
 #' @param echo Should `loggit()`'s log entry be echoed to the console, as well? Defaults to `TRUE`.
+#'
+#' @return Invisible `NULL`.
 #'
 #' @family handlers
 #'
@@ -91,6 +93,8 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #'
 #' @inherit base::stop params
 #' @inheritParams message
+#'
+#' @return No return value.
 #'
 #' @family handlers
 #'

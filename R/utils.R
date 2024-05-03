@@ -29,6 +29,8 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 #' @param rotate_lines The number of log entries to keep in the logfile.
 #' @param logfile Log file to truncate.
 #'
+#' @return Invisible `NULL`.
+#'
 #' @examples
 #'   # Truncate "default" log file to 100 lines
 #'   set_logfile()
@@ -49,7 +51,7 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- read_logs(logfile)
+  log_df <- read_logs(logfile, unsanitizer = identity)
   if (nrow(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }

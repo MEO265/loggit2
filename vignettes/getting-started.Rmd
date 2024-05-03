@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-options(width = 200)
+old <- options(width = 200)
 ```
 
 ```{r setup, include = FALSE}
@@ -143,3 +143,6 @@ can wrap this in a call to `.onLoad()`, so that logging is set on package
 load. If not, then make the set call as soon as possible (e.g. at the top of
 your script(s), right after your calls to `library()`); otherwise, no logs
 will be written to persistent storage!
+```{r, include = FALSE}
+options(old)
+```

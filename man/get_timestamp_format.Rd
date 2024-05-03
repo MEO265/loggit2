@@ -6,6 +6,9 @@
 \usage{
 get_timestamp_format()
 }
+\value{
+The timestamp format.
+}
 \description{
 Get timestamp format for use in output logs.
 }
