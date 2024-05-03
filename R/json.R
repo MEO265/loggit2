@@ -45,6 +45,9 @@ default_ndjson_sanitizer <- function(string) {
     string <- gsub(pattern = k, replacement =  sanitizer_map[[k]], string, fixed = TRUE)
   }
 
+  # Explicit NAs must be marked so that no new ones are inserted when rotating the log
+  string[is.na(string)] <- "__NA__"
+
   string
 }
 
@@ -53,6 +56,8 @@ default_ndjson_unsanitizer <- function(string) {
   for (k in names(sanitizer_map)) {
     string <- gsub(pattern = sanitizer_map[[k]], replacement = k, string, fixed = TRUE)
   }
+
+  string[string == "__NA__"] <- NA_character_
 
   string
 }
@@ -136,9 +141,9 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
       # is the corresponding key.
       if (logfieldnum %% 2L == 0L) {
         colname <- rowdata[logfieldnum - 1L]
-        # If the field doesn't exist, create it with the right length
+        # If the field doesn't exist, create it (filled with NAs) with the right length
         if (!(colname %in% names(log_df))) {
-          log_df[[colname]] <- character(length = rowcount)
+          log_df[[colname]] <- rep(NA_character_, length = rowcount)
         }
         # Unsanitize text, and store to df
         rowdata[logfieldnum] <- unsanitizer(rowdata[logfieldnum])

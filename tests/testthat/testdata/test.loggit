@@ -1,0 +1,6 @@
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_1", "extra": "extra"}
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_96"}
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_97"}
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_98"}
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_99"}
+{"timestamp": "2024-05-01T20:09:27+0200", "log_lvl": "INFO", "log_msg": "log_100 __LF__", "extra": "extra"}

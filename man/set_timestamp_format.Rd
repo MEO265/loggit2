@@ -13,6 +13,9 @@ set_timestamp_format(ts_format = "\%Y-\%m-\%dT\%H:\%M:\%S\%z", confirm = TRUE)
 \item{confirm}{Print confirmation message of timestamp format? Defaults to
 \code{TRUE}.}
 }
+\value{
+Invisible \code{NULL}.
+}
 \description{
 Set timestamp format for use in output logs.
 }

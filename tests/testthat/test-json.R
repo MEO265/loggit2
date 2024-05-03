@@ -10,7 +10,7 @@ test_that("write_logs() and read_logs() work in tandem", {
   log_df_want <- data.frame(
     log_lvl = "INFO",
     log_msg = c("msg1", "msg2", "msg3", "msg4: should: be :displayed:"),
-    extra = c("", "", "", "fields"),
+    extra = c(NA_character_, NA_character_, NA_character_, "fields"),
     stringsAsFactors = FALSE
   )
 
