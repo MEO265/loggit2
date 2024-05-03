@@ -85,3 +85,26 @@ find_call <- function() {
   if (id >= length(parents) - 1L) return(NULL) # nocov
   return(sys.call(-2L))
 }
+
+#' Write log to csv file
+#'
+#' @param file Path to write csv file to
+#' @param logfile Path to log file to read from
+#' @param remove_message_lf Should the line breaks at the end of messages be removed?
+#' @param ... Additional arguments to pass to `utils::write.table()`
+#'
+#' @return Invisible `NULL`.
+#'
+convert_to_csv <- function (file, logfile, remove_message_lf = TRUE, ...) {
+  log <- read_logs(logfile = logfile)
+
+  if(!remove_message_lf) {
+    msg_flag <- log$log_lvl == "INFO"
+    msg <- log$log_msg[msg_flag]
+    log$log_msg[msg_flag] <- gsub("\n$", "", msg)
+  }
+
+  write.table(log, file = file, ...)
+
+  return(invisible(NULL))
+}
