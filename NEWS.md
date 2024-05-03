@@ -26,6 +26,10 @@
   the new path in its confirmation message, when `NULL` is given as an argument.
 * `rotate_logs(rotate_lines = 0L)` now empties the log as expected. 
   Additionally, an error is thrown for negative values.
+* `rotate_logs()` preserves the original sanitization of the log entries. 
+  Previously, the sanitization was lost when the log was rotated, for values between 0 and the number of log-entries.
+* `read_logs()` now correctly reads empty log fields as `NA_character_`. 
+  Previously, empty fields were read as `""`, when first entry of the field was empty.
 
 ## Minor changes
 * All `set_*` functions use `message` instead of `print` for confirmation.
