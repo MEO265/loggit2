@@ -70,3 +70,21 @@ test_that("rotate_logs preserves sanitization", {
   expect_snapshot_file(tmp_log)
 
 })
+
+test_that("read_logs on empty log", {
+  set_logfile(get_logfile(), confirm = FALSE, create = TRUE)
+  log_df <- read_logs()
+  expect_identical(log_df, data.frame(timestamp = character(), log_lvl = character(), log_msg = character()))
+})
+cleanup()
+
+test_that("convert_to_csv", {
+  tmp_dir <- tempdir()
+  convert_to_csv(file = file.path(tmp_dir, "test.csv"), logfile = "testdata/test.loggit")
+  convert_to_csv(
+    file = file.path(tmp_dir, "test_with_lf.csv"), remove_message_lf = FALSE, logfile = "testdata/test.loggit"
+  )
+
+  expect_snapshot_file(file.path(tmp_dir, "test.csv"))
+  expect_snapshot_file(file.path(tmp_dir, "test_with_lf.csv"))
+})

@@ -8,6 +8,9 @@
 #'
 #' @return A `data.frame`.
 #'
+#' @details `read_logs()` returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg"
+#' if the log file has no entries.
+#'
 #' @examples
 #'   set_logfile(file.path(tempdir(), "loggit.log"), confirm = FALSE)
 #'   message("Test log message")
@@ -18,7 +21,11 @@ read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsa
 
   base::stopifnot("Log file does not exist" = file.exists(logfile))
 
-  read_ndjson(logfile, unsanitizer = unsanitizer)
+  log <- read_ndjson(logfile, unsanitizer = unsanitizer)
+
+  if(nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
+
+  return(log)
 }
 
 
@@ -77,4 +84,28 @@ find_call <- function() {
   id <- match(0L, parents)
   if (id >= length(parents) - 1L) return(NULL) # nocov
   return(sys.call(-2L))
+}
+
+#' Write log to csv file
+#'
+#' @param file Path to write csv file to
+#' @param logfile Path to log file to read from
+#' @param remove_message_lf Should the line breaks at the end of messages be removed?
+#' @param ... Additional arguments to pass to `utils::write.table()`
+#'
+#' @return Invisible `NULL`.
+#'
+#' @export
+convert_to_csv <- function (file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
+  log <- read_logs(logfile = logfile)
+
+  if(remove_message_lf) {
+    msg_flag <- log$log_lvl == "INFO"
+    msg <- log$log_msg[msg_flag]
+    log$log_msg[msg_flag] <- gsub("\n$", "", msg)
+  }
+
+  write.table(log, file = file, ...)
+
+  return(invisible(NULL))
 }
