@@ -1,5 +1,9 @@
 # loggit2 DEV
 
+## Minor changes
+* `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
+  instead of an empty (0x0) `data.frame` if the log file has no entries.
+
 # loggit2 2.2.2
 
 ## Breaking changes

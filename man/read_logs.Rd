@@ -18,6 +18,10 @@ A \code{data.frame}.
 \description{
 This function returns a \code{data.frame} containing all the logs in the provided \code{ndjson} log file.
 }
+\details{
+\code{read_logs()} returns a \code{data.frame} with the empty character columns "timestamp", "log_lvl" and "log_msg"
+if the log file has no entries.
+}
 \examples{
   set_logfile(file.path(tempdir(), "loggit.log"), confirm = FALSE)
   message("Test log message")
