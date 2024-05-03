@@ -45,7 +45,7 @@ Why use `loggit2`?
 - _Zero_ external dependencies
 
 Additionally, the boilerplate to get going with `loggit2` is minimal at worst.
-No need to write custom formatters, handlers, levels, etc. -- ***just loggit2!***
+No need to write custom formatters, handlers, levels, etc. -- ***just loggit!***
 
 Usage
 --------------
@@ -105,7 +105,7 @@ or, get the latest development version from GitHub via
 
 Acknowledgments
 -----------
-This package is based on the [eponymous package by Ryan Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
+This package is based on the ["loggit" package by Ryan Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
 
 Due to technical reasons, this repository is not a GitHub fork of [Ryan's repository](https://github.com/ryapric/loggit).
 

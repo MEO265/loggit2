@@ -29,7 +29,7 @@ for the Getting Started guide.
 
 Additionally, the boilerplate to get going with `loggit2` is minimal at
 worst. No need to write custom formatters, handlers, levels, etc. –
-***just loggit2!***
+***just loggit!***
 
 ## Usage
 
@@ -44,13 +44,13 @@ at the desired locations.
 
 ``` r
 loggit2::message("This is a message")
-#> {"timestamp": "2024-05-02T18:27:28+0200", "log_lvl": "INFO", "log_msg": "This is a message__LF__"}
+#> {"timestamp": "2024-05-03T21:30:47+0200", "log_lvl": "INFO", "log_msg": "This is a message__LF__"}
 #> This is a message
 loggit2::warning("This is a warning")
-#> {"timestamp": "2024-05-02T18:27:28+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-05-03T21:30:47+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning: This is a warning
 loggit2::stop("This is an error")
-#> {"timestamp": "2024-05-02T18:27:28+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-05-03T21:30:47+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in eval(expr, envir, enclos): This is an error
 ```
 
@@ -83,18 +83,18 @@ it’ll become a structured log.
 
 ``` r
 loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-05-02T18:27:28+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-05-03T21:30:47+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit2::read_logs()
 #>                  timestamp log_lvl                   log_msg       anything_else
-#> 1 2024-05-02T18:27:28+0200    INFO       This is a message\n                    
-#> 2 2024-05-02T18:27:28+0200    WARN         This is a warning                    
-#> 3 2024-05-02T18:27:28+0200   ERROR          This is an error                    
-#> 4 2024-05-02T18:27:28+0200    INFO This is another message\n                    
-#> 5 2024-05-02T18:27:28+0200    WARN   This is another warning                    
-#> 6 2024-05-02T18:27:28+0200   ERROR     This is another error                    
-#> 7 2024-05-02T18:27:28+0200   ERROR    This will log an error you want to include
+#> 1 2024-05-03T21:30:47+0200    INFO       This is a message\n                <NA>
+#> 2 2024-05-03T21:30:47+0200    WARN         This is a warning                <NA>
+#> 3 2024-05-03T21:30:47+0200   ERROR          This is an error                <NA>
+#> 4 2024-05-03T21:30:47+0200    INFO This is another message\n                <NA>
+#> 5 2024-05-03T21:30:47+0200    WARN   This is another warning                <NA>
+#> 6 2024-05-03T21:30:47+0200   ERROR     This is another error                <NA>
+#> 7 2024-05-03T21:30:47+0200   ERROR    This will log an error you want to include
 ```
 
 Check out the
@@ -113,7 +113,7 @@ or, get the latest development version from GitHub via
 
 ## Acknowledgments
 
-This package is based on the [eponymous package by Ryan
+This package is based on the [“loggit” package by Ryan
 Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
 
 Due to technical reasons, this repository is not a GitHub fork of
