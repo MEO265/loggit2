@@ -95,7 +95,8 @@ find_call <- function() {
 #'
 #' @return Invisible `NULL`.
 #'
-convert_to_csv <- function (file, logfile, remove_message_lf = TRUE, ...) {
+#' @export
+convert_to_csv <- function (file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
   log <- read_logs(logfile = logfile)
 
   if(!remove_message_lf) {

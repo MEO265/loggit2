@@ -4,7 +4,7 @@
 \alias{convert_to_csv}
 \title{Write log to csv file}
 \usage{
-convert_to_csv(file, logfile, remove_message_lf = TRUE, ...)
+convert_to_csv(file, logfile = get_logfile(), remove_message_lf = TRUE, ...)
 }
 \arguments{
 \item{file}{Path to write csv file to}
