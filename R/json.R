@@ -36,6 +36,8 @@ sanitizer_map <- list(
 #' @return A character vector
 #'
 #' @name sanitizers
+#'
+#' @keywords internal
 NULL
 
 
@@ -72,15 +74,15 @@ default_ndjson_unsanitizer <- function(string) {
 #' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
 #' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
 #'   so will append new log entries to the log file.
-#' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
-#'   Defaults to [default_ndjson_sanitizer()].
+#' @param sanitizer Should the log data be sanitized before writing to json?
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE,
-                         sanitizer = default_ndjson_sanitizer) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE, sanitize = TRUE) {
 
-  for (field in colnames(log_df)) {
-    log_df[, field] <- sanitizer(log_df[, field])
+  if (sanitize) {
+    for (field in colnames(log_df)) {
+      log_df[, field] <- default_ndjson_sanitizer(log_df[, field])
+    }
   }
 
   # logdata will be built into a character vector where each element is a valid
@@ -109,12 +111,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #' Read ndJSON-formatted log file
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
-#' @param unsanitizer Unsanitizer function passed in from [read_logs()].
+#' @param unsanitize Should the log data be unsanitized after reading from json?
 #'
 #' @keywords internal
 #'
 #' @return A `data.frame`
-read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
+read_ndjson <- function(logfile, unsanitize = TRUE) {
 
   # Read in lines of log data
   logdata <- readLines(logfile)
@@ -156,8 +158,9 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
     }
   }
 
-  # Unsanitize the log data
-  log_df <- as.data.frame(lapply(log_df, FUN = unsanitizer))
+  if (unsanitize) log_df <- lapply(log_df, FUN = default_ndjson_unsanitizer)
+
+  log_df <- as.data.frame(log_df)
 
   log_df
 }

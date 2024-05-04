@@ -1,5 +1,10 @@
 # loggit2 DEV
 
+## Breaking changes
+* Custom `sanitizer`s and `unsanitizer`s are no longer supported. This decision was made because no active user is known and this functionality severely limits further development.  
+  If custom `sanitizer`s were previously used, they could simply be executed before or after instead in `loggit()` 
+  or `read_logs()`. If custom sanitizer has been used to get around bugs, please report them so that they can be fixed.
+
 ## New features
 * Add `convert_to_csv()` to convert log files to CSV format.
 
@@ -21,7 +26,7 @@
 # loggit2 2.2.2
 
 ## Breaking changes
-* Custom sanitizers and unsanitizers must be able to process character vectors. 
+* Custom `sanitizer`s and `unsanitizer`s must be able to process character vectors. 
   Previously, only the processing of vectors of length one was explicitly required.
 
 ## New features

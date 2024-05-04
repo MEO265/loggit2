@@ -4,14 +4,7 @@
 \alias{loggit}
 \title{Log entries to file}
 \usage{
-loggit(
-  log_lvl,
-  log_msg,
-  ...,
-  echo = TRUE,
-  custom_log_lvl = FALSE,
-  sanitizer = default_ndjson_sanitizer
-)
+loggit(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE)
 }
 \arguments{
 \item{log_lvl}{Log level coerceable to \code{character}. For details see parameter \code{custom_log_lvl}.}
@@ -26,9 +19,6 @@ Defaults to \code{TRUE}.}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN",
 and "ERROR"? Defaults to \code{FALSE}.}
-
-\item{sanitizer}{\link[=sanitizers]{Sanitizer function} to run over elements in log data.
-Defaults to \code{\link[=default_ndjson_sanitizer]{default_ndjson_sanitizer()}}.}
 }
 \value{
 Invisible \code{NULL}.

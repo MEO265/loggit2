@@ -3,8 +3,6 @@
 #' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
 #' @param logfile Path to log file.
-#' @param unsanitizer [Unsanitizer function][sanitizers] to run over elements in log.
-#'   Defaults to [default_ndjson_unsanitizer()]
 #'
 #' @return A `data.frame`.
 #'
@@ -17,13 +15,13 @@
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer) {
+read_logs <- function(logfile = get_logfile()) {
 
   base::stopifnot("Log file does not exist" = file.exists(logfile))
 
-  log <- read_ndjson(logfile, unsanitizer = unsanitizer)
+  log <- read_ndjson(logfile)
 
-  if(nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
+  if (nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
 
   return(log)
 }
@@ -58,12 +56,12 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- read_logs(logfile, unsanitizer = identity)
+  log_df <- read_ndjson(logfile, unsanitize = FALSE)
   if (nrow(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }
   log_df <- log_df[seq.int(from = nrow(log_df) - rotate_lines + 1L, length.out = rotate_lines),]
-  write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE, sanitizer = identity)
+  write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE, sanitize = FALSE)
 }
 
 #' Find the Call of a Parent Function in the Call Hierarchy
@@ -96,10 +94,10 @@ find_call <- function() {
 #' @return Invisible `NULL`.
 #'
 #' @export
-convert_to_csv <- function (file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
+convert_to_csv <- function(file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
   log <- read_logs(logfile = logfile)
 
-  if(remove_message_lf) {
+  if (remove_message_lf) {
     msg_flag <- log$log_lvl == "INFO"
     msg <- log$log_msg[msg_flag]
     log$log_msg[msg_flag] <- gsub("\n$", "", msg)

@@ -4,13 +4,10 @@
 \alias{read_logs}
 \title{Return log file as an R data frame}
 \usage{
-read_logs(logfile = get_logfile(), unsanitizer = default_ndjson_unsanitizer)
+read_logs(logfile = get_logfile())
 }
 \arguments{
 \item{logfile}{Path to log file.}
-
-\item{unsanitizer}{\link[=sanitizers]{Unsanitizer function} to run over elements in log.
-Defaults to \code{\link[=default_ndjson_unsanitizer]{default_ndjson_unsanitizer()}}}
 }
 \value{
 A \code{data.frame}.
