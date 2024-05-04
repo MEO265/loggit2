@@ -108,14 +108,14 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
   write(logdata, file = logfile, append = !overwrite)
 }
 
-  #' Read ndJSON-formatted log file
-  #'
-  #' @param logfile Log file to read from, and convert to a `data.frame`.
-  #' @param unsanitize Should the log data be unsanitized after reading from json?
-  #'
-  #' @keywords internal
-  #'
-  #' @return A `data.frame`
+#' Read ndJSON-formatted log file
+#'
+#' @param logfile Log file to read from, and convert to a `data.frame`.
+#' @param unsanitize Should the log data be unsanitized after reading from json?
+#'
+#' @keywords internal
+#'
+#' @return A `data.frame`
 read_ndjson <- function(logfile, unsanitize = TRUE) {
 
   # Read in lines of log data
