@@ -10,6 +10,8 @@
 #' twice (in the same or different files)
 #'
 #' @return The result of the expression.
+#'
+#' @export
 with_loggit <- function(exp, logfile = get_logfile(), echo = TRUE) {
   withCallingHandlers(
     exp,
