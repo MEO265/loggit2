@@ -75,12 +75,8 @@ cleanup()
 test_that("write_logs() special cases", {
   # Ignore NAs
   log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_)
-  write_ndjson(log_data, echo = FALSE)
+  write_ndjson(log_data, echo = FALSE, sanitizer = identity)
   log_file <- read_logs()
   expect_identical(log_file, data.frame(log_lvl = c("foo", "bar")))
-
-  # Warn about unsanitized line breaks
-  log_data <- data.frame(log_lvl = "fo\no")
-  expect_warning(write_ndjson(log_data, echo = FALSE))
 })
 cleanup()

@@ -87,28 +87,18 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
   # JSON object, constructed from each row of the log data frame.
   logdata <- character(nrow(log_df))
 
-  # The looping construct makes it easier to read & debug than an `lapply()` or
-  # similar.
-  for (row in seq_len(nrow(log_df))) {
-    # Open the JSON
-    logdata[row] <- "{"
-    for (col in colnames(log_df)) {
-      # Only log non-NA entries to JSON, in case there's more than one to flush
-      # at once
-      if (is.na(log_df[row, col])) next
-      # Throw warning if embedded newlines are detected
-      if (grepl("\\n|\\r", log_df[row, col])) {
-        base::warning(
-          "Logs in ndjson format should not have embedded newlines!\n",
-          "found here: ", log_df[row, col]
-        )
-      }
-      logdata[row] <- paste0(logdata[row], sprintf('\"%s\": \"%s\", ', col, log_df[row, col]))
+  field_names <- paste0("\"", colnames(log_df), "\"")
 
-    }
-    # Drop the trailing comma and space from the last entry, and close the JSON
-    logdata[row] <- substring(logdata[row], 1L, nchar(logdata[row]) - 2L)
-    logdata[row] <- paste0(logdata[row], "}")
+  for (row in seq_len(nrow(log_df))) {
+
+    row_data <- as.character(log_df[row,])
+    na_entries <- is.na(row_data)
+    row_data <- row_data[!na_entries]
+    row_names <- field_names[!na_entries]
+
+    row_data <- paste0("\"", row_data, "\"")
+    row_data <- paste(row_names, row_data, sep = ": ", collapse = ", ")
+    logdata[row] <- paste0("{", row_data, "}")
   }
 
   # Cat out if echo is on, and write to log file
