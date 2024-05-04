@@ -10,7 +10,8 @@ loggit(
   ...,
   echo = TRUE,
   custom_log_lvl = FALSE,
-  logfile = get_logfile()
+  logfile = get_logfile(),
+  ignore_log_level = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ The names of the arguments are treated as column names in the log.}
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
 \item{logfile}{Path of log file to write to.}
+
+\item{ignore_log_level}{Ignore the log level set by \code{set_log_level()}?}
 }
 \value{
 Invisible \code{NULL}.

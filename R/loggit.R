@@ -10,6 +10,7 @@ NULL
 #' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?
+#' @param ignore_log_level Ignore the log level set by `set_log_level()`?
 #' @inheritParams write_ndjson
 #'
 #' @return Invisible `NULL`.
@@ -28,7 +29,8 @@ NULL
 #'   )
 #' }
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
+loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(),
+                   ignore_log_level = FALSE) {
 
   if (length(log_msg) > 1L) {
     base::warning("log_msg should be of length one, only the first element will be used.")
@@ -38,15 +40,21 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
     base::warning("log_lvl should be of length one, only the first element will be used.")
     log_lvl <- log_lvl[[1L]]
   }
-
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
-  if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
+  if (!ignore_log_level || !custom_log_lvl) {
+    is_default_log_lvl <- log_lvl %in% log_lvls
+  }
+  if (!custom_log_lvl && !is_default_log_lvl) {
     base::stop(
       "Nonstandard log_lvl ('", log_lvl, "').\n",
       "Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.\n",
       "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
     )
+  }
+
+  if (!ignore_log_level && is_default_log_lvl && get_log_level() < get_lvl_int(log_lvl)) {
+    return(invisible(NULL))
   }
 
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])

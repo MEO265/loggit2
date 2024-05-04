@@ -111,3 +111,45 @@ convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, la
 
   return(invisible(NULL))
 }
+
+#' Get Log Level Name
+#'
+#' @param level Log level as integer.
+#'
+#' @return The log level name.
+#'
+#' @keywords internal
+get_lvl_name <- function(level) {
+  base::stopifnot(is.integer(level), level >= 0L, level <= 4L)
+  lvl <- c("NONE", "ERROR", "WARN", "INFO", "DEBUG")
+  lvl[level + 1L]
+}
+
+#' Get Log Level Integer
+#'
+#' @param level Log level as character.
+#'
+#' @return The log level integer.
+#'
+#' @keywords internal
+get_lvl_int <- function(level) {
+  base::stopifnot(is.character(level), level %in% c("NONE", "ERROR", "WARN", "INFO", "DEBUG"))
+  match(level, c("NONE", "ERROR", "WARN", "INFO", "DEBUG")) - 1L
+}
+
+#' Convert Log Level Input to Integer
+#'
+#' @param level Log level as character or numeric.
+#'
+#' @return The log level integer.
+#'
+#' @keywords internal
+convert_lvl_input <- function(level) {
+  if (!is.numeric(level)) {
+    level <- get_lvl_int(level)
+  } else {
+    level <- as.integer(level)
+    base::stopifnot(level >= 0L, level <= 4L)
+  }
+  level
+}

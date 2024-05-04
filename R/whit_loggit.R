@@ -4,6 +4,7 @@
 #' This is particularly useful for code that cannot be customized, e.g. from third-party packages.
 #'
 #' @param exp An `expression` to evaluate.
+#' @param log_level The log level to use.
 #' @inheritParams loggit
 #'
 #' @details If `loggit2` handlers are already used in the expression, this can lead to conditions being logged
@@ -28,17 +29,18 @@
 #' }
 #'
 #' @export
-with_loggit <- function(exp, logfile = get_logfile(), echo = TRUE) {
+with_loggit <- function(exp, logfile = get_logfile(), echo = TRUE, log_level = get_log_level()) {
+  log_level <- convert_lvl_input(log_level)
   withCallingHandlers(
     exp,
     error = function(e) {
-      loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, logfile = logfile)
+      if (log_level >= 1L) loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, logfile = logfile, ignore_log_level = TRUE)
     },
     warning = function(w) {
-      loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, logfile = logfile)
+      if (log_level >= 2L) loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, logfile = logfile, ignore_log_level = TRUE)
     },
     message = function(m) {
-      loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, logfile = logfile)
+      if (log_level >= 3L) loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, logfile = logfile, ignore_log_level = TRUE)
     }
   )
 }
