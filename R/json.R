@@ -132,17 +132,28 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
       log_kvs[[kvs]][[mk]] <- c(log_kvs[[kvs]][[mk]], "")
     }
   }
-  log_kvs <- lapply(log_kvs, unlist, use.names = FALSE)
 
+  key_value_split <- function(x) {
+    x <- unlist(x, use.names = FALSE)
+    keys <- x[c(TRUE, FALSE)]
+    values <- x[c(FALSE, TRUE)]
+    list(keys = keys, values = values)
+  }
+
+  log_kvs <- lapply(log_kvs, key_value_split)
   rowcount <- length(log_kvs)
+
+  all_keys <- unique(unlist(lapply(log_kvs, FUN = function(x) x[["keys"]])))
+
+  log_df <- rep(list(rep(NA_character_, rowcount)), length(all_keys))
+  names(log_df) <- all_keys
   for (lognum in seq_len(rowcount)) {
-    rowdata <- log_kvs[[lognum]]
-    len <- length(rowdata)
-
-    keys <- rowdata[seq(1L, len, by = 2L)]
-    values <- rowdata[seq(2L, len, by = 2L)]
-
-    log_df[lognum, keys] <- values
+    row <- log_kvs[[lognum]]
+    keys <- row[["keys"]]
+    values <- row[["values"]]
+    for (i in seq_along(keys)) {
+      log_df[[keys[i]]][lognum] <- values[i]
+    }
   }
 
   # Unsanitize the log data
