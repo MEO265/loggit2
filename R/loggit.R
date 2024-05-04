@@ -10,8 +10,7 @@
 #'   Defaults to `TRUE`.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN",
 #'   and "ERROR"? Defaults to `FALSE`.
-#' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
-#'   Defaults to [default_ndjson_sanitizer()].
+#' @inheritParams write_ndjson
 #'
 #' @return Invisible `NULL`.
 #'
@@ -54,9 +53,5 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, s
     )
   }
 
-  for (field in colnames(log_df)) {
-    log_df[, field] <- sanitizer(log_df[, field])
-  }
-
-  write_ndjson(log_df, echo = echo)
+  write_ndjson(log_df, echo = echo, sanitizer = sanitizer)
 }

@@ -42,7 +42,7 @@ NULL
 #' @rdname sanitizers
 default_ndjson_sanitizer <- function(string) {
   for (k in names(sanitizer_map)) {
-    string <- gsub(pattern = k, replacement =  sanitizer_map[[k]], string, fixed = TRUE)
+    string <- gsub(pattern = k, replacement = sanitizer_map[[k]], string, fixed = TRUE)
   }
 
   # Explicit NAs must be marked so that no new ones are inserted when rotating the log
@@ -72,36 +72,33 @@ default_ndjson_unsanitizer <- function(string) {
 #' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
 #' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
 #'   so will append new log entries to the log file.
+#' @param sanitizer [Sanitizer function][sanitizers] to run over elements in log data.
+#'   Defaults to [default_ndjson_sanitizer()].
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE,
+                         sanitizer = default_ndjson_sanitizer) {
+
+  for (field in colnames(log_df)) {
+    log_df[, field] <- sanitizer(log_df[, field])
+  }
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
   logdata <- character(nrow(log_df))
 
-  # The looping construct makes it easier to read & debug than an `lapply()` or
-  # similar.
-  for (row in seq_len(nrow(log_df))) {
-    # Open the JSON
-    logdata[row] <- "{"
-    for (col in colnames(log_df)) {
-      # Only log non-NA entries to JSON, in case there's more than one to flush
-      # at once
-      if (is.na(log_df[row, col])) next
-      # Throw warning if embedded newlines are detected
-      if (grepl("\\n|\\r", log_df[row, col])) {
-        base::warning(
-          "Logs in ndjson format should not have embedded newlines!\n",
-          "found here: ", log_df[row, col]
-        )
-      }
-      logdata[row] <- paste0(logdata[row], sprintf('\"%s\": \"%s\", ', col, log_df[row, col]))
+  field_names <- paste0("\"", colnames(log_df), "\"")
 
-    }
-    # Drop the trailing comma and space from the last entry, and close the JSON
-    logdata[row] <- substring(logdata[row], 1L, nchar(logdata[row]) - 2L)
-    logdata[row] <- paste0(logdata[row], "}")
+  for (row in seq_len(nrow(log_df))) {
+
+    row_data <- as.character(log_df[row,])
+    na_entries <- is.na(row_data)
+    row_data <- row_data[!na_entries]
+    row_names <- field_names[!na_entries]
+
+    row_data <- paste0("\"", row_data, "\"")
+    row_data <- paste(row_names, row_data, sep = ": ", collapse = ", ")
+    logdata[row] <- paste0("{", row_data, "}")
   }
 
   # Cat out if echo is on, and write to log file
@@ -123,35 +120,44 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
   logdata <- readLines(logfile)
 
   # List first; easier to add to dynamically
-  log_df <- list()
+  log_df <- data.frame()
 
   # Split out the log data into individual pieces, which will include JSON keys AND values
   logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
   logdata <- strsplit(logdata, '", "', fixed = TRUE)
-  log_kvs <- lapply(logdata, FUN = function(x) unlist(strsplit(x, '": "', fixed = FALSE), use.names = FALSE))
-
-  rowcount <- length(log_kvs)
-  for (lognum in seq_len(rowcount)) {
-    rowdata <- log_kvs[[lognum]]
-    # Filter out emtpy values from strsplit()
-    rowdata <- rowdata[!(rowdata %in% c("", " "))]
-
-    for (logfieldnum in seq_along(rowdata)) {
-      # If odd, it's the key; if even, it's the value, where the preceding element
-      # is the corresponding key.
-      if (logfieldnum %% 2L == 0L) {
-        colname <- rowdata[logfieldnum - 1L]
-        # If the field doesn't exist, create it (filled with NAs) with the right length
-        if (!(colname %in% names(log_df))) {
-          log_df[[colname]] <- rep(NA_character_, length = rowcount)
-        }
-        # Unsanitize text, and store to df
-        rowdata[logfieldnum] <- unsanitizer(rowdata[logfieldnum])
-        log_df[[colname]][lognum] <- rowdata[logfieldnum]
-      }
+  log_kvs <- lapply(logdata, FUN = function(x) strsplit(x, '": "', fixed = FALSE))
+  for (kvs in seq_along(log_kvs)) {
+    missing_key <- which(lengths(log_kvs[[kvs]]) == 1L)
+    for (mk in missing_key) {
+      log_kvs[[kvs]][[mk]] <- c(log_kvs[[kvs]][[mk]], "")
     }
   }
 
-  log_df <- as.data.frame(log_df, stringsAsFactors = FALSE)
+  key_value_split <- function(x) {
+    x <- unlist(x, use.names = FALSE)
+    keys <- x[c(TRUE, FALSE)]
+    values <- x[c(FALSE, TRUE)]
+    list(keys = keys, values = values)
+  }
+
+  log_kvs <- lapply(log_kvs, key_value_split)
+  rowcount <- length(log_kvs)
+
+  all_keys <- unique(unlist(lapply(log_kvs, FUN = function(x) x[["keys"]])))
+
+  log_df <- rep(list(rep(NA_character_, rowcount)), length(all_keys))
+  names(log_df) <- all_keys
+  for (lognum in seq_len(rowcount)) {
+    row <- log_kvs[[lognum]]
+    keys <- row[["keys"]]
+    values <- row[["values"]]
+    for (i in seq_along(keys)) {
+      log_df[[keys[i]]][lognum] <- values[i]
+    }
+  }
+
+  # Unsanitize the log data
+  log_df <- as.data.frame(lapply(log_df, FUN = unsanitizer))
+
   log_df
 }
