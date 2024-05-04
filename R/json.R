@@ -120,7 +120,7 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
   logdata <- readLines(logfile)
 
   # List first; easier to add to dynamically
-  log_df <- list()
+  log_df <- data.frame()
 
   # Split out the log data into individual pieces, which will include JSON keys AND values
   logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
@@ -130,25 +130,16 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
   rowcount <- length(log_kvs)
   for (lognum in seq_len(rowcount)) {
     rowdata <- log_kvs[[lognum]]
-    # Filter out emtpy values from strsplit()
-    rowdata <- rowdata[!(rowdata %in% c("", " "))]
+    len <- length(rowdata)
 
-    for (logfieldnum in seq_along(rowdata)) {
-      # If odd, it's the key; if even, it's the value, where the preceding element
-      # is the corresponding key.
-      if (logfieldnum %% 2L == 0L) {
-        colname <- rowdata[logfieldnum - 1L]
-        # If the field doesn't exist, create it (filled with NAs) with the right length
-        if (!(colname %in% names(log_df))) {
-          log_df[[colname]] <- rep(NA_character_, length = rowcount)
-        }
-        # Unsanitize text, and store to df
-        rowdata[logfieldnum] <- unsanitizer(rowdata[logfieldnum])
-        log_df[[colname]][lognum] <- rowdata[logfieldnum]
-      }
-    }
+    keys <- rowdata[seq(1L, len, by = 2L)]
+    values <- rowdata[seq(2L, len, by = 2L)]
+
+    log_df[lognum, keys] <- values
   }
 
-  log_df <- as.data.frame(log_df, stringsAsFactors = FALSE)
+  # Unsanitize the log data
+  log_df <- as.data.frame(lapply(log_df, FUN = unsanitizer))
+
   log_df
 }
