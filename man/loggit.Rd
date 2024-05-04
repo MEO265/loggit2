@@ -4,7 +4,14 @@
 \alias{loggit}
 \title{Log entries to file}
 \usage{
-loggit(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE)
+loggit(
+  log_lvl,
+  log_msg,
+  ...,
+  echo = TRUE,
+  custom_log_lvl = FALSE,
+  logfile = get_logfile()
+)
 }
 \arguments{
 \item{log_lvl}{Log level coerceable to \code{character}. For details see parameter \code{custom_log_lvl}.}
@@ -19,6 +26,9 @@ Defaults to \code{TRUE}.}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN",
 and "ERROR"? Defaults to \code{FALSE}.}
+
+\item{logfile}{Log file to write to. Defaults to currently-configured log
+file.}
 }
 \value{
 Invisible \code{NULL}.
