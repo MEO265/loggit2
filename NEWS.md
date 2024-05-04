@@ -3,6 +3,11 @@
 ## New features
 * Add `convert_to_csv()` to convert log files to CSV format.
 
+## Bugfixes 
+* `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
+  Previously, empty fields were read as `NA`. This meant that when `rotate_logs()` was used,
+  these entries could completely disappear from the respective json object
+
 ## Minor changes
 * `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
   instead of an empty (0x0) `data.frame` if the log file has no entries.

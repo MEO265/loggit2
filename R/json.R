@@ -125,7 +125,14 @@ read_ndjson <- function(logfile, unsanitizer = default_ndjson_unsanitizer) {
   # Split out the log data into individual pieces, which will include JSON keys AND values
   logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
   logdata <- strsplit(logdata, '", "', fixed = TRUE)
-  log_kvs <- lapply(logdata, FUN = function(x) unlist(strsplit(x, '": "', fixed = FALSE), use.names = FALSE))
+  log_kvs <- lapply(logdata, FUN = function(x) strsplit(x, '": "', fixed = FALSE))
+  for (kvs in seq_along(log_kvs)) {
+    missing_key <- which(lengths(log_kvs[[kvs]]) == 1L)
+    for (mk in missing_key) {
+      log_kvs[[kvs]][[mk]] <- c(log_kvs[[kvs]][[mk]], "")
+    }
+  }
+  log_kvs <- lapply(log_kvs, unlist, use.names = FALSE)
 
   rowcount <- length(log_kvs)
   for (lognum in seq_len(rowcount)) {
