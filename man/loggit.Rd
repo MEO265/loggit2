@@ -10,7 +10,8 @@ loggit(
   ...,
   echo = TRUE,
   custom_log_lvl = FALSE,
-  logfile = get_logfile()
+  logfile = get_logfile(),
+  ignore_log_level = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ and "ERROR"? Defaults to \code{FALSE}.}
 
 \item{logfile}{Log file to write to. Defaults to currently-configured log
 file.}
+
+\item{ignore_log_level}{Ignore the log level set by \code{set_log_level()}?}
 }
 \value{
 Invisible \code{NULL}.

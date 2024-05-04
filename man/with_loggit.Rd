@@ -4,7 +4,12 @@
 \alias{with_loggit}
 \title{Log any expressions}
 \usage{
-with_loggit(exp, logfile = get_logfile(), echo = TRUE)
+with_loggit(
+  exp,
+  logfile = get_logfile(),
+  echo = TRUE,
+  log_level = get_log_level()
+)
 }
 \arguments{
 \item{exp}{An expression to evaluate.}
@@ -14,6 +19,8 @@ file.}
 
 \item{echo}{Should the log file entry be printed to the console as well?
 Defaults to \code{TRUE}.}
+
+\item{log_level}{The log level to use.}
 }
 \value{
 The result of the expression.

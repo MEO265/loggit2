@@ -90,3 +90,36 @@ set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TR
 get_timestamp_format <- function() {
   .config$ts_format
 }
+
+
+#' Set Log Level
+#'
+#' @param level Log level to set.
+#' @param confirm Print confirmation message of log level?
+#'
+#' @return Invisible `NULL`.
+#'
+#' @details Log levels are as follows:
+#'  DEBUG: 4
+#'  INFO: 3
+#'  WARNING: 2
+#'  ERROR: 1
+#'  NONE: 0
+#'
+#' @export
+set_log_level <- function(level = "INFO", confirm = TRUE) {
+  level <- convert_lvl_input(level)
+  .config$level <- level
+  if (confirm) base::message("Log level set to ", level, " (", get_lvl_name(level), ")")
+  invisible(NULL)
+}
+
+#' Get Log Level
+#'
+#' @return The log level.
+#'
+#' @export
+get_log_level <- function() {
+  .config$level
+}
+
