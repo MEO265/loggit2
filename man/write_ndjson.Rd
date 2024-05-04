@@ -9,7 +9,7 @@ write_ndjson(
   logfile = get_logfile(),
   echo = TRUE,
   overwrite = FALSE,
-  sanitizer = default_ndjson_sanitizer
+  sanitize = TRUE
 )
 }
 \arguments{
@@ -24,8 +24,7 @@ file.}
 \item{overwrite}{Overwrite previous log file data? Defaults to \code{FALSE}, and
 so will append new log entries to the log file.}
 
-\item{sanitizer}{\link[=sanitizers]{Sanitizer function} to run over elements in log data.
-Defaults to \code{\link[=default_ndjson_sanitizer]{default_ndjson_sanitizer()}}.}
+\item{sanitizer}{Should the log data be sanitized before writing to json?}
 }
 \description{
 Write ndJSON-formatted log file
