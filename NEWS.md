@@ -7,6 +7,7 @@
 
 ## New features
 * Add `convert_to_csv()` to convert log files to CSV format.
+* Add `with_loggit()` to log third-party code or to easily use different `loggit()`-parameters for a chunk of code.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  

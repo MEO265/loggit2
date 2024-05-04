@@ -10,6 +10,7 @@
 #'   Defaults to `TRUE`.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN",
 #'   and "ERROR"? Defaults to `FALSE`.
+#' @inheritParams write_ndjson
 #'
 #' @return Invisible `NULL`.
 #'
@@ -18,7 +19,7 @@
 #'   sure = "why not?", like = 2, or = 10, what = "ever")
 #'
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE) {
+loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
   if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
@@ -52,5 +53,5 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE) {
     )
   }
 
-  write_ndjson(log_df, echo = echo)
+  write_ndjson(log_df, echo = echo, logfile = logfile)
 }
