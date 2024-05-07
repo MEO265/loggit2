@@ -71,9 +71,9 @@ extern "C" SEXP split_json(SEXP strSEXP) {
         valuesNA.push_back(true);
     }
 
-    SEXP ans = PROTECT(allocVector(VECSXP, 2)); // List with two elements
-    SEXP keysR = PROTECT(allocVector(STRSXP, keys.size()));
-    SEXP valuesR = PROTECT(allocVector(STRSXP, values.size()));
+    SEXP ans = PROTECT(Rf_allocVector(VECSXP, 2)); // List with two elements
+    SEXP keysR = PROTECT(Rf_allocVector(STRSXP, keys.size()));
+    SEXP valuesR = PROTECT(Rf_allocVector(STRSXP, values.size()));
 
     for (size_t j = 0; j < keys.size(); ++j) {
         SET_STRING_ELT(keysR, j, keysNA[j] ? NA_STRING : mkChar(keys[j].c_str()));
