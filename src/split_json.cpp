@@ -2,6 +2,7 @@
 #include <string>
 #include <R.h>
 #include <Rinternals.h>
+#include "loggit.h"
 
 
 extern "C" SEXP split_json(SEXP strSEXP) {
