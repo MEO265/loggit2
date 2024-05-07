@@ -95,11 +95,11 @@ extern "C" SEXP split_json(SEXP strSEXP) {
 }
 
 extern "C" SEXP split_ndjson(SEXP strVecSEXP) {
-    if (!isString(strVecSEXP)) {
-        error("Input must be a character vector.");
+    if (!Rf_isString(strVecSEXP)) {
+        Rf_error("Input must be a character vector.");
     }
 
-    int n = length(strVecSEXP);
+    int n = Rf_length(strVecSEXP);
     SEXP result = PROTECT(Rf_allocVector(VECSXP, n));
 
     for (int i = 0; i < n; i++) {
