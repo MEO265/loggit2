@@ -76,10 +76,10 @@ extern "C" SEXP split_json(SEXP strSEXP) {
     SEXP valuesR = PROTECT(Rf_allocVector(STRSXP, values.size()));
 
     for (size_t j = 0; j < keys.size(); ++j) {
-        SET_STRING_ELT(keysR, j, keysNA[j] ? NA_STRING : mkChar(keys[j].c_str()));
+        SET_STRING_ELT(keysR, j, keysNA[j] ? NA_STRING : Rf_mkChar(keys[j].c_str()));
     }
     for (size_t j = 0; j < values.size(); ++j) {
-        SET_STRING_ELT(valuesR, j, valuesNA[j] ? NA_STRING : mkChar(values[j].c_str()));
+        SET_STRING_ELT(valuesR, j, valuesNA[j] ? NA_STRING : Rf_mkChar(values[j].c_str()));
     }
 
     SET_VECTOR_ELT(ans, 0, keysR);
