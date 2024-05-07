@@ -121,28 +121,8 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
   # Read in lines of log data
   logdata <- readLines(logfile)
 
-  # List first; easier to add to dynamically
-  log_df <- data.frame()
+  log_kvs <- split_ndjson(logdata)
 
-  # Split out the log data into individual pieces, which will include JSON keys AND values
-  logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
-  logdata <- strsplit(logdata, '", "', fixed = TRUE)
-  log_kvs <- lapply(logdata, FUN = function(x) strsplit(x, '": "', fixed = FALSE))
-  for (kvs in seq_along(log_kvs)) {
-    missing_key <- which(lengths(log_kvs[[kvs]]) == 1L)
-    for (mk in missing_key) {
-      log_kvs[[kvs]][[mk]] <- c(log_kvs[[kvs]][[mk]], "")
-    }
-  }
-
-  key_value_split <- function(x) {
-    x <- unlist(x, use.names = FALSE)
-    keys <- x[c(TRUE, FALSE)]
-    values <- x[c(FALSE, TRUE)]
-    list(keys = keys, values = values)
-  }
-
-  log_kvs <- lapply(log_kvs, key_value_split)
   rowcount <- length(log_kvs)
 
   all_keys <- unique(unlist(lapply(log_kvs, FUN = function(x) x[["keys"]])))
@@ -157,8 +137,6 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
       log_df[[keys[i]]][lognum] <- values[i]
     }
   }
-
-  if (unsanitize) log_df <- lapply(log_df, FUN = default_ndjson_unsanitizer)
 
   log_df <- as.data.frame(log_df)
 

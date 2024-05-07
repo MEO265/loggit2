@@ -85,6 +85,30 @@ extern "C" SEXP split_json(SEXP strSEXP) {
     SET_VECTOR_ELT(ans, 0, keysR);
     SET_VECTOR_ELT(ans, 1, valuesR);
 
-    UNPROTECT(3);
+    SEXP names = PROTECT(Rf_allocVector(STRSXP, 2));
+    SET_STRING_ELT(names, 0, Rf_mkChar("keys"));
+    SET_STRING_ELT(names, 1, Rf_mkChar("values"));
+    Rf_setAttrib(ans, R_NamesSymbol, names);
+
+    UNPROTECT(4);
     return ans;
 }
+
+extern "C" SEXP split_ndjson(SEXP strVecSEXP) {
+    if (!isString(strVecSEXP)) {
+        error("Input must be a character vector.");
+    }
+
+    int n = length(strVecSEXP);
+    SEXP result = PROTECT(Rf_allocVector(VECSXP, n));
+
+    for (int i = 0; i < n; i++) {
+        SEXP strSEXP = PROTECT(Rf_mkString(CHAR(STRING_ELT(strVecSEXP, i))));
+        SET_VECTOR_ELT(result, i, split_json(strSEXP));
+        UNPROTECT(1); // Entferne den Schutz für strSEXP nach dessen Verwendung
+    }
+
+    UNPROTECT(1); // Entferne den Schutz für result
+    return result;
+}
+
