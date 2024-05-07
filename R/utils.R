@@ -3,6 +3,7 @@
 #' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
 #' @param logfile Path to log file.
+#' @param unsanitize Should the log messages be unsanitized?
 #'
 #' @return A `data.frame`.
 #'
@@ -15,11 +16,11 @@
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile = get_logfile()) {
+read_logs <- function(logfile = get_logfile(), unsanitize = TRUE) {
 
   base::stopifnot("Log file does not exist" = file.exists(logfile))
 
-  log <- read_ndjson(logfile)
+  log <- read_ndjson(logfile, unsanitize = unsanitize)
 
   if (nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
 
@@ -94,14 +95,8 @@ find_call <- function() {
 #' @return Invisible `NULL`.
 #'
 #' @export
-convert_to_csv <- function(file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
-  log <- read_logs(logfile = logfile)
-
-  if (remove_message_lf) {
-    msg_flag <- log$log_lvl == "INFO"
-    msg <- log$log_msg[msg_flag]
-    log$log_msg[msg_flag] <- gsub("\n$", "", msg)
-  }
+convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, ...) {
+  log <- read_logs(logfile = logfile, unsanitize = unsanitize)
 
   write.table(log, file = file, ...)
 

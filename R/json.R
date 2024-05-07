@@ -94,11 +94,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #' Read ndJSON-formatted log file
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
+#' @param unsanitize Should the log data be unsanitized?
 #'
 #' @keywords internal
 #'
 #' @return A `data.frame`
-read_ndjson <- function(logfile) {
+read_ndjson <- function(logfile, unsanitize = TRUE) {
 
   # Read in lines of log data
   logdata <- readLines(logfile)
@@ -120,7 +121,7 @@ read_ndjson <- function(logfile) {
     }
   }
 
-  log_df <- lapply(log_df, default_ndjson_unsanitizer)
+  if(unsanitize) log_df <- lapply(log_df, default_ndjson_unsanitizer)
 
   log_df <- as.data.frame(log_df)
 
