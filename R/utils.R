@@ -56,12 +56,12 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- read_ndjson(logfile)
-  if (nrow(log_df) <= rotate_lines) {
+  log_df <- readLines(logfile)
+  if (length(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }
-  log_df <- log_df[seq.int(from = nrow(log_df) - rotate_lines + 1L, length.out = rotate_lines),]
-  write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE)
+  log_df <- log_df[seq.int(from = length(log_df) - rotate_lines + 1L, length.out = rotate_lines)]
+  write(log_df, logfile, append = FALSE)
 }
 
 #' Find the Call of a Parent Function in the Call Hierarchy
