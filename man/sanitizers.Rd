@@ -25,12 +25,9 @@ Associated \emph{sanitizer} and \emph{unsanitizer} should be constructed in such
 \details{
 The default sanatizer and unsanatizer are based on the following mapping:\tabular{ll}{
    Character \tab Replacement \cr
-   \verb{\{} \tab \verb{__LEFTBRACE__} \cr
-   \verb{\}} \tab \verb{__RIGHTBRACE__} \cr
-   \verb{"} \tab \verb{__DBLQUOTE__} \cr
-   \verb{,} \tab \verb{__COMMA__} \cr
-   \verb{\\r} \tab \verb{__CR__} \cr
-   \verb{\\n} \tab \verb{__LF__} \cr
+   \verb{"} \tab \verb{\\"} \cr
+   \verb{\\r} \tab \verb{\\\\r} \cr
+   \verb{\\n} \tab \verb{\\\\n} \cr
 }
 
 

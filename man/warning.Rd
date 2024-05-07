@@ -49,7 +49,7 @@ but it includes logging of the exception message via \code{loggit()}.
 \seealso{
 Other handlers: 
 \code{\link{message}()},
-\code{\link{stopifnot}()},
-\code{\link{stop}()}
+\code{\link{stop}()},
+\code{\link{stopifnot}()}
 }
 \concept{handlers}

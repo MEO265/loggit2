@@ -89,7 +89,7 @@ find_call <- function() {
 #'
 #' @param file Path to write csv file to
 #' @param logfile Path to log file to read from
-#' @param remove_message_lf Should the line breaks at the end of messages be removed?
+#' @param unsanitize Should the line breaks at the end of messages be not escaped?
 #' @param ... Additional arguments to pass to `utils::write.table()`
 #'
 #' @return Invisible `NULL`.

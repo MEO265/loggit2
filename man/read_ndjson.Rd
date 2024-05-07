@@ -9,7 +9,7 @@ read_ndjson(logfile, unsanitize = TRUE)
 \arguments{
 \item{logfile}{Log file to read from, and convert to a \code{data.frame}.}
 
-\item{unsanitize}{Should the log data be unsanitized after reading from json?}
+\item{unsanitize}{Should the log data be unsanitized?}
 }
 \value{
 A \code{data.frame}
