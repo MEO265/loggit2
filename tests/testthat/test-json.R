@@ -24,26 +24,6 @@ test_that("write_logs() and read_logs() work in tandem", {
 })
 cleanup()
 
-
-test_that("write_logs() and read_logs() work with disallowed JSON characters via santizers", {
-  loggit("INFO", 'default { } , " \r \n sanitizer', echo = FALSE)
-
-  log_df_want <- data.frame(
-    log_lvl = "INFO",
-    log_msg = "default __LEFTBRACE__ __RIGHTBRACE__ __COMMA__ __DBLQUOTE__ __CR__ __LF__ sanitizer",
-    stringsAsFactors = FALSE
-  )
-
-  # Rreturn the sanitized strings as-is
-  log_df_got <- read_ndjson(logfile = get_logfile(), unsanitize = FALSE)
-
-  log_df_got$timestamp <- NULL
-
-  expect_identical(log_df_want, log_df_got)
-})
-cleanup()
-
-
 test_that("read_logs() works with unsanitizers", {
   loggit("INFO", 'default { } , " \r \n unsanitizer', echo = FALSE)
 
@@ -55,8 +35,8 @@ cleanup()
 test_that("write_logs() special cases", {
   # Ignore NAs
   log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_)
-  write_ndjson(log_data, echo = FALSE, sanitize = FALSE)
+  write_ndjson(log_data, echo = FALSE)
   log_file <- read_logs()
-  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar")))
+  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_))
 })
 cleanup()

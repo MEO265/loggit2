@@ -30,7 +30,7 @@ extern "C" SEXP split_json(SEXP strSEXP) {
         char ch = str[i];
         if (ch == ' ' && !inQuotes) continue; // Skip spaces outside quotes
 
-        if (ch == '\\' && !inQuotes) {
+        if (ch == '\\') {
             backslashCount++;
             token += ch;
         } else if (ch == '"' && (backslashCount % 2 == 0)) {
