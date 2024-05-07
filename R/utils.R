@@ -97,7 +97,7 @@ find_call <- function() {
 #' @export
 convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, ...) {
   if (!requireNamespace(package = "utils", quietly = TRUE)) {
-    stop("Package 'utils' is not available. Please install it, if you want to use this function.")
+    stop("Package 'utils' is not available. Please install it, if you want to use this function.") # nocov
   }
 
   log <- read_logs(logfile = logfile, unsanitize = unsanitize)
