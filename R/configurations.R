@@ -126,6 +126,7 @@ get_log_level <- function() {
 #' Set echo
 #'
 #' @param echo Logical. Should log messages be echoed to the console?
+#' @param confirm Print confirmation message of echo setting?
 #'
 #' @return Invisible `NULL`.
 #'
