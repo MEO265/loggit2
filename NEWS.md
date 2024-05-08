@@ -13,6 +13,8 @@
 * `NA`s are now stored as `null` in the json log. And `read_logs()` also restores these as `NA`.  
   This was previously (unintentionally) guaranteed by replacing the `NA` with `"__NA__"`.
 * `read_logs()` now allows reading the logs in reverse order using `last_first` argument.
+* A global log level can now be set using `set_log_level()`, which is used by all functions unless otherwise stated.
+  The log levels are: `"DEBUG"`, `"INFO"`, `"WARN"`, `"ERROR"` and `"NONE"`.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
