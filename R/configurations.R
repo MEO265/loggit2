@@ -123,3 +123,25 @@ get_log_level <- function() {
   .config$level
 }
 
+#' Set echo
+#'
+#' @param echo Logical. Should log messages be echoed to the console?
+#'
+#' @return Invisible `NULL`.
+#'
+#' @export
+#'
+set_echo <- function(echo = TRUE, confirm = TRUE) {
+  .config$echo <- echo
+  if (confirm) base::message("Echo set to ", echo)
+  invisible(NULL)
+}
+
+#' Get echo
+#'
+#' @return Logical. Are log messages echoed to the console?
+#'
+#' @export
+get_echo <- function() {
+  .config$echo
+}

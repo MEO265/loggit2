@@ -13,7 +13,7 @@
 #' @return The result of the expression.
 #'
 #' @export
-with_loggit <- function(exp, logfile = get_logfile(), echo = TRUE, log_level = get_log_level()) {
+with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level()) {
   log_level <- convert_lvl_input(log_level)
   withCallingHandlers(
     exp,

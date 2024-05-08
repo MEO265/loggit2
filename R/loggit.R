@@ -23,7 +23,7 @@ NULL
 #'   sure = "why not?", like = 2, or = 10, what = "ever")
 #'
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(),
+loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FALSE, logfile = get_logfile(),
                    ignore_log_level = FALSE) {
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
