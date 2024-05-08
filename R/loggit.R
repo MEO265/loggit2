@@ -46,6 +46,10 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
 
   if (...length() > 0L) {
     dots <- list(...)
+    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+    if (is.null(names(dots)) || anyNA(names(dots))) {
+      base::stop("All custom log fields should be named.")
+    }
     if (any(lengths(dots) > 1L)) {
       base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
     }
