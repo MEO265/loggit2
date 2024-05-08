@@ -1,11 +1,8 @@
 sanitizer_map <- list(
-  "{" = "__LEFTBRACE__",
-  "}" = "__RIGHTBRACE__",
-  '"' = "__DBLQUOTE__",
-  "," = "__COMMA__",
-  "\r" = "__CR__",
-  "\n" = "__LF__"
-)
+  "\\" =  "\\\\",
+  '"' = '\\\"',
+  "\r" = "\\r",
+  "\n" = "\\n")
 
 
 #' Sanitization for ndJSON.
@@ -20,13 +17,10 @@ sanitizer_map <- list(
 #' The default sanatizer and unsanatizer are based on the following mapping:
 #'
 #'  | Character | Replacement |
-#'  |:--------- | :---------------------- |
-#'  | `{`       | `__LEFTBRACE__`         |
-#'  | `}`       | `__RIGHTBRACE__`        |
-#'  | `"`       | `__DBLQUOTE__`          |
-#'  | `,`       | `__COMMA__`             |
-#'  | `\r`      | `__CR__`                |
-#'  | `\n`      | `__LF__`                |
+#'  |:--------- | :-----------|
+#'  | `"`       | `\"`        |
+#'  | `\r`      | `\\r`       |
+#'  | `\n`      | `\\n`       |
 #'
 #' This type of function is needed because because some characters in a JSON cannot appear unescaped and
 #' since `loggit2` reimplements its own very simple string-based JSON parser.
@@ -47,19 +41,14 @@ default_ndjson_sanitizer <- function(string) {
     string <- gsub(pattern = k, replacement = sanitizer_map[[k]], string, fixed = TRUE)
   }
 
-  # Explicit NAs must be marked so that no new ones are inserted when rotating the log
-  string[is.na(string)] <- "__NA__"
-
   string
 }
 
 #' @rdname sanitizers
 default_ndjson_unsanitizer <- function(string) {
-  for (k in names(sanitizer_map)) {
+  for (k in rev(names(sanitizer_map))) {
     string <- gsub(pattern = sanitizer_map[[k]], replacement = k, string, fixed = TRUE)
   }
-
-  string[string == "__NA__"] <- NA_character_
 
   string
 }
@@ -74,31 +63,25 @@ default_ndjson_unsanitizer <- function(string) {
 #' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
 #' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
 #'   so will append new log entries to the log file.
-#' @param sanitizer Should the log data be sanitized before writing to json?
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE, sanitize = TRUE) {
-
-  if (sanitize) {
-    for (field in colnames(log_df)) {
-      log_df[, field] <- default_ndjson_sanitizer(log_df[, field])
-    }
-  }
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
   logdata <- character(nrow(log_df))
 
-  field_names <- paste0("\"", colnames(log_df), "\"")
+  log_df <- as.data.frame(lapply(log_df, function (x) default_ndjson_sanitizer(as.character(x))))
+
+  row_names <- paste0("\"", colnames(log_df), "\"")
 
   for (row in seq_len(nrow(log_df))) {
 
     row_data <- as.character(log_df[row,])
-    na_entries <- is.na(row_data)
-    row_data <- row_data[!na_entries]
-    row_names <- field_names[!na_entries]
 
-    row_data <- paste0("\"", row_data, "\"")
+    na_entries <- is.na(row_data)
+    row_data[!na_entries] <- paste0("\"", row_data[!na_entries], "\"")
+    row_data[na_entries] <- "null"
     row_data <- paste(row_names, row_data, sep = ": ", collapse = ", ")
     logdata[row] <- paste0("{", row_data, "}")
   }
@@ -111,7 +94,7 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #' Read ndJSON-formatted log file
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
-#' @param unsanitize Should the log data be unsanitized after reading from json?
+#' @param unsanitize Should the log data be unsanitized?
 #'
 #' @keywords internal
 #'
@@ -121,28 +104,8 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
   # Read in lines of log data
   logdata <- readLines(logfile)
 
-  # List first; easier to add to dynamically
-  log_df <- data.frame()
+  log_kvs <- split_ndjson(logdata)
 
-  # Split out the log data into individual pieces, which will include JSON keys AND values
-  logdata <- substring(logdata, first = 3L, last = nchar(logdata) - 2L)
-  logdata <- strsplit(logdata, '", "', fixed = TRUE)
-  log_kvs <- lapply(logdata, FUN = function(x) strsplit(x, '": "', fixed = FALSE))
-  for (kvs in seq_along(log_kvs)) {
-    missing_key <- which(lengths(log_kvs[[kvs]]) == 1L)
-    for (mk in missing_key) {
-      log_kvs[[kvs]][[mk]] <- c(log_kvs[[kvs]][[mk]], "")
-    }
-  }
-
-  key_value_split <- function(x) {
-    x <- unlist(x, use.names = FALSE)
-    keys <- x[c(TRUE, FALSE)]
-    values <- x[c(FALSE, TRUE)]
-    list(keys = keys, values = values)
-  }
-
-  log_kvs <- lapply(log_kvs, key_value_split)
   rowcount <- length(log_kvs)
 
   all_keys <- unique(unlist(lapply(log_kvs, FUN = function(x) x[["keys"]])))
@@ -158,7 +121,7 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
     }
   }
 
-  if (unsanitize) log_df <- lapply(log_df, FUN = default_ndjson_unsanitizer)
+  if(unsanitize) log_df <- lapply(log_df, default_ndjson_unsanitizer)
 
   log_df <- as.data.frame(log_df)
 

@@ -1,3 +1,6 @@
+#' @useDynLib loggit2, .registration=TRUE
+NULL
+
 #' Log entries to file
 #'
 #' Log entries to a [ndjson](https://github.com/ndjson) log file, defined by [set_logfile()].

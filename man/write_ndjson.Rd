@@ -4,13 +4,7 @@
 \alias{write_ndjson}
 \title{Write ndJSON-formatted log file}
 \usage{
-write_ndjson(
-  log_df,
-  logfile = get_logfile(),
-  echo = TRUE,
-  overwrite = FALSE,
-  sanitize = TRUE
-)
+write_ndjson(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE)
 }
 \arguments{
 \item{log_df}{Data frame of log data. Rows are converted to \code{ndjson} entries,
@@ -23,8 +17,6 @@ file.}
 
 \item{overwrite}{Overwrite previous log file data? Defaults to \code{FALSE}, and
 so will append new log entries to the log file.}
-
-\item{sanitizer}{Should the log data be sanitized before writing to json?}
 }
 \description{
 Write ndJSON-formatted log file

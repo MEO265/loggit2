@@ -3,6 +3,7 @@
 #' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
 #' @param logfile Path to log file.
+#' @param unsanitize Should the log messages be unsanitized?
 #'
 #' @return A `data.frame`.
 #'
@@ -15,11 +16,11 @@
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile = get_logfile()) {
+read_logs <- function(logfile = get_logfile(), unsanitize = TRUE) {
 
   base::stopifnot("Log file does not exist" = file.exists(logfile))
 
-  log <- read_ndjson(logfile)
+  log <- read_ndjson(logfile, unsanitize = unsanitize)
 
   if (nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
 
@@ -56,12 +57,12 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- read_ndjson(logfile, unsanitize = FALSE)
-  if (nrow(log_df) <= rotate_lines) {
+  log_df <- readLines(logfile)
+  if (length(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }
-  log_df <- log_df[seq.int(from = nrow(log_df) - rotate_lines + 1L, length.out = rotate_lines),]
-  write_ndjson(log_df, logfile, echo = FALSE, overwrite = TRUE, sanitize = FALSE)
+  log_df <- log_df[seq.int(from = length(log_df) - rotate_lines + 1L, length.out = rotate_lines)]
+  write(log_df, logfile, append = FALSE)
 }
 
 #' Find the Call of a Parent Function in the Call Hierarchy
@@ -88,22 +89,20 @@ find_call <- function() {
 #'
 #' @param file Path to write csv file to
 #' @param logfile Path to log file to read from
-#' @param remove_message_lf Should the line breaks at the end of messages be removed?
+#' @param unsanitize Should the line breaks at the end of messages be not escaped?
 #' @param ... Additional arguments to pass to `utils::write.table()`
 #'
 #' @return Invisible `NULL`.
 #'
 #' @export
-convert_to_csv <- function(file, logfile = get_logfile(), remove_message_lf = TRUE, ...) {
-  log <- read_logs(logfile = logfile)
-
-  if (remove_message_lf) {
-    msg_flag <- log$log_lvl == "INFO"
-    msg <- log$log_msg[msg_flag]
-    log$log_msg[msg_flag] <- gsub("\n$", "", msg)
+convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, ...) {
+  if (!requireNamespace(package = "utils", quietly = TRUE)) {
+    stop("Package 'utils' is not available. Please install it, if you want to use this function.") # nocov
   }
 
-  write.table(log, file = file, ...)
+  log <- read_logs(logfile = logfile, unsanitize = unsanitize)
+
+  utils::write.table(log, file = file, ...)
 
   return(invisible(NULL))
 }

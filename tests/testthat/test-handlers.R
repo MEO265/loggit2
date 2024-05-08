@@ -137,3 +137,7 @@ test_that("stopifnot", {
 })
 
 cleanup()
+
+test_that("split_ndjson error", {
+  expect_error(split_ndjson(3L), "Input must be a character vector.")
+})

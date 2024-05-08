@@ -4,14 +4,14 @@
 \alias{convert_to_csv}
 \title{Write log to csv file}
 \usage{
-convert_to_csv(file, logfile = get_logfile(), remove_message_lf = TRUE, ...)
+convert_to_csv(file, logfile = get_logfile(), unsanitize = FALSE, ...)
 }
 \arguments{
 \item{file}{Path to write csv file to}
 
 \item{logfile}{Path to log file to read from}
 
-\item{remove_message_lf}{Should the line breaks at the end of messages be removed?}
+\item{unsanitize}{Should the line breaks at the end of messages be not escaped?}
 
 \item{...}{Additional arguments to pass to \code{utils::write.table()}}
 }

@@ -4,10 +4,12 @@
 \alias{read_logs}
 \title{Return log file as an R data frame}
 \usage{
-read_logs(logfile = get_logfile())
+read_logs(logfile = get_logfile(), unsanitize = TRUE)
 }
 \arguments{
 \item{logfile}{Path to log file.}
+
+\item{unsanitize}{Should the log messages be unsanitized?}
 }
 \value{
 A \code{data.frame}.
