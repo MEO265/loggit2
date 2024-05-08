@@ -15,6 +15,7 @@
 * `read_logs()` now allows reading the logs in reverse order using `last_first` argument.
 * A global log level can now be set using `set_log_level()`, which is used by all functions unless otherwise stated.
   The log levels are: `"DEBUG"`, `"INFO"`, `"WARN"`, `"ERROR"` and `"NONE"`.
+* Add `set_echo()` to control globally whether log messages are echoed to the console.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  

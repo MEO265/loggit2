@@ -29,7 +29,7 @@ NULL
 #'   )
 #' }
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(),
+loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FALSE, logfile = get_logfile(),
                    ignore_log_level = FALSE) {
 
   if (length(log_msg) > 1L) {

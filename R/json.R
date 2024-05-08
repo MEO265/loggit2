@@ -67,7 +67,7 @@ default_ndjson_unsanitizer <- function(string) {
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), overwrite = FALSE) {
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
