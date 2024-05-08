@@ -33,6 +33,15 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
     )
   }
 
+  if (length(log_msg) > 1L) {
+    base::warning("log_msg should be of length one, only the first element will be used.")
+    log_msg <- log_msg[1L]
+  }
+  if (length(log_lvl) > 1L) {
+    base::warning("log_lvl should be of length one, only the first element will be used.")
+    log_lvl <- log_lvl[1L]
+  }
+
   timestamp <- format(Sys.time(), format = .config$ts_format)
 
   if (...length() > 0L) {
