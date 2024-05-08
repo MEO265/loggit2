@@ -54,17 +54,12 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
       base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
     }
     log_df <- data.frame(
-      timestamp = timestamp,
-      log_lvl = as.character(log_lvl),
-      log_msg = as.character(log_msg),
-      dots,
-      stringsAsFactors = FALSE
+      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
+      stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
     )
   } else {
     log_df <- data.frame(
-      timestamp = timestamp,
-      log_lvl = as.character(log_lvl),
-      log_msg = as.character(log_msg),
+      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
       stringsAsFactors = FALSE
     )
   }
