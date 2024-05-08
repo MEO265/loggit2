@@ -7,7 +7,7 @@
 with_loggit(
   exp,
   logfile = get_logfile(),
-  echo = TRUE,
+  echo = get_echo(),
   log_level = get_log_level()
 )
 }

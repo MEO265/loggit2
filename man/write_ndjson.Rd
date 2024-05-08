@@ -4,7 +4,12 @@
 \alias{write_ndjson}
 \title{Write ndJSON-formatted log file}
 \usage{
-write_ndjson(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE)
+write_ndjson(
+  log_df,
+  logfile = get_logfile(),
+  echo = get_echo(),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{log_df}{Data frame of log data. Rows are converted to \code{ndjson} entries,

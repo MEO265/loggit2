@@ -8,7 +8,7 @@ loggit(
   log_lvl,
   log_msg,
   ...,
-  echo = TRUE,
+  echo = get_echo(),
   custom_log_lvl = FALSE,
   logfile = get_logfile(),
   ignore_log_level = FALSE
