@@ -127,7 +127,7 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
   }
 
   if (unsanitize) {
-    colnames(log_df) <- default_ndjson_unsanitizer(colnames(log_df))
+    names(log_df) <- default_ndjson_unsanitizer(names(log_df))
     log_df <- lapply(log_df, default_ndjson_unsanitizer)
   }
 
