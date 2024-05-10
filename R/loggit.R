@@ -22,7 +22,7 @@ NULL
 #'   sure = "why not?", like = 2, or = 10, what = "ever")
 #'
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
+loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(), allow_multiline = NA) {
 
   if (length(log_msg) > 1L) {
     base::warning("log_msg should be of length one, only the first element will be used.")
@@ -32,7 +32,6 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
     base::warning("log_lvl should be of length one, only the first element will be used.")
     log_lvl <- log_lvl[1L]
   }
-
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
   if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
@@ -47,13 +46,21 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
 
   if (...length() > 0L) {
     dots <- list(...)
+    multiline_args <- lengths(dots) > 1L
+    if (any(multiline_args)) {
+      if (isFALSE(allow_multiline)) {
+        dots[multiline_args] <- lapply(dots[multiline_args], FUN = toString)
+      } else {
+        if (is.na(allow_multiline)) base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
+        dots[multiline_args] <- lapply(dots[multiline_args], FUN = function(x) I(as.character(x)))
+      }
+    }
     # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
     if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
       base::stop("All custom log fields should be named.")
     }
-    if (any(lengths(dots) > 1L)) {
-      base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
-    }
+    # dots <- lapply(dots, FUN = as.character)
+    dots <- lapply(dots, I)
     log_df <- data.frame(
       timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
       stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
