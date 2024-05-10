@@ -22,7 +22,8 @@ NULL
 #'   sure = "why not?", like = 2, or = 10, what = "ever")
 #'
 #' @export
-loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(), allow_multiline = NA) {
+loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile(),
+                   allow_multiline = NA, repeat_length_one = FALSE) {
 
   if (length(log_msg) > 1L) {
     base::warning("log_msg should be of length one, only the first element will be used.")
@@ -46,6 +47,10 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
 
   if (...length() > 0L) {
     dots <- list(...)
+    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+    if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
+      base::stop("All custom log fields should be named.")
+    }
     multiline_args <- lengths(dots) > 1L
     if (any(multiline_args)) {
       if (isFALSE(allow_multiline)) {
@@ -55,12 +60,9 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
         dots[multiline_args] <- lapply(dots[multiline_args], FUN = function(x) I(as.character(x)))
       }
     }
-    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-    if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
-      base::stop("All custom log fields should be named.")
-    }
-    # dots <- lapply(dots, FUN = as.character)
-    dots <- lapply(dots, I)
+    # Handle lists of length one
+    dots[!multiline_args] <- lapply(dots[!multiline_args], FUN = as.character)
+    if (!repeat_length_one) dots <- lapply(dots, I)
     log_df <- data.frame(
       timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
       stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
