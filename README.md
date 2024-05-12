@@ -42,13 +42,13 @@ at the desired locations.
 
 ``` r
 loggit2::message("This is a message")
-#> {"timestamp": "2024-05-12T20:39:08+0200", "log_lvl": "INFO", "log_msg": "This is a message__LF__"}
+#> {"timestamp": "2024-05-12T21:15:47+0200", "log_lvl": "INFO", "log_msg": "This is a message\n"}
 #> This is a message
 loggit2::warning("This is a warning")
-#> {"timestamp": "2024-05-12T20:39:08+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-05-12T21:15:47+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning: This is a warning
 loggit2::stop("This is an error")
-#> {"timestamp": "2024-05-12T20:39:08+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-05-12T21:15:47+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in eval(expr, envir, enclos): This is an error
 ```
 
@@ -81,18 +81,18 @@ it’ll become a structured log.
 
 ``` r
 loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-05-12T20:39:08+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-05-12T21:15:47+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit2::read_logs()
 #>                  timestamp log_lvl                   log_msg       anything_else
-#> 1 2024-05-12T20:39:08+0200    INFO       This is a message\n                <NA>
-#> 2 2024-05-12T20:39:08+0200    WARN         This is a warning                <NA>
-#> 3 2024-05-12T20:39:08+0200   ERROR          This is an error                <NA>
-#> 4 2024-05-12T20:39:08+0200    INFO This is another message\n                <NA>
-#> 5 2024-05-12T20:39:08+0200    WARN   This is another warning                <NA>
-#> 6 2024-05-12T20:39:08+0200   ERROR     This is another error                <NA>
-#> 7 2024-05-12T20:39:08+0200   ERROR    This will log an error you want to include
+#> 1 2024-05-12T21:15:47+0200    INFO       This is a message\n                <NA>
+#> 2 2024-05-12T21:15:47+0200    WARN         This is a warning                <NA>
+#> 3 2024-05-12T21:15:47+0200   ERROR          This is an error                <NA>
+#> 4 2024-05-12T21:15:47+0200    INFO This is another message\n                <NA>
+#> 5 2024-05-12T21:15:47+0200    WARN   This is another warning                <NA>
+#> 6 2024-05-12T21:15:47+0200   ERROR     This is another error                <NA>
+#> 7 2024-05-12T21:15:47+0200   ERROR    This will log an error you want to include
 ```
 
 Check out the
