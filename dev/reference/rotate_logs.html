@@ -18,14 +18,11 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/loggit2.html">Get started</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
-  </div>
+<li class="active nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -81,17 +78,17 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span>  <span class="co"># Truncate "default" log file to 100 lines</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/RtmpU8ZmxT/loggit.log</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/Rtmp4GtzWB/loggit.log</span>
 <span class="r-in"><span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">150</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="va">i</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">}</span></span></span>
 <span class="r-in"><span>  <span class="fu">rotate_logs</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Truncate a different log file to 250 lines</span></span></span>
 <span class="r-in"><span>  <span class="va">another_log</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"another.log"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="va">another_log</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/RtmpU8ZmxT/another.log</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/Rtmp4GtzWB/another.log</span>
 <span class="r-in"><span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">300</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="va">i</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">}</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># clears pointer to other log file</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/RtmpU8ZmxT/loggit.log</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Log file set to /tmp/Rtmp4GtzWB/loggit.log</span>
 <span class="r-in"><span>  <span class="fu">rotate_logs</span><span class="op">(</span><span class="fl">250</span>, <span class="va">another_log</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
