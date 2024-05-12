@@ -13,3 +13,6 @@ Makefile
 ^\.github$
 ^\.covrignore$
 ^\.idea$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
