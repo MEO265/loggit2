@@ -1,0 +1,43 @@
+url: http://www.r-loggit.org/
+
+home:
+  title: Easy-to-Use, Dependencyless Logger for R
+  sidebar:
+    structure: [links, license, dev]
+
+template:
+  bootstrap: 5
+
+reference:
+  - title: Handlers
+  - contents:
+    - "message"
+    - "warning"
+    - "stop"
+    - "stopifnot"
+  - title: Working horses
+  - contents:
+    - "loggit"
+    - "with_loggit"
+  - title: Utility functions
+  - contents:
+    - "read_logs"
+    - "rotate_logs"
+    - "convert_to_csv"
+  - title: Configuration
+  - contents:
+    - starts_with("set_")
+    - starts_with("get_")
+
+development:
+  mode: auto
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: github
+
+footer:
+  structure:
+    left: package
+    right: developed_by
