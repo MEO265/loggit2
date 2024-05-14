@@ -59,7 +59,7 @@
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
 <ul><li>Custom <code>sanitizer</code>s and <code>unsanitizer</code>s are no longer supported. This decision was made because no active user is known and this functionality severely limits further development.<br>
 If custom <code>sanitizer</code>s were previously used, they could simply be executed before or after instead in <code><a href="../reference/loggit.html">loggit()</a></code> or <code><a href="../reference/read_logs.html">read_logs()</a></code>. If custom sanitizer has been used to get around bugs, please report them so that they can be fixed.</li>
-<li>Special characters are no longer escaped by replacement, but rather by “".</li>
+<li>Special characters are no longer escaped by replacement, but rather by “\”.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
@@ -74,12 +74,18 @@ This was previously (unintentionally) guaranteed by replacing the <code>NA</code
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty character values <code>""</code>, as in <code>{"key": ""}</code>, as such.<br>
 Previously, empty fields were read as <code>NA</code>. This meant that when <code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> was used, these entries could completely disappear from the respective json object</li>
+<li>
+<code><a href="../reference/loggit.html">loggit()</a></code> now does not unintentionally “repair” argument names of log entries. Previously, the names were replaced by <code>check.names</code> of <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code>, which could lead to unexpected behavior. Names that are not valid JSON keys are now escaped according to the JSON standard.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-development-version">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-development-version"></a></h3>
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now returns a <code>data.frame</code> with the empty character columns “timestamp”, “log_lvl” and “log_msg” instead of an empty (0x0) <code>data.frame</code> if the log file has no entries.</li>
 <li>The Json reading functions are more tolerant of manual changes to the log.</li>
+<li>
+<code><a href="../reference/loggit.html">loggit()</a></code> now throws an error if there are unnamed <code>...</code> arguments. Previously, these were silently named, by <code>fix.empty.names</code> of <code>data.frame</code>, which could lead to unexpected behavior.</li>
+<li>
+<code><a href="../reference/loggit.html">loggit()</a></code> now also checks the length of the <code>log_lvl</code> and <code>log_msg</code> arguments and only uses the first element. Previously, the log entry had been multiplied, leading to unintended consequences, regarding <code>custom_log_lvl</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="internals-development-version">Internals<a class="anchor" aria-label="anchor" href="#internals-development-version"></a></h3>
