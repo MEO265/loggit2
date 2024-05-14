@@ -47,7 +47,7 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
   if (...length() > 0L) {
     dots <- list(...)
     # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-    if (is.null(names(dots)) || anyNA(names(dots))) {
+    if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
       base::stop("All custom log fields should be named.")
     }
     if (any(lengths(dots) > 1L)) {
