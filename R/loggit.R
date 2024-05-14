@@ -23,6 +23,16 @@ NULL
 #'
 #' @export
 loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
+
+  if (length(log_msg) > 1L) {
+    base::warning("log_msg should be of length one, only the first element will be used.")
+    log_msg <- log_msg[1L]
+  }
+  if (length(log_lvl) > 1L) {
+    base::warning("log_lvl should be of length one, only the first element will be used.")
+    log_lvl <- log_lvl[1L]
+  }
+
   # Try to suggest limited log levels to prevent typos by users
   log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
   if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
@@ -37,21 +47,20 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
 
   if (...length() > 0L) {
     dots <- list(...)
+    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+    if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
+      base::stop("All custom log fields should be named.")
+    }
     if (any(lengths(dots) > 1L)) {
       base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
     }
     log_df <- data.frame(
-      timestamp = timestamp,
-      log_lvl = as.character(log_lvl),
-      log_msg = as.character(log_msg),
-      dots,
-      stringsAsFactors = FALSE
+      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
+      stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
     )
   } else {
     log_df <- data.frame(
-      timestamp = timestamp,
-      log_lvl = as.character(log_lvl),
-      log_msg = as.character(log_msg),
+      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
       stringsAsFactors = FALSE
     )
   }

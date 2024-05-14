@@ -30,6 +30,22 @@ test_that("loggit multiplies values with warning", {
     loggit(log_lvl = "INFO", log_msg = "foo", value = 1:3, echo = FALSE),
     regexp = "^Each custom log field should be of length one, or else your logs will be multiplied!$"
   )
+
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = c("foo", "bar"), value = 1, echo = FALSE),
+    regexp = "^log_msg should be of length one, only the first element will be used.$"
+  )
+
+  expect_warning(
+    loggit(log_lvl = c("INFO", "DEBUG"), log_msg = "foo", value = 3L, echo = FALSE),
+    regexp = "^log_lvl should be of length one, only the first element will be used.$"
+  )
+
+  expect_error(
+    loggit(log_lvl = "INFO", log_msg = "foo", value = 1, "4", echo = FALSE),
+    regexp = "^All custom log fields should be named.$"
+  )
+
 })
 cleanup()
 
