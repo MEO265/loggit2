@@ -24,7 +24,9 @@ Easy-to-use, dependencyless Logger for R
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/loggit2)](https://cran.r-project.org/package=loggit2)
 [![R-CMD-check](https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/MEO265/loggit2/graph/badge.svg)](https://codecov.io/gh/MEO265/loggit2)
+
 ------------------------------------------------------------------------
+
 <!-- badges: end -->
 
 `loggit2` is an easy-to-use [`ndJSON`](https://github.com/ndjson/ndjson-spec) logging library for R software,

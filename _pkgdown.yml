@@ -9,13 +9,13 @@ template:
   bootstrap: 5
 
 reference:
-  - title: Handlers
+  - title: Condition log handlers
   - contents:
     - "message"
     - "warning"
     - "stop"
     - "stopifnot"
-  - title: Working horses
+  - title: Log functions
   - contents:
     - "loggit"
     - "with_loggit"

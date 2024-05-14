@@ -1,5 +1,5 @@
 sanitizer_map <- list(
-  "\\" =  "\\\\",
+  "\\" = "\\\\",
   '"' = '\\\"',
   "\r" = "\\r",
   "\n" = "\\n")
@@ -71,7 +71,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
   # JSON object, constructed from each row of the log data frame.
   logdata <- character(nrow(log_df))
 
-  log_df <- as.data.frame(lapply(log_df, function (x) default_ndjson_sanitizer(as.character(x))))
+  colnames(log_df) <- default_ndjson_sanitizer(colnames(log_df))
+
+  log_df <- as.data.frame(
+    lapply(log_df, function(x) default_ndjson_sanitizer(as.character(x))),
+    check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE
+  )
 
   row_names <- paste0("\"", colnames(log_df), "\"")
 
@@ -121,9 +126,12 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
     }
   }
 
-  if(unsanitize) log_df <- lapply(log_df, default_ndjson_unsanitizer)
+  if (unsanitize) {
+    names(log_df) <- default_ndjson_unsanitizer(names(log_df))
+    log_df <- lapply(log_df, default_ndjson_unsanitizer)
+  }
 
-  log_df <- as.data.frame(log_df)
+  log_df <- as.data.frame(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   log_df
 }
