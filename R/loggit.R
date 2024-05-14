@@ -23,15 +23,6 @@ NULL
 #'
 #' @export
 loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
-  # Try to suggest limited log levels to prevent typos by users
-  log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
-  if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
-    base::stop(
-      "Nonstandard log_lvl ('", log_lvl, "').\n",
-      "Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.\n",
-      "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
-    )
-  }
 
   if (length(log_msg) > 1L) {
     base::warning("log_msg should be of length one, only the first element will be used.")
@@ -40,6 +31,16 @@ loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, l
   if (length(log_lvl) > 1L) {
     base::warning("log_lvl should be of length one, only the first element will be used.")
     log_lvl <- log_lvl[1L]
+  }
+
+  # Try to suggest limited log levels to prevent typos by users
+  log_lvls <- c("DEBUG", "INFO", "WARN", "ERROR")
+  if (!custom_log_lvl && !(log_lvl %in% log_lvls)) {
+    base::stop(
+      "Nonstandard log_lvl ('", log_lvl, "').\n",
+      "Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.\n",
+      "If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'."
+    )
   }
 
   timestamp <- format(Sys.time(), format = .config$ts_format)
