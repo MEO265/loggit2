@@ -50,10 +50,10 @@ No need to write custom formatters, handlers, levels, etc. -- ***just loggit!***
 
 Usage
 --------------
-`loggit2` provides a set of wrappings for base R's `message()`, `warning()`, `stop()` and `stopifnot()`
-functions that maintain identical functionality, making it sufficient to
-import the `loggit2` namespace, for example by using `library("loggit2")`, or by
-prefixing `loggit2::` at the desired locations.
+`loggit2` provides a set of wrappings for base R’s `message()`, `warning()`, `stop()` and `stopifnot()` functions
+that maintain identical functionality.
+Thus, it is sufficient to import the `loggit2` namespace, for example by using `library("loggit2")`,
+or by prefixing `loggit2::` at the desired locations.
 
 ```{r, error = TRUE}
 base::message("This is another message")
@@ -73,8 +73,6 @@ will be filled in the background).
 
 You can also directly use the logging function `loggit()` to compose much more custom logs, e.g.
 to include custom fields or to prevent throwing actual conditions.
-No further configurations are necessary for this:
-just throw nearly whatever you want at it, and it'll become a structured log.
 
 ```{r loggit2}
 loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
@@ -82,6 +80,8 @@ loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to 
 # Read log file into data frame to implement logic based on entries
 loggit2::read_logs()
 ```
+No further configurations are necessary for this:
+just throw nearly whatever you want at it, and it'll become a structured log.
 
 Check out the [vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/) for more details and features.
 

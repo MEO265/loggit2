@@ -36,9 +36,10 @@ worst. No need to write custom formatters, handlers, levels, etc. –
 
 `loggit2` provides a set of wrappings for base R’s `message()`,
 `warning()`, `stop()` and `stopifnot()` functions that maintain
-identical functionality, making it sufficient to import the `loggit2`
-namespace, for example by using `library("loggit2")`, or by prefixing
-`loggit2::` at the desired locations.
+identical functionality.  
+Thus, it is sufficient to import the `loggit2` namespace, for example by
+using `library("loggit2")`, or by prefixing `loggit2::` at the desired
+locations.
 
 ``` r
 base::message("This is another message")
@@ -51,16 +52,16 @@ base::stopifnot("This is another condition" = FALSE)
 #> Error: This is another condition
 
 loggit2::message("This is a message")
-#> {"timestamp": "2024-05-15T12:10:46+0200", "log_lvl": "INFO", "log_msg": "This is a message\n"}
+#> {"timestamp": "2024-05-15T12:41:01+0200", "log_lvl": "INFO", "log_msg": "This is a message\n"}
 #> This is a message
 loggit2::warning("This is a warning")
-#> {"timestamp": "2024-05-15T12:10:46+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2024-05-15T12:41:01+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning: This is a warning
 loggit2::stop("This is an error")
-#> {"timestamp": "2024-05-15T12:10:46+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2024-05-15T12:41:01+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error in eval(expr, envir, enclos): This is an error
 loggit2::stopifnot("This is another condition" = FALSE)
-#> {"timestamp": "2024-05-15T12:10:46+0200", "log_lvl": "ERROR", "log_msg": "This is another condition"}
+#> {"timestamp": "2024-05-15T12:41:01+0200", "log_lvl": "ERROR", "log_msg": "This is another condition"}
 #> Error: This is another condition
 ```
 
@@ -70,23 +71,24 @@ the log will be filled in the background).
 
 You can also directly use the logging function `loggit()` to compose
 much more custom logs, e.g. to include custom fields or to prevent
-throwing actual conditions. No further configurations are necessary for
-this: just throw nearly whatever you want at it, and it’ll become a
-structured log.
+throwing actual conditions.
 
 ``` r
 loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-05-15T12:10:46+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
+#> {"timestamp": "2024-05-15T12:41:01+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 
 # Read log file into data frame to implement logic based on entries
 loggit2::read_logs()
 #>                  timestamp log_lvl                   log_msg       anything_else
-#> 1 2024-05-15T12:10:46+0200    INFO       This is a message\n                <NA>
-#> 2 2024-05-15T12:10:46+0200    WARN         This is a warning                <NA>
-#> 3 2024-05-15T12:10:46+0200   ERROR          This is an error                <NA>
-#> 4 2024-05-15T12:10:46+0200   ERROR This is another condition                <NA>
-#> 5 2024-05-15T12:10:46+0200   ERROR    This will log an error you want to include
+#> 1 2024-05-15T12:41:01+0200    INFO       This is a message\n                <NA>
+#> 2 2024-05-15T12:41:01+0200    WARN         This is a warning                <NA>
+#> 3 2024-05-15T12:41:01+0200   ERROR          This is an error                <NA>
+#> 4 2024-05-15T12:41:01+0200   ERROR This is another condition                <NA>
+#> 5 2024-05-15T12:41:01+0200   ERROR    This will log an error you want to include
 ```
+
+No further configurations are necessary for this: just throw nearly
+whatever you want at it, and it’ll become a structured log.
 
 Check out the
 [vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/)
