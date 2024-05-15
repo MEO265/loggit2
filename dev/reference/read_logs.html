@@ -60,7 +60,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_logs</span><span class="op">(</span>logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>, unsanitize <span class="op">=</span> <span class="cn">TRUE</span>, last_first <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_logs</span><span class="op">(</span>logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>, unsanitize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,11 +70,7 @@
 
 
 <dt>unsanitize</dt>
-<dd><p>Should the log data be unsanitized?</p></dd>
-
-
-<dt>last_first</dt>
-<dd><p>Should the last log entry be the first row of the data frame?</p></dd>
+<dd><p>Should the log messages be unsanitized?</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -93,12 +89,12 @@ if the log file has no entries.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span>  <span class="fu"><a href="set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"loggit.log"</span><span class="op">)</span>, confirm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="message.html">message</a></span><span class="op">(</span><span class="st">"Test log message"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> {"timestamp": "2024-05-15T07:40:54+0000", "log_lvl": "INFO", "log_msg": "Test log message\n"}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {"timestamp": "2024-05-15T07:51:26+0000", "log_lvl": "INFO", "log_msg": "Test log message\n"}</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Test log message</span>
 <span class="r-in"><span>  <span class="fu">read_logs</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  timestamp log_lvl            log_msg             but_maybe</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2024-05-15T07:40:54+0000    INFO  This is a message you want more fields?</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2024-05-15T07:40:54+0000    INFO Test log message\n                  &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2024-05-15T07:51:26+0000    INFO  This is a message you want more fields?</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2024-05-15T07:51:26+0000    INFO Test log message\n                  &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       sure like   or what</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 why not?    2   10 ever</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
