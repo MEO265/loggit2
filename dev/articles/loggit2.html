@@ -123,13 +123,13 @@ and use the same handlers you always do:</p>
 <span><span class="fu"><a href="../reference/set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="st">"/path/to/my/log/directory/loggit.log"</span><span class="op">)</span> <span class="co"># loggit2 enforces no specific file extension</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
 <span><span class="co">#&gt; This is a message</span></span>
 <span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is a warning</span></span>
 <span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is a critical error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "ERROR", "log_msg": "This is a critical error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "ERROR", "log_msg": "This is a critical error"}</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is a critical error</span></span></code></pre></div>
 <p>You can see that the handlers will pring both the
 <code><a href="../reference/loggit.html">loggit()</a></code>-generated log entry, as well as their base default
@@ -146,11 +146,11 @@ some sane defaults. However, the <code><a href="../reference/loggit.html">loggit
 exported for use by the developer:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="st">"This is also a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "INFO", "log_msg": "This is also a message"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "INFO", "log_msg": "This is also a message"}</span></span>
 <span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"WARN"</span>, <span class="st">"This is also a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "WARN", "log_msg": "This is also a warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "WARN", "log_msg": "This is also a warning"}</span></span>
 <span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"ERROR"</span>, <span class="st">"This is an error, but it won't stop"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "ERROR", "log_msg": "This is an error, but it won't stop"}</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "ERROR", "log_msg": "This is an error, but it won't stop"}</span></span></code></pre></div>
 <p><em>“But why wouldn’t I just use the handlers instead?”</em></p>
 <p>Because <code><a href="../reference/loggit.html">loggit()</a></code> exposes much greater flexibility to the
 user, by way of <em>custom fields</em>.</p>
@@ -162,7 +162,7 @@ user, by way of <em>custom fields</em>.</p>
 <span>  sure <span class="op">=</span> <span class="st">"why not?"</span>,</span>
 <span>  like <span class="op">=</span> <span class="fl">2</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:35:20+0000", "log_lvl": "INFO", "log_msg": "This is a message", "but_maybe": "you want more fields?", "sure": "why not?", "like": "2"}</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2024-05-15T07:41:00+0000", "log_lvl": "INFO", "log_msg": "This is a message", "but_maybe": "you want more fields?", "sure": "why not?", "like": "2"}</span></span></code></pre></div>
 <p>Since JSON is considered <em>semi-structured data</em> (sometimes
 called “schema-on-read”), you can log any custom fields you like, as
 <em>inconsistently</em> as you like. It all just ends up as text in a
@@ -175,13 +175,13 @@ the currently-set log file as a data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  timestamp log_lvl                             log_msg             but_maybe     sure like</span></span>
-<span><span class="co">#&gt; 1 2024-05-15T07:35:20+0000    INFO                 This is a message\n                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 2024-05-15T07:35:20+0000    WARN                   This is a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3 2024-05-15T07:35:20+0000   ERROR            This is a critical error                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 4 2024-05-15T07:35:20+0000    INFO              This is also a message                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 5 2024-05-15T07:35:20+0000    WARN              This is also a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 6 2024-05-15T07:35:20+0000   ERROR This is an error, but it won't stop                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 7 2024-05-15T07:35:20+0000    INFO                   This is a message you want more fields? why not?    2</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 2024-05-15T07:41:00+0000    INFO                 This is a message\n                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2 2024-05-15T07:41:00+0000    WARN                   This is a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 2024-05-15T07:41:00+0000   ERROR            This is a critical error                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 4 2024-05-15T07:41:00+0000    INFO              This is also a message                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 5 2024-05-15T07:41:00+0000    WARN              This is also a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 6 2024-05-15T07:41:00+0000   ERROR This is an error, but it won't stop                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 7 2024-05-15T07:41:00+0000    INFO                   This is a message you want more fields? why not?    2</span></span></code></pre></div>
 <p>Notice that <code><a href="../reference/read_logs.html">read_logs()</a></code> handles any columnar
 inconsistencies as mentioned above. If <code><a href="../reference/read_logs.html">read_logs()</a></code> finds a
 field that other entries don’t have, it maps it to an empty string for
