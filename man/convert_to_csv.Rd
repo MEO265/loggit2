@@ -4,7 +4,13 @@
 \alias{convert_to_csv}
 \title{Write log to csv file}
 \usage{
-convert_to_csv(file, logfile = get_logfile(), unsanitize = FALSE, ...)
+convert_to_csv(
+  file,
+  logfile = get_logfile(),
+  unsanitize = FALSE,
+  last_first = FALSE,
+  ...
+)
 }
 \arguments{
 \item{file}{Path to write csv file to}
@@ -12,6 +18,8 @@ convert_to_csv(file, logfile = get_logfile(), unsanitize = FALSE, ...)
 \item{logfile}{Path to log file to read from}
 
 \item{unsanitize}{Should the line breaks at the end of messages be not escaped?}
+
+\item{last_first}{Should the last log entry be the first row of the data frame?}
 
 \item{...}{Additional arguments to pass to \code{utils::write.table()}}
 }

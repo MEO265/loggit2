@@ -100,11 +100,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
 #' @param unsanitize Should the log data be unsanitized?
+#' @param last_first Should the last log entry be the first row of the data frame?
 #'
 #' @keywords internal
 #'
 #' @return A `data.frame`
-read_ndjson <- function(logfile, unsanitize = TRUE) {
+read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
   logdata <- readLines(logfile)
@@ -118,7 +119,8 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
   log_df <- rep(list(rep(NA_character_, rowcount)), length(all_keys))
   names(log_df) <- all_keys
   for (lognum in seq_len(rowcount)) {
-    row <- log_kvs[[lognum]]
+    lognum_df <- ifelse(last_first, yes = rowcount - lognum + 1L, no = lognum)
+    row <- log_kvs[[lognum_df]]
     keys <- row[["keys"]]
     values <- row[["values"]]
     for (i in seq_along(keys)) {

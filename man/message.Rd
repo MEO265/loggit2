@@ -34,8 +34,8 @@ but it includes logging of the exception message via \code{loggit()}.
 }
 \seealso{
 Other handlers: 
-\code{\link{stop}()},
 \code{\link{stopifnot}()},
+\code{\link{stop}()},
 \code{\link{warning}()}
 }
 \concept{handlers}

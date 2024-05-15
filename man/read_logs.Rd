@@ -4,12 +4,14 @@
 \alias{read_logs}
 \title{Return log file as an R data frame}
 \usage{
-read_logs(logfile = get_logfile(), unsanitize = TRUE)
+read_logs(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE)
 }
 \arguments{
 \item{logfile}{Path to log file.}
 
-\item{unsanitize}{Should the log messages be unsanitized?}
+\item{unsanitize}{Should the log data be unsanitized?}
+
+\item{last_first}{Should the last log entry be the first row of the data frame?}
 }
 \value{
 A \code{data.frame}.
