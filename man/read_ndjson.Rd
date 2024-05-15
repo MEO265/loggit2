@@ -4,12 +4,14 @@
 \alias{read_ndjson}
 \title{Read ndJSON-formatted log file}
 \usage{
-read_ndjson(logfile, unsanitize = TRUE)
+read_ndjson(logfile, unsanitize = TRUE, last_first = FALSE)
 }
 \arguments{
 \item{logfile}{Log file to read from, and convert to a \code{data.frame}.}
 
 \item{unsanitize}{Should the log data be unsanitized?}
+
+\item{last_first}{Should the last log entry be the first row of the data frame?}
 }
 \value{
 A \code{data.frame}

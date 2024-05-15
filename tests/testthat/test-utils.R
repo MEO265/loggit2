@@ -81,10 +81,12 @@ cleanup()
 test_that("convert_to_csv", {
   tmp_dir <- tempdir()
   convert_to_csv(file = file.path(tmp_dir, "test.csv"), logfile = "testdata/test.loggit")
+  convert_to_csv(file = file.path(tmp_dir, "test_reverse.csv"), logfile = "testdata/test.loggit", last_first = TRUE)
   convert_to_csv(
     file = file.path(tmp_dir, "test_with_lf.csv"), unsanitize = TRUE, logfile = "testdata/test.loggit"
   )
 
   expect_snapshot_file(file.path(tmp_dir, "test.csv"))
+  expect_snapshot_file(file.path(tmp_dir, "test_reverse.csv"))
   expect_snapshot_file(file.path(tmp_dir, "test_with_lf.csv"))
 })

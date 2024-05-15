@@ -3,7 +3,7 @@
 #' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
 #' @param logfile Path to log file.
-#' @param unsanitize Should the log messages be unsanitized?
+#' @inheritParams read_ndjson
 #'
 #' @return A `data.frame`.
 #'
@@ -16,11 +16,11 @@
 #'   read_logs()
 #'
 #' @export
-read_logs <- function(logfile = get_logfile(), unsanitize = TRUE) {
+read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE) {
 
   base::stopifnot("Log file does not exist" = file.exists(logfile))
 
-  log <- read_ndjson(logfile, unsanitize = unsanitize)
+  log <- read_ndjson(logfile, unsanitize = unsanitize, last_first = last_first)
 
   if (nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
 
@@ -91,18 +91,19 @@ find_call <- function() {
 #' @param logfile Path to log file to read from
 #' @param unsanitize Should the line breaks at the end of messages be not escaped?
 #' @param ... Additional arguments to pass to `utils::write.table()`
+#' @inheritParams read_logs
 #'
 #' @return Invisible `NULL`.
 #'
 #' @export
-convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, ...) {
+convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, last_first = FALSE, ...) {
   if (!requireNamespace(package = "utils", quietly = TRUE)) {
     stop("Package 'utils' is not available. Please install it, if you want to use this function.") # nocov
   }
 
-  log <- read_logs(logfile = logfile, unsanitize = unsanitize)
+  log <- read_logs(logfile = logfile, unsanitize = unsanitize, last_first = last_first)
 
-  utils::write.table(log, file = file, ...)
+  utils::write.csv(log, file = file, row.names = FALSE, ...)
 
   return(invisible(NULL))
 }
