@@ -60,7 +60,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">convert_to_csv</span><span class="op">(</span><span class="va">file</span>, logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>, unsanitize <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">convert_to_csv</span><span class="op">(</span></span>
+<span>  <span class="va">file</span>,</span>
+<span>  logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  unsanitize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  last_first <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +81,10 @@
 
 <dt>unsanitize</dt>
 <dd><p>Should the line breaks at the end of messages be not escaped?</p></dd>
+
+
+<dt>last_first</dt>
+<dd><p>Should the last log entry be the first row of the data frame?</p></dd>
 
 
 <dt>...</dt>
