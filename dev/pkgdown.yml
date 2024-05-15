@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   fork: articels/fork.html
   loggit2: loggit2.html
-last_built: 2024-05-14T18:40Z
+last_built: 2024-05-15T07:35Z
 urls:
   reference: http://www.r-loggit.org/reference
   article: http://www.r-loggit.org/articles
