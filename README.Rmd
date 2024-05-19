@@ -50,8 +50,8 @@ No need to write custom formatters, handlers, levels, etc. -- ***just loggit!***
 
 Usage
 --------------
-`loggit2` provides a set of wrappings for base R’s `message()`, `warning()`, `stop()` and `stopifnot()` functions
-that maintain identical functionality.
+`loggit2` provides, among other functions, a set of wrappings for base R’s `message()`, `warning()`, `stop()` and
+`stopifnot()` functions that maintain identical functionality, except the additional logging.
 Thus, it is sufficient to import the `loggit2` namespace, for example by using `library("loggit2")`,
 or by prefixing `loggit2::` at the desired locations.
 
