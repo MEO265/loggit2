@@ -38,15 +38,15 @@ Please see below for some quick examples, and read the
 Why use `loggit2`?
 -----------------
 
-`loggit2` takes a modern approach to logging in R:
+`loggit2` takes a minimalistic but powerful approach to logging in R:
 
-- Opting to use the JSON format
-- Highly flexible log streams
-- Enables log data analysis on the same host
+- Easy integration, even into existing code
+- Flexible logs with automatic field creation
+- Logs immediately available as `data.frame` objects and as ndJSON and CSV file.
+- Simple external logging (e.g., in containers) via ndJSON echo to stdout
 - _Zero_ external dependencies
 
 Additionally, the boilerplate to get going with `loggit2` is minimal at worst.
-No need to write custom formatters, handlers, levels, etc. -- ***just loggit!***
 
 Usage
 --------------
