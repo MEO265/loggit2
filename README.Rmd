@@ -42,7 +42,7 @@ Why use `loggit2`?
 
 - Easy integration, even into existing code
 - Flexible logs with automatic field creation
-- Logs immediately available as `data.frame` objects and as ndJSON and CSV file.
+- Logs immediately available as `data.frame` object, ndJSON and CSV file
 - Simple external logging (e.g., in containers) via ndJSON echo to stdout
 - _Zero_ external dependencies
 
@@ -57,13 +57,15 @@ or by prefixing `loggit2::` at the desired locations.
 
 ```{r, error = TRUE}
 base::message("This is another message")
-base::warning("This is another warning")
-base::stop("This is another error")
-base::stopifnot("This is another condition" = FALSE)
-
 loggit2::message("This is a message")
+
+base::warning("This is another warning")
 loggit2::warning("This is a warning")
+
+base::stop("This is another error")
 loggit2::stop("This is an error")
+
+base::stopifnot("This is another condition" = FALSE)
 loggit2::stopifnot("This is another condition" = FALSE)
 ```
 
