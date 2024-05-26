@@ -15,134 +15,188 @@ knitr::opts_chunk$set(
 old <- options(width = 200)
 ```
 
-```{r setup, include = FALSE}
-library(loggit2)
-```
-
 `loggit2` is an easy-to-use, yet powerful, [`ndjson`](https://github.com/ndjson)
 logger. It is very fast, has zero external dependencies, and can be as
 straightforward or as integral as you want to make it.
 
-R has a selection of built-in functions for handling different *exceptions*, or
-special cases where diagnostic messages are provided, and/or function execution
-is halted because of an error. However, R itself provides nothing to record this
-diagnostic post-hoc; useRs are left with what is printed to the console as their
-only means of analyzing the what-went-wrong of their code. There are some
-slightly hacky ways of capturing this console output, such as `sink`ing to a
-text file, repetitively `cat`ing identical exception messages that are passed
-to existing handler calls, etc. But there are two main issues with these
-approaches:
+## Preparation
+No preparations are needed to use `loggit2`. However, it is recommended to explicitly set a log file using
+`loggit2::set_logfile("path/to/your/file")`, as `loggit2` defaults to creating a file in your temporary directory.[^1]
 
-1.  The console output is not at all easy to parse, so that a user can quickly
-    identify the causes of failure without manually scanning through it
+## Logging
+There are three ways to populate the log in `loggit2`. First, through wrapper functions of the base `R` condition
+handler, second, via the `loggit()` log function, and third, by logging (external) expressions using `with_loggit()`.
 
-2.  Even if the user tries to structure a text file output, they would likely
-    have to ensure consistency in that output across all their work, and there
-    is still the issue of parsing that text file into a familiar, usable format
+Each function of these three methods has the parameter `echo`, which determines whether the log entries should also
+be echoed to `stdout`.
 
-`loggit2` addresses these issues by writing logs as *newline-delimited
-[JSON](https://www.json.org/)* (`ndjson`). This format exhibits very fast
-disk write speeds, while still being machine-parsable, human-readable,
-and ideal for log stream collection systems.
+### Condition Log Handling
 
-How to Use `loggit2`
--------------------
+`loggit2` provides a set of wrappings for base R’s `message()`, `warning()`, `stop()` and
+`stopifnot()` functions that maintain identical functionality[^2], except the additional logging.
+Thus, it is sufficient to import the `loggit2` namespace, for example by using `library("loggit2")`,
+or by prefixing `loggit2::` at the desired locations.
 
-To write a log entry using `loggit2` via its exception handlers, you just load
-`loggit2`, set its log file location, and use the same handlers you always do:
+```{r, error = TRUE}
+base::message("This is another message")
+loggit2::message("This is a message")
 
-```{r handlers_0, eval = FALSE}
-library(loggit2)
+base::warning("This is another warning")
+loggit2::warning("This is a warning")
 
-set_logfile("/path/to/my/log/directory/loggit.log") # loggit2 enforces no specific file extension
-```
-```{r handlers, error = TRUE}
-message("This is a message")
-warning("This is a warning")
-stop("This is a critical error")
+base::stop("This is another error")
+loggit2::stop("This is an error")
+
+base::stopifnot("This is another condition" = FALSE)
+loggit2::stopifnot("This is another condition" = FALSE)
 ```
 
-You can see that the handlers will pring both the `loggit()`-generated log entry,
-as well as their base default output. To only have the JSON print, wrap the call
-in the appropriate suppressor (i.e. `suppressMessages()` or
-`suppressWarnings()`). To only have the base text printed, pass `echo = FALSE`
-to the handler.
+Besides the `echo` parameter, the functions have an additional parameter `.loggit`, which allows to deactivate
+the logging such that the function behaves exactly like the base `R` equivalents.
+```{r}
+loggit2::warning("This is a alternative warning", echo = FALSE)
 
-And... that's it! You've introduced human-readable, machine-parsable logging
-into your workflow!
-
-However, surely you want more control over your logs.
-
-Behind the scenes, `loggit2`'s core function, called `loggit()`, is executed
-right before the base handlers with some sane defaults. However, the `loggit()`
-function is also exported for use by the developer:
-
-```{r loggit2_func}
-loggit("INFO", "This is also a message")
-loggit("WARN", "This is also a warning")
-loggit("ERROR", "This is an error, but it won't stop")
+loggit2::warning("This is not part of the log", .loggit = FALSE)
 ```
 
-*"But why wouldn't I just use the handlers instead?"*
+<details>
+<summary>Click here to see the generated log</summary>
+```{r, echo = FALSE}
+loggit2::read_logs()
+loggit2::rotate_logs(0L)
+```
+</details>
 
-Because `loggit()` exposes much greater flexibility to the user, by way of
-*custom fields*.
+### Explicit Log Function
 
-```{r custom_fields}
-loggit(
-  "INFO",
-  "This is a message",
-  but_maybe = "you want more fields?",
-  sure = "why not?",
-  like = 2
-)
+`loggit2` allows direct access to the core logging function `loggit()`.
+This enables setting the log level directly during the call and creating arbitrary fields in the log.
+
+This function does not trigger any conditions; it only populates the log.
+
+```{r}
+loggit2::loggit("INFO", "This is a message", ID = 1L, boole = TRUE)
+
+loggit2::loggit("WARN", "This is a alternative warning", echo = FALSE)
+
+loggit2::loggit("DEBUG", "This is a message", Why = "Because", echo = FALSE)
 ```
 
-Since JSON is considered *semi-structured data* (sometimes called
-"schema-on-read"), you can log any custom fields you like, as *inconsistently*
-as you like. It all just ends up as text in a file, with no column structure to
-worry about.
+To allow log levels other than "DEBUG", "INFO", "WARN" or "ERROR" the `custom_log_lvl` parameter must be set.
 
-So, `loggit2`'s log format is a special type of JSON. JSON objects are like
-`list`s -- and so are `data.frames`. To allow for the most flexibility, the
-`read_logs()` function is available to you, which reads in the currently-set log
-file as a data frame:
+```{r, error = TRUE}
+loggit2::loggit("CRITICAL", "Critical error")
 
-```{r read_logs}
-read_logs()
+loggit2::loggit("CRITICAL", "Critical error 2", custom_log_lvl = TRUE)
 ```
 
-Notice that `read_logs()` handles any columnar inconsistencies as mentioned
-above. If `read_logs()` finds a field that other entries don't have, it maps it
-to an empty string for that log entry. This was chosen over `NA`s to allow for
-consistency on re-write. You can, however, just replace all the empty strings
-with `NA` after read, if you want to.
+<details>
+<summary>Click here to see the generated log</summary>
+```{r, echo = FALSE}
+loggit2::read_logs()
+loggit2::rotate_logs(0L)
+```
+</details>
 
-You can also pass a file path to `read_logs()`, and read that `loggit2` log file
-instead.
+### Log Expressions
 
-The other helpful utilities are as follows:
+One will repeatedly encounter situations where conditions need to be logged from code without wanting to or being able
+to modify it (e.g., when dealing with functions from external packages).
+In this case, `with_loggit()` comes into play. This function allows logging conditions from arbitrary expressions
+without restricting functionality[^3] or needing to modify the code.
 
-- You can control the format of the timestamp in the logs; it defaults to ISO
-  format `"%Y-%m-%dT%H:%M:%S%z"`, but you may set it yourself using
-  `set_timestamp_format()`. Note that this format is ultimately passed to
-  `format.Date()`, so the supplied format needs to be valid.
-- You can control the output name & location of the log file using
-  `set_logfile(logfile)`. Similarly, you can retrieve the location of the
-  current log file using `get_logfile()`.
+```{r, error = TRUE}
+fun_a <- function(x) {
+  base::warning("This is a warning")
+  base::message("This is a message")
+  base::stopifnot("This is true" = 3L == 1L + 2L, "This is not TRUE" = FALSE)
+}
 
-Things to keep in mind
-----------------------
+fun_b <- function(x) {
+  base::warning("This is a second warning")
+  5 + 5
+}
+```
 
-`loggit2` will default to writing to an R temporary directory. As per CRAN
-policies, ***a package cannot write*** to a user's "home filespace" without
-approval. Therefore, you need to set the log file before any logs are written
-to disk, using `set_logfile(logfile)` (I recommend in your working directory,
-and naming it "loggit.log"). If you are using loggit2 in your own package, you
-can wrap this in a call to `.onLoad()`, so that logging is set on package
-load. If not, then make the set call as soon as possible (e.g. at the top of
-your script(s), right after your calls to `library()`); otherwise, no logs
-will be written to persistent storage!
+```{r, error = TRUE}
+x <- loggit2::with_loggit(fun_b())
+print(x)
+```
+
+
+```{r, error = TRUE}
+loggit2::with_loggit({
+  x <- fun_b()
+  fun_a()
+}, echo = FALSE)
+```
+Additionally, `with_loggit()` allows alternative settings (logfile, echo, etc.) to be used for a specific section of code.
+
+<details>
+<summary>Click here to see the generated log</summary>
+```{r, echo = FALSE}
+loggit2::read_logs()
+```
+</details>
+
+
+## Post-Processing
+
+A log is of little use without the ability to access and modify it. Here are a few possibilities.
+
+### Accessing the Log
+
+As seen above, the log can be queried as a `data.frame` using `read_logs()`.
+
+```{r}
+loggit2::read_logs()
+```
+
+Alternatively, the log can also be saved as a CSV file using `convert_to_csv()`.
+
+```{r, eval = FALSE}
+loggit2::convert_to_csv("path/to/your/file.csv")
+```
+
+### Rotating the Log
+
+To maintain a clear log even in long-running sessions (e.g., in a Shiny app hosted on a server),
+the log can be restricted to the last `n` entries using `rotate_logs(n)`.
+
+```{r}
+loggit2::rotate_logs(2L)
+```
+
+<details>
+<summary>Click here to see the generated log</summary>
+```{r, echo = FALSE}
+loggit2::read_logs()
+```
+</details>
+
+```{r}
+loggit2::rotate_logs(0L)
+```
+
+<details>
+<summary>Click here to see the generated log</summary>
+```{r, echo = FALSE}
+loggit2::read_logs()
+```
+</details>
+
+
 ```{r, include = FALSE}
 options(old)
 ```
+
+
+[^1]: This is done to [CRAN Repository Policy](https://cran.r-project.org/web/packages/policies.html):
+
+    > Packages should not write in the user’s home filespace (including clipboards), nor anywhere else on the file
+    > system apart from the R session’s temporary directory `[...]`.
+
+[^2]: This means in particular that `tryCatch` and similar functions can be used as usual.
+
+[^3]: Just like with the direct use of the wrappers for condition handlers, `tryCatch` and similar mechanisms
+can be used as usual.
