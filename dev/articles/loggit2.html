@@ -45,7 +45,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/articels/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
   </div>
 </li>
 <li class="nav-item">
@@ -87,140 +87,227 @@
 <p><code>loggit2</code> is an easy-to-use, yet powerful, <a href="https://github.com/ndjson" class="external-link"><code>ndjson</code></a> logger. It is
 very fast, has zero external dependencies, and can be as straightforward
 or as integral as you want to make it.</p>
-<p>R has a selection of built-in functions for handling different
-<em>exceptions</em>, or special cases where diagnostic messages are
-provided, and/or function execution is halted because of an error.
-However, R itself provides nothing to record this diagnostic post-hoc;
-useRs are left with what is printed to the console as their only means
-of analyzing the what-went-wrong of their code. There are some slightly
-hacky ways of capturing this console output, such as
-<code>sink</code>ing to a text file, repetitively <code>cat</code>ing
-identical exception messages that are passed to existing handler calls,
-etc. But there are two main issues with these approaches:</p>
-<ol style="list-style-type: decimal">
-<li><p>The console output is not at all easy to parse, so that a user
-can quickly identify the causes of failure without manually scanning
-through it</p></li>
-<li><p>Even if the user tries to structure a text file output, they
-would likely have to ensure consistency in that output across all their
-work, and there is still the issue of parsing that text file into a
-familiar, usable format</p></li>
-</ol>
-<p><code>loggit2</code> addresses these issues by writing logs as
-<em>newline-delimited <a href="https://www.json.org/" class="external-link">JSON</a></em>
-(<code>ndjson</code>). This format exhibits very fast disk write speeds,
-while still being machine-parsable, human-readable, and ideal for log
-stream collection systems.</p>
 <div class="section level2">
-<h2 id="how-to-use-loggit2">How to Use <code>loggit2</code><a class="anchor" aria-label="anchor" href="#how-to-use-loggit2"></a>
+<h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
 </h2>
-<p>To write a log entry using <code>loggit2</code> via its exception
-handlers, you just load <code>loggit2</code>, set its log file location,
-and use the same handlers you always do:</p>
+<p>No preparations are needed to use <code>loggit2</code>. However, it
+is recommended to explicitly set a log file using
+<code>loggit2::set_logfile("path/to/your/file")</code>, as
+<code>loggit2</code> defaults to creating a file in your temporary
+directory.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;This is done to &lt;a href="https://cran.r-project.org/web/packages/policies.html" class="external-link"&gt;CRAN
+Repository Policy&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Packages should not write in the user’s home filespace (including
+clipboards), nor anywhere else on the file system apart from the R
+session’s temporary directory &lt;code&gt;[...]&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;'><sup>1</sup></a></p>
+</div>
+<div class="section level2">
+<h2 id="logging">Logging<a class="anchor" aria-label="anchor" href="#logging"></a>
+</h2>
+<p>There are three ways to populate the log in <code>loggit2</code>.
+First, through wrapper functions of the base <code>R</code> condition
+handler, second, via the <code><a href="../reference/loggit.html">loggit()</a></code> log function, and third,
+by logging (external) expressions using <code><a href="../reference/with_loggit.html">with_loggit()</a></code>.</p>
+<p>Each function of these three methods has the parameter
+<code>echo</code>, which determines whether the log entries should also
+be echoed to <code>stdout</code>.</p>
+<div class="section level3">
+<h3 id="condition-log-handling">Condition Log Handling<a class="anchor" aria-label="anchor" href="#condition-log-handling"></a>
+</h3>
+<p><code>loggit2</code> provides a set of wrappings for base R’s
+<code><a href="../reference/message.html">message()</a></code>, <code><a href="../reference/warning.html">warning()</a></code>, <code><a href="../reference/stop.html">stop()</a></code> and
+<code><a href="../reference/stopifnot.html">stopifnot()</a></code> functions that maintain identical
+functionality<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This means in particular that &lt;code&gt;tryCatch&lt;/code&gt; and
+similar functions can be used as usual.&lt;/p&gt;"><sup>2</sup></a>, except the additional logging. Thus, it is
+sufficient to import the <code>loggit2</code> namespace, for example by
+using <code><a href="https://github.com/MEO265/loggit2" class="external-link">library("loggit2")</a></code>, or by prefixing
+<code>loggit2::</code> at the desired locations.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MEO265/loggit2" class="external-link">loggit2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="st">"/path/to/my/log/directory/loggit.log"</span><span class="op">)</span> <span class="co"># loggit2 enforces no specific file extension</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; This is another message</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
 <span><span class="co">#&gt; This is a message</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
-<span><span class="co">#&gt; Warning: This is a warning</span></span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: This is another warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is a critical error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "ERROR", "log_msg": "This is a critical error"}</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is a critical error</span></span></code></pre></div>
-<p>You can see that the handlers will pring both the
-<code><a href="../reference/loggit.html">loggit()</a></code>-generated log entry, as well as their base default
-output. To only have the JSON print, wrap the call in the appropriate
-suppressor (i.e. <code><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages()</a></code> or
-<code><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings()</a></code>). To only have the base text printed,
-pass <code>echo = FALSE</code> to the handler.</p>
-<p>And… that’s it! You’ve introduced human-readable, machine-parsable
-logging into your workflow!</p>
-<p>However, surely you want more control over your logs.</p>
-<p>Behind the scenes, <code>loggit2</code>’s core function, called
-<code><a href="../reference/loggit.html">loggit()</a></code>, is executed right before the base handlers with
-some sane defaults. However, the <code><a href="../reference/loggit.html">loggit()</a></code> function is also
-exported for use by the developer:</p>
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
+<span><span class="co">#&gt; Warning: This is a warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="st">"This is also a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "INFO", "log_msg": "This is also a message"}</span></span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"WARN"</span>, <span class="st">"This is also a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "WARN", "log_msg": "This is also a warning"}</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is an error"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is an error</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"ERROR"</span>, <span class="st">"This is an error, but it won't stop"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "ERROR", "log_msg": "This is an error, but it won't stop"}</span></span></code></pre></div>
-<p><em>“But why wouldn’t I just use the handlers instead?”</em></p>
-<p>Because <code><a href="../reference/loggit.html">loggit()</a></code> exposes much greater flexibility to the
-user, by way of <em>custom fields</em>.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span></span>
-<span>  <span class="st">"INFO"</span>,</span>
-<span>  <span class="st">"This is a message"</span>,</span>
-<span>  but_maybe <span class="op">=</span> <span class="st">"you want more fields?"</span>,</span>
-<span>  sure <span class="op">=</span> <span class="st">"why not?"</span>,</span>
-<span>  like <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-20T15:31:14+0000", "log_lvl": "INFO", "log_msg": "This is a message", "but_maybe": "you want more fields?", "sure": "why not?", "like": "2"}</span></span></code></pre></div>
-<p>Since JSON is considered <em>semi-structured data</em> (sometimes
-called “schema-on-read”), you can log any custom fields you like, as
-<em>inconsistently</em> as you like. It all just ends up as text in a
-file, with no column structure to worry about.</p>
-<p>So, <code>loggit2</code>’s log format is a special type of JSON. JSON
-objects are like <code>list</code>s – and so are
-<code>data.frames</code>. To allow for the most flexibility, the
-<code><a href="../reference/read_logs.html">read_logs()</a></code> function is available to you, which reads in
-the currently-set log file as a data frame:</p>
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
+<span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
+<p>Besides the <code>echo</code> parameter, the functions have an
+additional parameter <code>.loggit</code>, which allows to deactivate
+the logging such that the function behaves exactly like the base
+<code>R</code> equivalents.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                  timestamp log_lvl                             log_msg             but_maybe     sure like</span></span>
-<span><span class="co">#&gt; 1 2024-05-20T15:31:14+0000    INFO                 This is a message\n                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 2024-05-20T15:31:14+0000    WARN                   This is a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3 2024-05-20T15:31:14+0000   ERROR            This is a critical error                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 4 2024-05-20T15:31:14+0000    INFO              This is also a message                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 5 2024-05-20T15:31:14+0000    WARN              This is also a warning                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 6 2024-05-20T15:31:14+0000   ERROR This is an error, but it won't stop                  &lt;NA&gt;     &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 7 2024-05-20T15:31:14+0000    INFO                   This is a message you want more fields? why not?    2</span></span></code></pre></div>
-<p>Notice that <code><a href="../reference/read_logs.html">read_logs()</a></code> handles any columnar
-inconsistencies as mentioned above. If <code><a href="../reference/read_logs.html">read_logs()</a></code> finds a
-field that other entries don’t have, it maps it to an empty string for
-that log entry. This was chosen over <code>NA</code>s to allow for
-consistency on re-write. You can, however, just replace all the empty
-strings with <code>NA</code> after read, if you want to.</p>
-<p>You can also pass a file path to <code><a href="../reference/read_logs.html">read_logs()</a></code>, and read
-that <code>loggit2</code> log file instead.</p>
-<p>The other helpful utilities are as follows:</p>
-<ul>
-<li>You can control the format of the timestamp in the logs; it defaults
-to ISO format <code>"%Y-%m-%dT%H:%M:%S%z"</code>, but you may set it
-yourself using <code><a href="../reference/set_timestamp_format.html">set_timestamp_format()</a></code>. Note that this
-format is ultimately passed to <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">format.Date()</a></code>, so the
-supplied format needs to be valid.</li>
-<li>You can control the output name &amp; location of the log file using
-<code>set_logfile(logfile)</code>. Similarly, you can retrieve the
-location of the current log file using <code><a href="../reference/get_logfile.html">get_logfile()</a></code>.</li>
-</ul>
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a alternative warning"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: This is a alternative warning</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is not part of the log"</span>, .loggit <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: This is not part of the log</span></span></code></pre></div>
+<details><summary>
+Click here to see the generated log
+</summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                       log_msg</span></span>
+<span><span class="co">#&gt; 1 2024-05-26T18:42:31+0000    INFO           This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T18:42:31+0000    WARN             This is a warning</span></span>
+<span><span class="co">#&gt; 3 2024-05-26T18:42:31+0000   ERROR              This is an error</span></span>
+<span><span class="co">#&gt; 4 2024-05-26T18:42:31+0000   ERROR     This is another condition</span></span>
+<span><span class="co">#&gt; 5 2024-05-26T18:42:31+0000    WARN This is a alternative warning</span></span></code></pre>
+</details>
+</div>
+<div class="section level3">
+<h3 id="explicit-log-function">Explicit Log Function<a class="anchor" aria-label="anchor" href="#explicit-log-function"></a>
+</h3>
+<p><code>loggit2</code> allows direct access to the core logging
+function <code><a href="../reference/loggit.html">loggit()</a></code>. This enables setting the log level
+directly during the call and creating arbitrary fields in the log.</p>
+<p>This function does not trigger any conditions; it only populates the
+log.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="st">"This is a message"</span>, ID <span class="op">=</span> <span class="fl">1L</span>, boole <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"WARN"</span>, <span class="st">"This is a alternative warning"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"DEBUG"</span>, <span class="st">"This is a message"</span>, Why <span class="op">=</span> <span class="st">"Because"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>To allow log levels other than “DEBUG”, “INFO”, “WARN” or “ERROR” the
+<code>custom_log_lvl</code> parameter must be set.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"CRITICAL"</span>, <span class="st">"Critical error"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in loggit2::loggit("CRITICAL", "Critical error"): Nonstandard log_lvl ('CRITICAL').</span></span>
+<span><span class="co">#&gt; Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.</span></span>
+<span><span class="co">#&gt; If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'.</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"CRITICAL"</span>, <span class="st">"Critical error 2"</span>, custom_log_lvl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}</span></span></code></pre></div>
+<details><summary>
+Click here to see the generated log
+</summary><pre><code><span><span class="co">#&gt;                  timestamp  log_lvl                       log_msg   ID boole     Why</span></span>
+<span><span class="co">#&gt; 1 2024-05-26T18:42:31+0000     INFO             This is a message    1  TRUE    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T18:42:31+0000     WARN This is a alternative warning &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 2024-05-26T18:42:31+0000    DEBUG             This is a message &lt;NA&gt;  &lt;NA&gt; Because</span></span>
+<span><span class="co">#&gt; 4 2024-05-26T18:42:31+0000 CRITICAL              Critical error 2 &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span></code></pre>
+</details>
+</div>
+<div class="section level3">
+<h3 id="log-expressions">Log Expressions<a class="anchor" aria-label="anchor" href="#log-expressions"></a>
+</h3>
+<p>One will repeatedly encounter situations where conditions need to be
+logged from code without wanting to or being able to modify it (e.g.,
+when dealing with functions from external packages). In this case,
+<code><a href="../reference/with_loggit.html">with_loggit()</a></code> comes into play. This function allows logging
+conditions from arbitrary expressions without restricting
+functionality<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Just like with the direct use of the wrappers for
+condition handlers, &lt;code&gt;tryCatch&lt;/code&gt; and similar mechanisms can be
+used as usual.&lt;/p&gt;"><sup>3</sup></a> or needing to modify the code.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fun_a</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
+<span>  <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
+<span>  <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"This is true"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">==</span> <span class="fl">1L</span> <span class="op">+</span> <span class="fl">2L</span>, <span class="st">"This is not TRUE"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">fun_b</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is a second warning"</span><span class="op">)</span></span>
+<span>  <span class="fl">5</span> <span class="op">+</span> <span class="fl">5</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span><span class="fu">fun_b</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T18:42:31+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}</span></span>
+<span><span class="co">#&gt; Warning in fun_b(): This is a second warning</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">fun_b</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">fun_a</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fun_b(): This is a second warning</span></span>
+<span><span class="co">#&gt; Warning in fun_a(): This is a warning</span></span>
+<span><span class="co">#&gt; This is a message</span></span>
+<span><span class="co">#&gt; Error in fun_a(): This is not TRUE</span></span></code></pre></div>
+<p>Additionally, <code><a href="../reference/with_loggit.html">with_loggit()</a></code> allows alternative settings
+(logfile, echo, etc.) to be used for a specific section of code.</p>
+<details><summary>
+Click here to see the generated log
+</summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
+<span><span class="co">#&gt; 1 2024-05-26T18:42:31+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T18:42:31+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2024-05-26T18:42:31+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2024-05-26T18:42:31+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2024-05-26T18:42:31+0000   ERROR         This is not TRUE</span></span></code></pre>
+</details>
+</div>
 </div>
 <div class="section level2">
-<h2 id="things-to-keep-in-mind">Things to keep in mind<a class="anchor" aria-label="anchor" href="#things-to-keep-in-mind"></a>
+<h2 id="post-processing">Post-Processing<a class="anchor" aria-label="anchor" href="#post-processing"></a>
 </h2>
-<p><code>loggit2</code> will default to writing to an R temporary
-directory. As per CRAN policies, <strong><em>a package cannot
-write</em></strong> to a user’s “home filespace” without approval.
-Therefore, you need to set the log file before any logs are written to
-disk, using <code>set_logfile(logfile)</code> (I recommend in your
-working directory, and naming it “loggit.log”). If you are using loggit2
-in your own package, you can wrap this in a call to
-<code>.onLoad()</code>, so that logging is set on package load. If not,
-then make the set call as soon as possible (e.g. at the top of your
-script(s), right after your calls to <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>); otherwise,
-no logs will be written to persistent storage!</p>
+<p>A log is of little use without the ability to access and modify it.
+Here are a few possibilities.</p>
+<div class="section level3">
+<h3 id="accessing-the-log">Accessing the Log<a class="anchor" aria-label="anchor" href="#accessing-the-log"></a>
+</h3>
+<p>As seen above, the log can be queried as a <code>data.frame</code>
+using <code><a href="../reference/read_logs.html">read_logs()</a></code>.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
+<span><span class="co">#&gt; 1 2024-05-26T18:42:31+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T18:42:31+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2024-05-26T18:42:31+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2024-05-26T18:42:31+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2024-05-26T18:42:31+0000   ERROR         This is not TRUE</span></span></code></pre></div>
+<p>Alternatively, the log can also be saved as a CSV file using
+<code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code>.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/convert_to_csv.html">convert_to_csv</a></span><span class="op">(</span><span class="st">"path/to/your/file.csv"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="rotating-the-log">Rotating the Log<a class="anchor" aria-label="anchor" href="#rotating-the-log"></a>
+</h3>
+<p>To maintain a clear log even in long-running sessions (e.g., in a
+Shiny app hosted on a server), the log can be restricted to the last
+<code>n</code> entries using <code>rotate_logs(n)</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_logs.html">rotate_logs</a></span><span class="op">(</span><span class="fl">2L</span><span class="op">)</span></span></code></pre></div>
+<details><summary>
+Click here to see the generated log
+</summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl             log_msg</span></span>
+<span><span class="co">#&gt; 1 2024-05-26T18:42:31+0000    INFO This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T18:42:31+0000   ERROR    This is not TRUE</span></span></code></pre>
+</details><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_logs.html">rotate_logs</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span></span></code></pre></div>
+<details><summary>
+Click here to see the generated log
+</summary><pre><code><span><span class="co">#&gt; [1] timestamp log_lvl   log_msg  </span></span>
+<span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre>
+</details>
+</div>
+</div>
+
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>

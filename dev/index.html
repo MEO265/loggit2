@@ -45,7 +45,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/articels/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="articles/fork.html">Why the Fork?</a>
   </div>
 </li>
 <li class="nav-item">
@@ -75,82 +75,79 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end --><p><code>loggit2</code> is an easy-to-use <a href="https://github.com/ndjson/ndjson-spec" class="external-link"><code>ndJSON</code></a> logging library for R software, with <em>zero</em> external dependencies.</p>
-<p>Please see below for some quick examples, and read the <a href="https://cran.r-project.org/web/packages/loggit2/vignettes/" class="external-link">vignettes</a> for the Getting Started guide.</p>
+<!-- badges: end --><p><code>loggit2</code> is an easy-to-use <a href="https://github.com/ndjson/ndjson-spec" class="external-link"><code>ndJSON</code></a> logging library for R, with <em>zero</em> external dependencies.</p>
+<p>Please see below for some quick examples, and read the <a href="https://cran.r-project.org/web/packages/loggit2/vignettes/" class="external-link">vignettes</a> for more.</p>
 <div class="section level2">
 <h2 id="why-use-loggit2">Why use <code>loggit2</code>?<a class="anchor" aria-label="anchor" href="#why-use-loggit2"></a>
 </h2>
-<p><code>loggit2</code> takes a modern approach to logging in R:</p>
+<p><code>loggit2</code> takes a minimalistic but powerful approach to logging in R:</p>
 <ul>
-<li>Opting to use the JSON format</li>
-<li>Highly flexible log streams</li>
-<li>Enables log data analysis on the same host</li>
+<li>Easy integration, even into existing code</li>
+<li>Flexible logs with automatic field creation</li>
+<li>Logs immediately available as <code>data.frame</code> object, ndJSON and CSV file</li>
+<li>Simple external logging (e.g., in containers) via ndJSON echo to stdout</li>
 <li>
 <em>Zero</em> external dependencies</li>
 </ul>
-<p>Additionally, the boilerplate to get going with <code>loggit2</code> is minimal at worst. No need to write custom formatters, handlers, levels, etc. – <strong><em>just loggit!</em></strong></p>
+<p>Additionally, the boilerplate to get going with <code>loggit2</code> is minimal at worst.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>The quickest way to get up &amp; running with <code>loggit2</code> is to do nearly nothing.</p>
-<p><code>loggit2</code> provides a set of wrappings for base R’s <code><a href="reference/message.html">message()</a></code>, <code><a href="reference/warning.html">warning()</a></code>, and <code><a href="reference/stop.html">stop()</a></code> functions that maintain identical functionality, making it sufficient to import the <code>loggit2</code> namespace, for example by using <code><a href="https://github.com/MEO265/loggit2" class="external-link">library("loggit2")</a></code>, or by prefixing <code>loggit2::</code> at the desired locations.</p>
+<p><code>loggit2</code> provides, among other functions, a set of wrappings for base R’s <code><a href="reference/message.html">message()</a></code>, <code><a href="reference/warning.html">warning()</a></code>, <code><a href="reference/stop.html">stop()</a></code> and <code><a href="reference/stopifnot.html">stopifnot()</a></code> functions that maintain identical functionality, except the additional logging. Thus, it is sufficient to import the <code>loggit2</code> namespace, for example by using <code><a href="https://github.com/MEO265/loggit2" class="external-link">library("loggit2")</a></code>, or by prefixing <code>loggit2::</code> at the desired locations.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-14T19:06:57+0200", "log_lvl": "INFO", "log_msg": "This is a message__LF__"}</span></span>
-<span><span class="co">#&gt; This is a message</span></span>
-<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-14T19:06:57+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
-<span><span class="co">#&gt; Warning: This is a warning</span></span>
-<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is an error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-14T19:06:57+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is an error</span></span></code></pre></div>
-<p>You can suppress the additional console output by using <code>echo = FALSE</code> and you won’t notice any difference to the base functions (except that the log will be filled in the background).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
-<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is another message"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; This is another message</span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
+<span><span class="co">#&gt; This is a message</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
-<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: This is another warning</span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
+<span><span class="co">#&gt; Warning: This is a warning</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span>
-<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
-<p>You can also use <code><a href="reference/loggit.html">loggit()</a></code> directly to compose much more custom logs, including <strong><em>entirely custom fields</em></strong> (and prevent throwing actual conditions). <code>loggit2</code> doesn’t require that you set custom logger objects or anything like that: just throw whatever you want at it, and it’ll become a structured log.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is an error"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is an error</span></span>
+<span></span>
+<span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error: This is another condition</span></span>
+<span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
+<span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
+<p>You can suppress the additional console output by using <code>echo = FALSE</code> and you won’t notice any difference to the base functions (except that the log will be filled in the background).</p>
+<p>You can also directly use the logging function <code><a href="reference/loggit.html">loggit()</a></code> to compose much more custom logs, e.g. to include custom fields or to prevent throwing actual conditions.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"ERROR"</span>, <span class="st">"This will log an error"</span>, anything_else <span class="op">=</span> <span class="st">"you want to include"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-14T19:06:58+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}</span></span>
 <span></span>
 <span><span class="co"># Read log file into data frame to implement logic based on entries</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  timestamp log_lvl                   log_msg       anything_else</span></span>
-<span><span class="co">#&gt; 1 2024-05-14T19:06:57+0200    INFO       This is a message\n                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 2024-05-14T19:06:57+0200    WARN         This is a warning                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3 2024-05-14T19:06:57+0200   ERROR          This is an error                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 4 2024-05-14T19:06:57+0200    INFO This is another message\n                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 5 2024-05-14T19:06:57+0200    WARN   This is another warning                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 6 2024-05-14T19:06:57+0200   ERROR     This is another error                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 7 2024-05-14T19:06:58+0200   ERROR    This will log an error you want to include</span></span></code></pre></div>
-<p>Check out the <a href="https://cran.r-project.org/web/packages/loggit2/vignettes/" class="external-link">vignettes</a> for more details.</p>
+<span><span class="co">#&gt; 1 2024-05-26T16:39:20+0200    INFO       This is a message\n                &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2 2024-05-26T16:39:20+0200    WARN         This is a warning                &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 2024-05-26T16:39:20+0200   ERROR          This is an error                &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 4 2024-05-26T16:39:20+0200   ERROR This is another condition                &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 5 2024-05-26T16:39:20+0200   ERROR    This will log an error you want to include</span></span></code></pre></div>
+<p>No further configurations are necessary for this: just throw nearly whatever you want at it, and it’ll become a structured log.</p>
+<p>Check out the <a href="https://cran.r-project.org/web/packages/loggit2/vignettes/" class="external-link">vignettes</a> for more details and features.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the latest CRAN release of <code>loggit2</code> via</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"loggit2"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"loggit2"</span>)</span></code></pre></div>
 <p>or, get the latest development version from GitHub via</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"MEO265/loggit2"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"MEO265/loggit2"</span>)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
 </h2>
 <p>This package is based on the <a href="https://github.com/ryapric/loggit" class="external-link">“loggit” package by Ryan Price</a>, specifically version 2.1.1.</p>
-<p>Due to technical reasons, this repository is not a GitHub fork of <a href="https://github.com/ryapric/loggit" class="external-link">Ryan’s repository</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -175,7 +172,6 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=loggit2" class="external-link"><img src="http://www.r-pkg.org/badges/version/loggit2" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://cran.r-project.org/package=loggit2" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/loggit2" alt="Downloads"></a></li>
 <li><a href="https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://codecov.io/gh/MEO265/loggit2" class="external-link"><img src="https://codecov.io/gh/MEO265/loggit2/graph/badge.svg" alt="codecov"></a></li>
 </ul>

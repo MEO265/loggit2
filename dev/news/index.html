@@ -27,7 +27,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/articels/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -84,6 +84,7 @@ Previously, empty fields were read as <code>NA</code>. This meant that when <cod
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now returns a <code>data.frame</code> with the empty character columns “timestamp”, “log_lvl” and “log_msg” instead of an empty (0x0) <code>data.frame</code> if the log file has no entries.</li>
 <li>The Json reading functions are more tolerant of manual changes to the log.</li>
+<li>The parameter <code>exprs</code> was added to <code><a href="../reference/stopifnot.html">stopifnot()</a></code> and included in the documentation. This has no impact on functionality due to the specific way <code><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">base::stopifnot()</a></code> is called internally.</li>
 <li>
 <code><a href="../reference/loggit.html">loggit()</a></code> now throws an error if there are unnamed <code>...</code> arguments. Previously, these were silently named, by <code>fix.empty.names</code> of <code>data.frame</code>, which could lead to unexpected behavior.</li>
 <li>

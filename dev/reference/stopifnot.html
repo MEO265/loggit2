@@ -29,7 +29,7 @@ but it includes logging of the exception message via loggit()."><meta name="robo
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/articels/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
   </div>
 </li>
 <li class="nav-item">
@@ -63,15 +63,22 @@ but it includes logging of the exception message via <code><a href="loggit.html"
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stopifnot</span><span class="op">(</span><span class="va">...</span>, <span class="va">exprObject</span>, <span class="va">local</span>, .loggit <span class="op">=</span> <span class="cn">TRUE</span>, echo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stopifnot</span><span class="op">(</span><span class="va">...</span>, <span class="va">exprs</span>, <span class="va">exprObject</span>, <span class="va">local</span>, .loggit <span class="op">=</span> <span class="cn">TRUE</span>, echo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>...</dt>
-<dd><p>zero or more objects which can be coerced to character
-    (and which are pasted together with no separator) or (for
-    <code>message</code> only) a single condition object.</p></dd>
+    <dl><dt>..., exprs</dt>
+<dd><p>any number of <code>R</code> expressions, which should each evaluate to (a logical vector of all) <code>TRUE</code>.
+Use <em>either</em> <code>...</code> <em>or</em> <code>exprs</code>, the latter typically an unevaluated expression of the form</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  expr1</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  expr2</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  ....</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>}</span></code></pre><p></p></div>
+<p>Note that e.g., positive numbers are not <code>TRUE</code>, even when they are coerced to <code>TRUE</code>, e.g., inside <code>if(.)</code> or
+in arithmetic computations in <code>R</code>.
+If names are provided to <code>...</code>, they will be used in lieu of the default error message.</p></dd>
 
 
 <dt>exprObject</dt>
@@ -89,19 +96,13 @@ but it includes logging of the exception message via <code><a href="loggit.html"
 
 
 <dt>.loggit</dt>
-<dd><p>Should <code><a href="loggit.html">loggit()</a></code> execute? Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Should <code><a href="loggit.html">loggit()</a></code> execute?</p></dd>
 
 
 <dt>echo</dt>
-<dd><p>Should <code><a href="loggit.html">loggit()</a></code>'s log entry be echoed to the console, as well? Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Should <code><a href="loggit.html">loggit()</a></code>'s log entry be echoed to the console, as well?</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>(<code><a href="https://rdrr.io/r/base/NULL.html" class="external-link">NULL</a></code> if all statements in <code>...</code> are <code>TRUE</code>.)</p>
-    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other handlers: 
