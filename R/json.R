@@ -1,5 +1,5 @@
 sanitizer_map <- list(
-  "\\" =  "\\\\",
+  "\\" = "\\\\",
   '"' = '\\\"',
   "\r" = "\\r",
   "\n" = "\\n")
@@ -69,7 +69,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
   # JSON object, constructed from each row of the log data frame.
   logdata <- character(nrow(log_df))
 
-  log_df <- as.data.frame(lapply(log_df, function (x) default_ndjson_sanitizer(as.character(x))))
+  colnames(log_df) <- default_ndjson_sanitizer(colnames(log_df))
+
+  log_df <- as.data.frame(
+    lapply(log_df, function(x) default_ndjson_sanitizer(as.character(x))),
+    check.names = FALSE, fix.empty.names = FALSE, stringsAsFactors = FALSE
+  )
 
   row_names <- paste0("\"", colnames(log_df), "\"")
 
@@ -93,11 +98,12 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #'
 #' @param logfile Log file to read from, and convert to a `data.frame`.
 #' @param unsanitize Should the log data be unsanitized?
+#' @param last_first Should the last log entry be the first row of the data frame?
 #'
 #' @keywords internal
 #'
 #' @return A `data.frame`
-read_ndjson <- function(logfile, unsanitize = TRUE) {
+read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
   logdata <- readLines(logfile)
@@ -111,7 +117,8 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
   log_df <- rep(list(rep(NA_character_, rowcount)), length(all_keys))
   names(log_df) <- all_keys
   for (lognum in seq_len(rowcount)) {
-    row <- log_kvs[[lognum]]
+    lognum_df <- ifelse(last_first, yes = rowcount - lognum + 1L, no = lognum)
+    row <- log_kvs[[lognum_df]]
     keys <- row[["keys"]]
     values <- row[["values"]]
     for (i in seq_along(keys)) {
@@ -119,9 +126,12 @@ read_ndjson <- function(logfile, unsanitize = TRUE) {
     }
   }
 
-  if(unsanitize) log_df <- lapply(log_df, default_ndjson_unsanitizer)
+  if (unsanitize) {
+    names(log_df) <- default_ndjson_unsanitizer(names(log_df))
+    log_df <- lapply(log_df, default_ndjson_unsanitizer)
+  }
 
-  log_df <- as.data.frame(log_df)
+  log_df <- as.data.frame(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   log_df
 }

@@ -5,18 +5,22 @@
   user is known and this functionality severely limits further development.  
   If custom `sanitizer`s were previously used, they could simply be executed before or after instead in `loggit()` 
   or `read_logs()`. If custom sanitizer has been used to get around bugs, please report them so that they can be fixed.
-* Special characters are no longer escaped by replacement, but rather by "\".
+* Special characters are no longer escaped by replacement, but rather by "\\".
 
 ## New features
 * Add `convert_to_csv()` to convert log files to CSV format.
 * Add `with_loggit()` to log third-party code or to easily use different `loggit()`-parameters for a chunk of code.
 * `NA`s are now stored as `null` in the json log. And `read_logs()` also restores these as `NA`.  
   This was previously (unintentionally) guaranteed by replacing the `NA` with `"__NA__"`.
+* `read_logs()` now allows reading the logs in reverse order using `last_first` argument.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
   Previously, empty fields were read as `NA`. This meant that when `rotate_logs()` was used,
   these entries could completely disappear from the respective json object
+* `loggit()` now does not unintentionally “repair” argument names of log entries. 
+  Previously, the names were replaced by `check.names` of `data.frame()`, which could lead to unexpected behavior.
+  Names that are not valid JSON keys are now escaped according to the JSON standard.
 
 ## Minor changes
 * `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
@@ -24,6 +28,10 @@
 * The Json reading functions are more tolerant of manual changes to the log.
 * The parameter `exprs` was added to `stopifnot()` and included in the documentation. This has no impact on 
   functionality due to the specific way `base::stopifnot()` is called internally.
+* `loggit()` now throws an error if there are unnamed `...` arguments. 
+  Previously, these were silently named, by `fix.empty.names` of `data.frame`, which could lead to unexpected behavior.
+* `loggit()` now also checks the length of the `log_lvl` and `log_msg` arguments and only uses the first element. 
+  Previously, the log entry had been multiplied, leading to unintended consequences, regarding `custom_log_lvl`.
 
 ## Internals
 * `write_ndjson` no longer warns if the log contains unsanitized line breaks.
