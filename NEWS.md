@@ -26,6 +26,8 @@
 * `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
   instead of an empty (0x0) `data.frame` if the log file has no entries.
 * The Json reading functions are more tolerant of manual changes to the log.
+* The parameter `exprs` was added to `stopifnot()` and included in the documentation. This has no impact on 
+  functionality due to the specific way `base::stopifnot()` is called internally.
 * `loggit()` now throws an error if there are unnamed `...` arguments. 
   Previously, these were silently named, by `fix.empty.names` of `data.frame`, which could lead to unexpected behavior.
 * `loggit()` now also checks the length of the `log_lvl` and `log_msg` arguments and only uses the first element. 

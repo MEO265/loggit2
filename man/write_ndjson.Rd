@@ -10,13 +10,11 @@ write_ndjson(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE)
 \item{log_df}{Data frame of log data. Rows are converted to \code{ndjson} entries,
 with the columns as the fields.}
 
-\item{logfile}{Log file to write to. Defaults to currently-configured log
-file.}
+\item{logfile}{Log file to write to.}
 
-\item{echo}{Echo the \code{ndjson} entry to the R console? Defaults to \code{TRUE}.}
+\item{echo}{Echo the \code{ndjson} entry to the R console?}
 
-\item{overwrite}{Overwrite previous log file data? Defaults to \code{FALSE}, and
-so will append new log entries to the log file.}
+\item{overwrite}{Overwrite previous log file data?}
 }
 \description{
 Write ndJSON-formatted log file

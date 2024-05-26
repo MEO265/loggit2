@@ -1,4 +1,3 @@
-// meineFunktionen.h
 #ifndef LOGGIT
 #define LOGGIT
 

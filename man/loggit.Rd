@@ -21,14 +21,11 @@ loggit(
 \item{...}{Named arguments, each a atomic vector of length one, you wish to log.
 The names of the arguments are treated as column names in the log.}
 
-\item{echo}{Should the log file entry be printed to the console as well?
-Defaults to \code{TRUE}.}
+\item{echo}{Should the log file entry be printed to the console as well?}
 
-\item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN",
-and "ERROR"? Defaults to \code{FALSE}.}
+\item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
-\item{logfile}{Log file to write to. Defaults to currently-configured log
-file.}
+\item{logfile}{Log file to write to.}
 }
 \value{
 Invisible \code{NULL}.

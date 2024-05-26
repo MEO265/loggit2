@@ -5,8 +5,8 @@
 #'
 #' @inherit base::message params
 #'
-#' @param .loggit Should `loggit()` execute? Defaults to `TRUE`.
-#' @param echo Should `loggit()`'s log entry be echoed to the console, as well? Defaults to `TRUE`.
+#' @param .loggit Should `loggit()` execute?
+#' @param echo Should `loggit()`'s log entry be echoed to the console, as well?
 #'
 #' @return Invisible `NULL`.
 #'
@@ -133,7 +133,20 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #' This function is identical to base R's [`stopifnot`][base::stopifnot],
 #' but it includes logging of the exception message via `loggit()`.
 #'
-#' @inherit base::stopifnot params return
+#' @param ...,exprs any number of `R` expressions, which should each evaluate to (a logical vector of all) `TRUE`.
+#' Use *either* `...` *or* `exprs`, the latter typically an unevaluated expression of the form
+#' ```
+#' {
+#'   expr1
+#'   expr2
+#'   ....
+#' }
+#' ```
+#' Note that e.g., positive numbers are not `TRUE`, even when they are coerced to `TRUE`, e.g., inside `if(.)` or
+#' in arithmetic computations in `R`.
+#' If names are provided to `...`, they will be used in lieu of the default error message.
+#'
+#' @inheritParams base::stopifnot
 #' @inheritParams message
 #'
 #' @family handlers
@@ -142,7 +155,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #'   stopifnot("This is a completely false condition, which throws an error" = TRUE)
 #'
 #' @export
-stopifnot <- function(..., exprObject, local, .loggit = TRUE, echo = TRUE) {
+stopifnot <- function(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE) {
   # Since no calling function can be detected within tryCatch from base::stopifnot
   call <- if (p <- sys.parent(1L)) sys.call(p)
   # Required to avoid early (and simultaneous) evaluation of the arguments.

@@ -4,12 +4,22 @@
 \alias{stopifnot}
 \title{Conditional Stop Function Log Handler}
 \usage{
-stopifnot(..., exprObject, local, .loggit = TRUE, echo = TRUE)
+stopifnot(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE)
 }
 \arguments{
-\item{...}{zero or more objects which can be coerced to character
-    (and which are pasted together with no separator) or (for
-    \code{message} only) a single condition object.}
+\item{..., exprs}{any number of \code{R} expressions, which should each evaluate to (a logical vector of all) \code{TRUE}.
+Use \emph{either} \code{...} \emph{or} \code{exprs}, the latter typically an unevaluated expression of the form
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{\{
+  expr1
+  expr2
+  ....
+\}
+}\if{html}{\out{</div>}}
+
+Note that e.g., positive numbers are not \code{TRUE}, even when they are coerced to \code{TRUE}, e.g., inside \verb{if(.)} or
+in arithmetic computations in \code{R}.
+If names are provided to \code{...}, they will be used in lieu of the default error message.}
 
 \item{exprObject}{alternative to \code{exprs} or \code{...}:
     an \sQuote{expression-like} object, typically an
@@ -22,12 +32,9 @@ stopifnot(..., exprObject, local, .loggit = TRUE, echo = TRUE)
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
 
-\item{.loggit}{Should \code{loggit()} execute? Defaults to \code{TRUE}.}
+\item{.loggit}{Should \code{loggit()} execute?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
-}
-\value{
-(\code{\link[base]{NULL}} if all statements in \code{\dots} are \code{TRUE}.)
+\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
 }
 \description{
 This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},

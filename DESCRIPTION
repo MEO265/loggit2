@@ -21,7 +21,7 @@ Suggests:
     utils
 URL: https://github.com/MEO265/loggit2, http://www.r-loggit.org/
 BugReports: https://github.com/MEO265/loggit2/issues
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

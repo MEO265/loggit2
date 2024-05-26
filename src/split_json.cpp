@@ -106,10 +106,10 @@ extern "C" SEXP split_ndjson(SEXP strVecSEXP) {
     for (int i = 0; i < n; i++) {
         SEXP strSEXP = PROTECT(Rf_mkString(CHAR(STRING_ELT(strVecSEXP, i))));
         SET_VECTOR_ELT(result, i, split_json(strSEXP));
-        UNPROTECT(1); // Entferne den Schutz für strSEXP nach dessen Verwendung
+        UNPROTECT(1); // Remove protection for strSEXP after using it
     }
 
-    UNPROTECT(1); // Entferne den Schutz für result
+    UNPROTECT(1); // Remove protection for result 
     return result;
 }
 

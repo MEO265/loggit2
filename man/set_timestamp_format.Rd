@@ -7,11 +7,9 @@
 set_timestamp_format(ts_format = "\%Y-\%m-\%dT\%H:\%M:\%S\%z", confirm = TRUE)
 }
 \arguments{
-\item{ts_format}{ISO date format. Defaults to ISO-8601 (e.g.
-"2020-01-01T00:00:00+0000").}
+\item{ts_format}{ISO date format.}
 
-\item{confirm}{Print confirmation message of timestamp format? Defaults to
-\code{TRUE}.}
+\item{confirm}{Print confirmation message of timestamp format?}
 }
 \value{
 Invisible \code{NULL}.
