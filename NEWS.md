@@ -22,6 +22,8 @@
 * `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
   instead of an empty (0x0) `data.frame` if the log file has no entries.
 * The Json reading functions are more tolerant of manual changes to the log.
+* The parameter `exprs` was added to `stopifnot()` and included in the documentation. This has no impact on 
+  functionality due to the specific way `base::stopifnot()` is called internally.
 
 ## Internals
 * `write_ndjson` no longer warns if the log contains unsanitized line breaks.
