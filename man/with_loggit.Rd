@@ -9,11 +9,9 @@ with_loggit(exp, logfile = get_logfile(), echo = TRUE)
 \arguments{
 \item{exp}{An expression to evaluate.}
 
-\item{logfile}{Log file to write to. Defaults to currently-configured log
-file.}
+\item{logfile}{Log file to write to.}
 
-\item{echo}{Should the log file entry be printed to the console as well?
-Defaults to \code{TRUE}.}
+\item{echo}{Should the log file entry be printed to the console as well?}
 }
 \value{
 The result of the expression.

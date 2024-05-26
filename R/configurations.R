@@ -9,8 +9,8 @@
 #' @param logfile Absolut or relative path to log file.
 #' An attempt is made to convert the path into a canonical absolute form using [normalizePath()].
 #' If `NULL` will set to `<tmpdir>/loggit.log`.
-#' @param confirm Print confirmation of log file setting? Defaults to `TRUE`.
-#' @param create Create the log file if it does not exist? Defaults to `TRUE`.
+#' @param confirm Print confirmation of log file setting?
+#' @param create Create the log file if it does not exist?
 #'
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
@@ -56,10 +56,8 @@ get_logfile <- function() {
 #' the host system's time configuration to provide this. This is to enforce
 #' consistency across software running on the host.
 #'
-#' @param ts_format ISO date format. Defaults to ISO-8601 (e.g.
-#'   "2020-01-01T00:00:00+0000").
-#' @param confirm Print confirmation message of timestamp format? Defaults to
-#'   `TRUE`.
+#' @param ts_format ISO date format.
+#' @param confirm Print confirmation message of timestamp format?
 #'
 #' @return Invisible `NULL`.
 #'

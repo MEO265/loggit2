@@ -58,11 +58,9 @@ default_ndjson_unsanitizer <- function(string) {
 #'
 #' @param log_df Data frame of log data. Rows are converted to `ndjson` entries,
 #'   with the columns as the fields.
-#' @param logfile Log file to write to. Defaults to currently-configured log
-#'   file.
-#' @param echo Echo the `ndjson` entry to the R console? Defaults to `TRUE`.
-#' @param overwrite Overwrite previous log file data? Defaults to `FALSE`, and
-#'   so will append new log entries to the log file.
+#' @param logfile Log file to write to.
+#' @param echo Echo the `ndjson` entry to the R console?
+#' @param overwrite Overwrite previous log file data?
 #'
 #' @keywords internal
 write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {

@@ -17,9 +17,9 @@ stop(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE)
 \item{domain}{see \code{\link[base]{gettext}}.  If \code{NA}, messages will
     not be translated.}
 
-\item{.loggit}{Should \code{loggit()} execute? Defaults to \code{TRUE}.}
+\item{.loggit}{Should \code{loggit()} execute?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well? Defaults to \code{TRUE}.}
+\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
 }
 \value{
 No return value.

@@ -5,8 +5,8 @@
 #'
 #' @inherit base::message params
 #'
-#' @param .loggit Should `loggit()` execute? Defaults to `TRUE`.
-#' @param echo Should `loggit()`'s log entry be echoed to the console, as well? Defaults to `TRUE`.
+#' @param .loggit Should `loggit()` execute?
+#' @param echo Should `loggit()`'s log entry be echoed to the console, as well?
 #'
 #' @return Invisible `NULL`.
 #'
