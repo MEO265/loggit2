@@ -31,6 +31,10 @@ If names are provided to \code{...}, they will be used in lieu of the default er
     \code{\link[base]{environment}} in which the expressions should be
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
+
+\item{.loggit}{Should \code{loggit()} execute?}
+
+\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
 }
 \description{
 This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},

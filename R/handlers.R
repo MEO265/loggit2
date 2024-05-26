@@ -147,6 +147,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #' If names are provided to `...`, they will be used in lieu of the default error message.
 #'
 #' @inheritParams base::stopifnot
+#' @inheritParams message
 #'
 #' @family handlers
 #'
