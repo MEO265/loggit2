@@ -9,12 +9,12 @@ read_logs(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE)
 \arguments{
 \item{logfile}{Path to log file to read from.}
 
-\item{unsanitize}{Should the log data be unsanitized?}
+\item{unsanitize}{Should escaped special characters be unescaped?}
 
 \item{last_first}{Should the last log entry be the first row of the data frame?}
 }
 \value{
-A \code{data.frame}. # TODO: Inherit from \code{read_ndjson}?
+A \code{data.frame}, with the columns as the fields in the log file.
 }
 \description{
 Returns a \code{data.frame} containing all the logs in the provided \code{ndjson} log file.

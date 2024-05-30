@@ -2,9 +2,7 @@
 #'
 #' Returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
-#' @inheritParams read_ndjson
-#'
-#' @return A `data.frame`. # TODO: Inherit from `read_ndjson`?
+#' @inherit read_ndjson return params
 #'
 #' @details `read_logs()` returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg"
 #' if the log file has no entries.
@@ -87,12 +85,12 @@ find_call <- function() {
 #' Creates a csv file from the ndjson log file.
 #'
 #' @param file Path to write csv file to
-#' @param logfile Path to log file to read from # TODO: Inherit from `read_logs`?
-#' @param unsanitize Should the line breaks at the end of messages be not escaped? # TODO: Inherit from `read_logs`?
 #' @param ... Additional arguments to pass to `utils::write.csv()`
 #' @inheritParams read_logs
 #'
 #' @return Invisible `NULL`.
+#'
+#' @details Unescaping of special characters can lead to unexpected results. Use `unsanitize = TRUE` with caution.
 #'
 #' @examples
 #' \dontrun{

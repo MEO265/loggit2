@@ -100,10 +100,10 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 #' Read ndJSON-formatted log file
 #'
 #' @param logfile Path to log file to read from.
-#' @param unsanitize Should the log data be unsanitized?
+#' @param unsanitize Should escaped special characters be unescaped?
 #' @param last_first Should the last log entry be the first row of the data frame?
 #'
-#' @return A `data.frame`
+#' @return A `data.frame`, with the columns as the fields in the log file.
 #'
 #' @keywords internal
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
