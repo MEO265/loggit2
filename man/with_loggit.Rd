@@ -7,7 +7,7 @@
 with_loggit(exp, logfile = get_logfile(), echo = TRUE)
 }
 \arguments{
-\item{exp}{An expression to evaluate.}
+\item{exp}{An \code{expression} to evaluate.}
 
 \item{logfile}{Log file to write to.}
 
@@ -18,9 +18,26 @@ The result of the expression.
 }
 \description{
 Log code without having to explicitly use the \code{loggit2} handlers.
-This is particularly useful for code that cannot be customized, e.g. from third-party packages
+This is particularly useful for code that cannot be customized, e.g. from third-party packages.
 }
 \details{
 If \code{loggit2} handlers are already used in the expression, this can lead to conditions being logged
 twice (in the same or different files)
+}
+\examples{
+\dontrun{
+ x <- with_loggit(5L + 5L)
+
+ with_loggit(base::message("Test log message"))
+
+ with_loggit(base::warning("Test log message"), echo = FALSE, logfile = "my_log.log")
+
+ x <- with_loggit({
+    y <- 5L
+    base::message("Test log message")
+    base::warning("Test log message")
+    1L + y
+ })
+}
+
 }
