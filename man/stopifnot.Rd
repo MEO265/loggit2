@@ -4,7 +4,7 @@
 \alias{stopifnot}
 \title{Conditional Stop Log Handler}
 \usage{
-stopifnot(..., exprs, exprObject, local, .loggit = NA, echo = TRUE)
+stopifnot(..., exprs, exprObject, local, .loggit = NA, echo = get_echo())
 }
 \arguments{
 \item{..., exprs}{any number of \code{R} expressions, which should each evaluate to (a logical vector of all) \code{TRUE}.

@@ -11,7 +11,7 @@ warning(
   noBreaks. = FALSE,
   domain = NULL,
   .loggit = NA,
-  echo = TRUE
+  echo = get_echo()
 )
 }
 \arguments{

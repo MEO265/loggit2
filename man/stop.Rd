@@ -4,7 +4,7 @@
 \alias{stop}
 \title{Stop Log Handler}
 \usage{
-stop(..., call. = TRUE, domain = NULL, .loggit = NA, echo = TRUE)
+stop(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo())
 }
 \arguments{
 \item{...}{zero or more objects which can be coerced to character

@@ -4,7 +4,7 @@
 \alias{message}
 \title{Message Log Handler}
 \usage{
-message(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = TRUE)
+message(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = get_echo())
 }
 \arguments{
 \item{...}{zero or more objects which can be coerced to character

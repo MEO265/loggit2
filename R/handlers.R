@@ -20,7 +20,7 @@
 #'   message("Don't say such silly things!", appendLF = FALSE, echo = FALSE)
 #' }
 #' @export
-message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = TRUE) {
+message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the message must be set manually
   # to avoid loggit2::message being displayed as a call
@@ -71,7 +71,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = TR
 #'
 #' @export
 warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
-                    domain = NULL, .loggit = NA, echo = TRUE) {
+                    domain = NULL, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the warning must be set manually
   # to avoid loggit2::warning being displayed as a call
@@ -122,7 +122,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #' }
 #'
 #' @export
-stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = TRUE) {
+stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the error must be set manually
   # to avoid loggit2::stop being displayed as a call
@@ -183,7 +183,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = TRUE) {
 #' }
 #'
 #' @export
-stopifnot <- function(..., exprs, exprObject, local, .loggit = NA, echo = TRUE) {
+stopifnot <- function(..., exprs, exprObject, local, .loggit = NA, echo = get_echo()) {
   # Since no calling function can be detected within tryCatch from base::stopifnot
   call <- if (p <- sys.parent(1L)) sys.call(p)
   # Required to avoid early (and simultaneous) evaluation of the arguments.

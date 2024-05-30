@@ -1,0 +1,124 @@
+---
+title: "Further Configurations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Further Configurations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set( #nolint
+  collapse = TRUE,
+  comment = "#>"
+)
+old <- options(width = 200L)
+```
+
+
+`loggit2` can be used immediately and fully without configuration after installation. However, to fully utilize the potential of `loggit2`, some configurations can be made.
+
+## Configuration System
+
+`loggit2` uses a three-tier configuration system:
+
+1. Meta/System-wide Configuration
+2. Global/Session-wide[^1] Configuration
+3. Local/Function-specific Configuration
+
+The first tier is the Meta or System-wide Configuration. It is defined by environment variables that are read by `loggit2` when the package is loaded. These settings then serve as default values for the session-wide configuration.
+
+The second tier is the Global or Session-wide Configuration. It is defined by the `set_*()` functions of `loggit2`.
+
+The third tier is the Local or Function-specific Configuration, implemented through the arguments of the functions. For a quick overview of the functions, refer to the [Getting Started Vignette](loggit2.html).
+
+Each time a function of `loggit2` is called, the settings from the three tiers are combined. A higher tier/specificity configuration always takes precedence over a lower tier/specificity configuration.
+
+## Configuration Options
+
+The configuration options of `loggit2` are described below. For details, refer to the function documentation.
+
+### Log file
+The log file can be set either via the environment variable `FILE_LOGGIT2`, the function `set_log_file()`, or the `logfile` argument of the logging functions `loggit()` and `with_loggit()`. The wrappers of the base R condition handler always use the session-wide configuration.
+
+
+```{r, echo = -1}
+setwd(tempdir())
+old_log <- loggit2::set_logfile("logfile.log")
+loggit2::loggit(log_lvl = "DEBUG", "This message will be logged to `logfile.log`.")
+
+
+loggit2::loggit(
+        log_lvl = "DEBUG",
+        log_msg = "This message will be logged to `otherlogfile.log`.",
+        logfile = "otherlogfile.log"
+)
+
+
+loggit2::with_loggit(logfile = "logfile2.log", {
+  base::warning("This warning message will be logged to `logfile2.log`.")
+})
+
+loggit2::set_logfile(old_log)
+```
+
+### Log level
+The log level can be set either via the environment variable `LEVEL_LOGGIT2` or the function `set_log_level()`. The `.loggit` argument can also be passed to the wrappers of the base R condition handler to enforce logging (`TRUE`) or suppress it (`FALSE`). The logging function `loggit()` can enforce logging through the `ignore_log_level` argument. `with_loggit()` allows setting a log level for the code block being executed.
+```{r, error = TRUE}
+old_log_lvl <- loggit2::set_log_level("INFO")
+loggit2::message("This message will be logged because the log level is set to INFO.")
+loggit2::loggit(log_lvl = "DEBUG", "This message will not be logged because the log level is set to INFO.")
+loggit2::loggit(log_lvl = "DEBUG", "This message will be logged because the log level is ignored.", ignore_log_level = TRUE)
+loggit2::warning("This warning message will not be logged because .loggit is set to FALSE.", .loggit = FALSE)
+
+loggit2::set_log_level("ERROR")
+loggit2::warning("This warning message will not be logged because the log level is set to ERROR.")
+loggit2::message("This message will be logged because .loggit is set to TRUE.", .loggit = TRUE)
+loggit2::stop("This error message will be logged because the log level is set to ERROR.")
+
+loggit2::with_loggit(log_level = "DEBUG", {
+  base::message("This message will be logged because the log level is set to DEBUG.")
+})
+
+loggit2::set_log_level(old_log_lvl)
+```
+
+### Echo
+Whether log messages should also be output to `stdout` can be controlled via the environment variable `ECHO_LOGGIT2` or the function `set_echo()`. Additionally, all logging functions and wrappers of the base R condition handler allow direct control via the `echo` argument.
+```{r}
+old_echo <- loggit2::set_echo(FALSE)
+loggit2::message("This message will not be logged, but it will be output to the console.")
+loggit2::message("This message will be logged and output to the console.", echo = TRUE)
+
+loggit2::set_echo(TRUE, confirm = FALSE)
+loggit2::message("This message will be logged and output to the console.")
+loggit2::message("This message will be logged, but it will not be output to the console.", echo = FALSE)
+
+loggit2::with_loggit(echo = FALSE, {
+  base::message("This message will be logged, but it will not be output to the console.")
+})
+
+loggit2::set_echo(old_echo)
+```
+### Timestamp format
+The format of the timestamp can be controlled via the environment variable `TIMESTAMP_LOGGIT2` or the function `set_timestamp_format()`.
+
+```{r}
+old_ts <- loggit2::set_timestamp_format("%H:%M:%S")
+loggit2::message("This message will be logged with a timestamp in the format HH:MM:SS.")
+
+loggit2::set_timestamp_format(old_ts)
+```
+
+## Temporary Configuration
+Depending on the use case, it may be useful to change temporary configurations, e.g., to log to a different file in a specific code block or to log a particular part of the code with more details (higher log level).
+
+One way is to manually set and reset the configurations (e.g., by using `on.exit()`), but this is cumbersome and error-prone.
+
+An alternative is to use `with_loggit()`. As mentioned above, almost all configurations can be adjusted directly in `with_loggit()`.
+
+[^1]: Note: "Session-wide" means that (unless locally configured otherwise) calls to `loggit2` functions in other packages will use the same settings. Consider this when using `loggit2` in a package that will be used elsewhere.
+
+```{r, include = FALSE}
+options(old)
+```
