@@ -15,7 +15,7 @@
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
 #'
-#' @return Invisible `NULL`.
+#' @return Invisible the previous log file path.
 #'
 #' @examples
 #' \dontrun{
@@ -23,13 +23,14 @@
 #' }
 #' @export
 set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
+  old <- get_logfile()
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
   if (create && !file.exists(logfile)) file.create(logfile)
   .config[["logfile"]] <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
   if (confirm) base::message("Log file set to ", .config[["logfile"]])
-  invisible(NULL)
+  return(invisible(old))
 }
 
 
@@ -54,7 +55,7 @@ get_logfile <- function() {
 #' @param ts_format ISO date format.
 #' @param confirm Print confirmation message of timestamp format?
 #'
-#' @return Invisible `NULL`.
+#' @return Invisible the previous timestamp format.
 #'
 #' @details This function performs no time format validations, but will echo out the current time in
 #' the provided format for manual validation.
@@ -70,6 +71,7 @@ get_logfile <- function() {
 #'
 #' @export
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {
+  old <- get_timestamp_format()
   .config[["ts_format"]] <- ts_format
   if (confirm) {
     base::message(
@@ -77,7 +79,7 @@ set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TR
       "Current time in this format: ", format(Sys.time(), format = ts_format)
     )
   }
-  invisible(NULL)
+  return(invisible(old))
 }
 
 
@@ -100,7 +102,7 @@ get_timestamp_format <- function() {
 #' @param level Log level to set, as a string or integer.
 #' @param confirm Print confirmation message of log level?
 #'
-#' @return Invisible `NULL`.
+#' @return Invisible the previous log level.
 #'
 #' @details Log levels are as follows:
 #'  DEBUG: 4
@@ -120,10 +122,11 @@ get_timestamp_format <- function() {
 #'
 #' @export
 set_log_level <- function(level = "DEBUG", confirm = TRUE) {
+  old <- get_log_level()
   level <- convert_lvl_input(level)
   .config[["level"]] <- level
   if (confirm) base::message("Log level set to ", level, " (", get_lvl_name(level), ")")
-  invisible(NULL)
+  return(invisible(old))
 }
 
 #' Get Log Level
@@ -140,7 +143,7 @@ get_log_level <- function() {
 #' @param echo Should log messages be echoed to `stdout`?
 #' @param confirm Print confirmation message of echo setting?
 #'
-#' @return Invisible `NULL`.
+#' @return Invisible the previous echo setting.
 #'
 #' @examples
 #' \dontrun{
@@ -150,9 +153,10 @@ get_log_level <- function() {
 #'
 #' @export
 set_echo <- function(echo = TRUE, confirm = TRUE) {
+  old <- get_echo()
   .config[["echo"]] <- echo
   if (confirm) base::message("Echo set to ", echo)
-  invisible(NULL)
+  return(invisible(old))
 }
 
 #' Get echo

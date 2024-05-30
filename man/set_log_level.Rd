@@ -12,7 +12,7 @@ set_log_level(level = "DEBUG", confirm = TRUE)
 \item{confirm}{Print confirmation message of log level?}
 }
 \value{
-Invisible \code{NULL}.
+Invisible the previous log level.
 }
 \description{
 Set Log Level

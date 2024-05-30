@@ -16,7 +16,7 @@ If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
 \item{create}{Create the log file if it does not exist?}
 }
 \value{
-Invisible \code{NULL}.
+Invisible the previous log file path.
 }
 \description{
 Set the log file that loggit will write to by default.

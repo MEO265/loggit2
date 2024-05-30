@@ -12,7 +12,7 @@ set_echo(echo = TRUE, confirm = TRUE)
 \item{confirm}{Print confirmation message of echo setting?}
 }
 \value{
-Invisible \code{NULL}.
+Invisible the previous echo setting.
 }
 \description{
 Set echo
