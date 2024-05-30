@@ -73,6 +73,12 @@ linters: list(
   T_and_F_symbol_linter(),
   todo_comment_linter(),
   trailing_blank_lines_linter(),
-  trailing_whitespace_linter()
+  trailing_whitespace_linter(),
+  unnecessary_concatenation_linter(),
+  unnecessary_lambda_linter(),
+  unnecessary_nested_if_linter(),
+  unreachable_code_linter(),
+  vector_logic_linter(),
+  whitespace_linter()
   )
 encoding: "UTF-8"
