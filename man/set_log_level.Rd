@@ -4,7 +4,7 @@
 \alias{set_log_level}
 \title{Set Log Level}
 \usage{
-set_log_level(level = "INFO", confirm = TRUE)
+set_log_level(level = "DEBUG", confirm = TRUE)
 }
 \arguments{
 \item{level}{Log level to set.}

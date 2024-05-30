@@ -110,7 +110,7 @@ get_timestamp_format <- function() {
 #'  NONE: 0
 #'
 #' @export
-set_log_level <- function(level = "INFO", confirm = TRUE) {
+set_log_level <- function(level = "DEBUG", confirm = TRUE) {
   level <- convert_lvl_input(level)
   .config$level <- level
   if (confirm) base::message("Log level set to ", level, " (", get_lvl_name(level), ")")
