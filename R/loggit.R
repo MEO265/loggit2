@@ -1,24 +1,33 @@
 #' @useDynLib loggit2, .registration=TRUE
 NULL
 
-#' Log entries to file
+#' Log messages and R objects
 #'
-#' Log entries to a [ndjson](https://github.com/ndjson) log file, defined by [set_logfile()].
+#' Log messages and R objects to a [ndjson](https://github.com/ndjson) log file.
 #'
-#' @param log_lvl Log level coerceable to `character`. For details see parameter `custom_log_lvl`.
-#' @param log_msg Main log message. Will be coerced to class `character`.
-#' @param ... Named arguments, each a atomic vector of length one, you wish to log.
+#' @param log_lvl Log level. A atomic vector of length one (usually `character`). Will be coerced to `character`.
+#' @param log_msg Log message. A atomic vector of length one (usually `character`). Will be coerced to `character`.
+#' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
-#' @param echo Should the log file entry be printed to the console as well?
+#' @param echo Should the log entry (json) be echod to `stdout` as well?
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?
 #' @inheritParams write_ndjson
 #'
 #' @return Invisible `NULL`.
 #'
 #' @examples
-#'   loggit("INFO", "This is a message", but_maybe = "you want more fields?",
-#'   sure = "why not?", like = 2, or = 10, what = "ever")
+#' \dontrun{
+#'   loggit("DEBUG", "This is a message")
 #'
+#'   loggit("INFO", "This is a message", echo = FALSE)
+#'
+#'   loggit("CUSTOM", "This is a message of a custom log_lvl", custom_log_lvl = TRUE)
+#'
+#'   loggit(
+#'    "INFO", "This is a message", but_maybe = "you want more fields?",
+#'     sure = "why not?", like = 2, or = 10, what = "ever"
+#'   )
+#' }
 #' @export
 loggit <- function(log_lvl, log_msg, ..., echo = TRUE, custom_log_lvl = FALSE, logfile = get_logfile()) {
 

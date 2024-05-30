@@ -11,7 +11,7 @@ with_loggit(exp, logfile = get_logfile(), echo = TRUE)
 
 \item{logfile}{Log file to write to.}
 
-\item{echo}{Should the log file entry be printed to the console as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }
 \value{
 The result of the expression.
