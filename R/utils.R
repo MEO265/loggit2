@@ -145,11 +145,11 @@ get_lvl_int <- function(level) {
 #'
 #' @keywords internal
 convert_lvl_input <- function(level) {
-  if (!is.numeric(level)) {
-    level <- get_lvl_int(level)
-  } else {
+  if (is.numeric(level)) {
     level <- as.integer(level)
     base::stopifnot(level >= 0L, level <= 4L)
+  } else {
+    level <- get_lvl_int(level)
   }
   level
 }

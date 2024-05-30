@@ -112,7 +112,7 @@ get_timestamp_format <- function() {
 #' @export
 set_log_level <- function(level = "DEBUG", confirm = TRUE) {
   level <- convert_lvl_input(level)
-  .config$level <- level
+  .config[["level"]] <- level
   if (confirm) base::message("Log level set to ", level, " (", get_lvl_name(level), ")")
   invisible(NULL)
 }
@@ -123,7 +123,7 @@ set_log_level <- function(level = "DEBUG", confirm = TRUE) {
 #'
 #' @export
 get_log_level <- function() {
-  .config$level
+  .config[["level"]]
 }
 
 #' Set echo
@@ -136,7 +136,7 @@ get_log_level <- function() {
 #' @export
 #'
 set_echo <- function(echo = TRUE, confirm = TRUE) {
-  .config$echo <- echo
+  .config[["echo"]] <- echo
   if (confirm) base::message("Echo set to ", echo)
   invisible(NULL)
 }
@@ -147,5 +147,5 @@ set_echo <- function(echo = TRUE, confirm = TRUE) {
 #'
 #' @export
 get_echo <- function() {
-  .config$echo
+  .config[["echo"]]
 }
