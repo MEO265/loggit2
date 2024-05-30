@@ -15,4 +15,8 @@ A list with the same length as \code{x}, each containing two character vectors: 
 \description{
 Split a vector of JSON strings into a list of R objects.
 }
+\examples{
+split_ndjson(c('{"a": 1, "b": 2}', '{"a": 3, "b": 4, "c": 5}'))
+
+}
 \keyword{internal}
