@@ -12,7 +12,7 @@ knitr::opts_chunk$set( #nolint
   collapse = TRUE,
   comment = "#>"
 )
-old <- options(width = 200)
+old <- options(width = 200L)
 ```
 
 `loggit2` is an easy-to-use, yet powerful, [`ndjson`](https://github.com/ndjson)
@@ -114,7 +114,7 @@ fun_a <- function(x) {
 
 fun_b <- function(x) {
   base::warning("This is a second warning")
-  5 + 5
+  5L + 5L
 }
 ```
 

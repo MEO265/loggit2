@@ -32,7 +32,7 @@ test_that("loggit multiplies values with warning", {
   )
 
   expect_warning(
-    loggit(log_lvl = "INFO", log_msg = c("foo", "bar"), value = 1, echo = FALSE),
+    loggit(log_lvl = "INFO", log_msg = c("foo", "bar"), value = 1L, echo = FALSE),
     regexp = "^log_msg should be of length one, only the first element will be used.$"
   )
 
@@ -42,7 +42,7 @@ test_that("loggit multiplies values with warning", {
   )
 
   expect_error(
-    loggit(log_lvl = "INFO", log_msg = "foo", value = 1, "4", echo = FALSE),
+    loggit(log_lvl = "INFO", log_msg = "foo", value = 1L, "4", echo = FALSE),
     regexp = "^All custom log fields should be named.$"
   )
 

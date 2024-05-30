@@ -3,7 +3,7 @@ test_that("message works as it does in base R", {
   expect_identical_message(message(), base::message())
   expect_identical_message(message("this is a message test"), base::message("this is a message test"))
   expect_identical_message(message("this", "is a", "message test"), base::message("this", "is a", "message test"))
-  expect_identical_message(message("Some numbers", 3, 1:5, "!"), base::message("Some numbers", 3, 1:5, "!"))
+  expect_identical_message(message("Some numbers", 3L, 1:5, "!"), base::message("Some numbers", 3L, 1:5, "!"))
 
   # message works as in base R (with echo = FALSE)
   expect_identical_message(message(echo = FALSE), base::message(), ignore_call = TRUE)
@@ -44,7 +44,7 @@ test_that("warning works as it does in base R", {
   expect_identical_warning(warning(), base::warning())
   expect_identical_warning(warning("this is a warning test"), base::warning("this is a warning test"))
   expect_identical_warning(warning("this", "is a", "warning test"), base::warning("this", "is a", "warning test"))
-  expect_identical_warning(warning("Some numbers", 3, 1:5, "!"), base::warning("Some numbers", 3, 1:5, "!"))
+  expect_identical_warning(warning("Some numbers", 3L, 1:5, "!"), base::warning("Some numbers", 3L, 1:5, "!"))
 
   # warning works as in base R (with echo = FALSE)
   expect_identical_warning(warning(echo = FALSE), base::warning())
@@ -80,7 +80,7 @@ test_that("stop works as it does in base R", {
   expect_identical_error(stop(), base::stop())
   expect_identical_error(stop("this is a stop test"), base::stop("this is a stop test"))
   expect_identical_error(stop("this", "is a", "stop test"), base::stop("this", "is a", "stop test"))
-  expect_identical_error(stop("Some numbers", 3, 1:5, "!"), base::stop("Some numbers", 3, 1:5, "!"))
+  expect_identical_error(stop("Some numbers", 3L, 1:5, "!"), base::stop("Some numbers", 3L, 1:5, "!"))
 
   # stop works as in base R (with echo = FALSE)
   expect_identical_error(stop(echo = FALSE), base::stop())
@@ -114,11 +114,11 @@ test_that("stopifnot", {
   f <- function(x, ...) x
   expect_identical_error(stopifnot(f(x = FALSE)), base::stopifnot(f(x = FALSE)))
   g <- function() f(FALSE)
-  expect_identical_error(stopifnot(4 == 4, g()), base::stopifnot(4 == 4, g()))
-  expect_identical_error(stopifnot(4 == 4, Test = g()), base::stopifnot(4 == 4, Test = g()))
+  expect_identical_error(stopifnot(4L == 4L, g()), base::stopifnot(4L == 4L, g()))
+  expect_identical_error(stopifnot(4L == 4L, Test = g()), base::stopifnot(4L == 4L, Test = g()))
   expect_identical_error(stopifnot(exprs = { TRUE; FALSE }), base::stopifnot(exprs = { TRUE; FALSE }))
   expect_identical_error(stopifnot(exprObject = { TRUE; FALSE }), base::stopifnot(exprObject = { TRUE; FALSE }))
-  expect_no_error(stopifnot(TRUE, 3 == 3))
+  expect_no_error(stopifnot(TRUE, 3L == 3L))
 
   # stopifnot works as in base R (with echo = FALSE)
   expect_no_error(stopifnot(echo = FALSE))
@@ -126,14 +126,14 @@ test_that("stopifnot", {
   f <- function(x, ...) x
   expect_identical_error(stopifnot(f(x = FALSE), echo = FALSE), base::stopifnot(f(x = FALSE)))
   g <- function() f(FALSE)
-  expect_identical_error(stopifnot(4 == 4, g(), echo = FALSE), base::stopifnot(4 == 4, g()))
-  expect_identical_error(stopifnot(4 == 4, "A Test" = g(), echo = FALSE), base::stopifnot(4 == 4, "A Test" = g()))
+  expect_identical_error(stopifnot(4L == 4L, g(), echo = FALSE), base::stopifnot(4L == 4L, g()))
+  expect_identical_error(stopifnot(4L == 4L, "A Test" = g(), echo = FALSE), base::stopifnot(4L == 4L, "A Test" = g()))
   expect_identical_error(stopifnot(exprs = { TRUE; FALSE }, echo = FALSE), base::stopifnot(exprs = { TRUE; FALSE }))
   expect_identical_error(
     stopifnot(exprObject = { TRUE; FALSE }, echo = FALSE),
     base::stopifnot(exprObject = { TRUE; FALSE })
   )
-  expect_no_error(stopifnot(TRUE, 3 == 3, echo = FALSE))
+  expect_no_error(stopifnot(TRUE, 3L == 3L, echo = FALSE))
 
   cleanup()
 

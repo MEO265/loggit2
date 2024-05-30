@@ -31,7 +31,7 @@ linters: list(
   if_not_else_linter(),
   ifelse_censor_linter(),
   # implicit_assignment_linter(allow_scoped = TRUE), # Is bugged
-  # implicit_integer_linter(allow_colon = TRUE),
+  implicit_integer_linter(allow_colon = TRUE),
   indentation_linter(),
   infix_spaces_linter(),
   inner_combine_linter(),
@@ -61,7 +61,7 @@ linters: list(
   repeat_linter(),
   routine_registration_linter(),
   scalar_in_linter(),
-  # semicolon_linter(),
+  # semicolon_linter(), # Wanted in tests
   seq_linter(),
   sort_linter(),
   spaces_inside_linter(),
