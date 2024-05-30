@@ -31,9 +31,10 @@ The default sanatizer and unsanatizer are based on the following mapping:\tabula
 }
 }
 \examples{
-default_ndjson_sanitizer('This is \n an "example"')
-
-default_ndjson_unsanitizer('This is \\\\n an \\\\"example\\\\"')
+\dontrun{
+  default_ndjson_sanitizer('This is \n an "example"')
+  default_ndjson_unsanitizer('This is \\\\n an \\\\"example\\\\"')
+}
 
 }
 \keyword{internal}

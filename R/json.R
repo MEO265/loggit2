@@ -29,9 +29,10 @@ sanitizer_map <- list(
 #' @name sanitizers
 #'
 #' @examples
-#' default_ndjson_sanitizer('This is \n an "example"')
-#'
-#' default_ndjson_unsanitizer('This is \\n an \\"example\\"')
+#' \dontrun{
+#'   default_ndjson_sanitizer('This is \n an "example"')
+#'   default_ndjson_unsanitizer('This is \\n an \\"example\\"')
+#' }
 #'
 #' @keywords internal
 NULL
