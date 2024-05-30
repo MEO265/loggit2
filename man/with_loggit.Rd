@@ -9,7 +9,7 @@ with_loggit(exp, logfile = get_logfile(), echo = TRUE)
 \arguments{
 \item{exp}{An \code{expression} to evaluate.}
 
-\item{logfile}{Log file to write to.}
+\item{logfile}{Path of log file to write to.}
 
 \item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }

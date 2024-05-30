@@ -7,7 +7,7 @@
 read_logs(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE)
 }
 \arguments{
-\item{logfile}{Log file to read from, and convert to a \code{data.frame}.}
+\item{logfile}{Path to log file to read from.}
 
 \item{unsanitize}{Should the log data be unsanitized?}
 

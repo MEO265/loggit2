@@ -25,7 +25,7 @@ The names of the arguments are treated as column names in the log.}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
-\item{logfile}{Log file to write to.}
+\item{logfile}{Path of log file to write to.}
 }
 \value{
 Invisible \code{NULL}.

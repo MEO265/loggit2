@@ -58,11 +58,12 @@ default_ndjson_unsanitizer <- function(string) {
 
 #' Write ndJSON-formatted log file
 #'
-#' @param log_df Data frame of log data. Rows are converted to `ndjson` entries,
-#'   with the columns as the fields.
-#' @param logfile Log file to write to.
-#' @param echo Echo the `ndjson` entry to the R console?
-#' @param overwrite Overwrite previous log file data?
+#' @param log_df A `data.frame`. Entries are converted to `ndjson`, with the columns as the fields.
+#' @param logfile Path of log file to write to.
+#' @param echo Should the log entry (json) be echod to `stdout` as well?
+#' @param overwrite Overwrite previous log file?
+#'
+#' @return Invisible `NULL`.
 #'
 #' @keywords internal
 write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE) {
@@ -98,13 +99,13 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = TRUE, overwrite
 
 #' Read ndJSON-formatted log file
 #'
-#' @param logfile Log file to read from, and convert to a `data.frame`.
+#' @param logfile Path to log file to read from.
 #' @param unsanitize Should the log data be unsanitized?
 #' @param last_first Should the last log entry be the first row of the data frame?
 #'
-#' @keywords internal
-#'
 #' @return A `data.frame`
+#'
+#' @keywords internal
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
