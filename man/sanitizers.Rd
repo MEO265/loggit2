@@ -17,21 +17,23 @@ default_ndjson_unsanitizer(string)
 A character vector
 }
 \description{
-\emph{Sanitizers} and \emph{unsanitizers} are functions, with one parameter, that convert a
-character vector (of any length) into another (of the same length).
-Associated \emph{sanitizer} and \emph{unsanitizer} should be constructed in such a way that the concatenation
+\emph{Sanitizer} and \emph{unsanitizer} are needed because the \code{ndjson} format requires that each line be a valid JSON object,
+thus special characters must be escaped. The functions worke in such a way that the concatenation
 \code{unsanitizer(sanitizer())} corresponds to the identity function.
 }
 \details{
 The default sanatizer and unsanatizer are based on the following mapping:\tabular{ll}{
    Character \tab Replacement \cr
+   \verb{\\} \tab \verb{\\\\} \cr
    \verb{"} \tab \verb{\\"} \cr
    \verb{\\r} \tab \verb{\\\\r} \cr
    \verb{\\n} \tab \verb{\\\\n} \cr
 }
+}
+\examples{
+default_ndjson_sanitizer('This is \n an "example"')
 
+default_ndjson_unsanitizer('This is \\\\n an \\\\"example\\\\"')
 
-This type of function is needed because because some characters in a JSON cannot appear unescaped and
-since \code{loggit2} reimplements its own very simple string-based JSON parser.
 }
 \keyword{internal}

@@ -8,29 +8,30 @@ sanitizer_map <- list(
 
 #' Sanitization for ndJSON.
 #'
-#' *Sanitizers* and *unsanitizers* are functions, with one parameter, that convert a
-#' character vector (of any length) into another (of the same length).
-#' Associated *sanitizer* and *unsanitizer* should be constructed in such a way that the concatenation
+#' *Sanitizer* and *unsanitizer* are needed because the `ndjson` format requires that each line be a valid JSON object,
+#' thus special characters must be escaped. The functions worke in such a way that the concatenation
 #' `unsanitizer(sanitizer())` corresponds to the identity function.
 #'
+#' @param string A character vector
+#'
+#' @return A character vector
 #'
 #' @details
 #' The default sanatizer and unsanatizer are based on the following mapping:
 #'
 #'  | Character | Replacement |
 #'  |:--------- | :-----------|
+#'  | `\`       | `\\`        |
 #'  | `"`       | `\"`        |
 #'  | `\r`      | `\\r`       |
 #'  | `\n`      | `\\n`       |
 #'
-#' This type of function is needed because because some characters in a JSON cannot appear unescaped and
-#' since `loggit2` reimplements its own very simple string-based JSON parser.
-#'
-#' @param string A character vector
-#'
-#' @return A character vector
-#'
 #' @name sanitizers
+#'
+#' @examples
+#' default_ndjson_sanitizer('This is \n an "example"')
+#'
+#' default_ndjson_unsanitizer('This is \\n an \\"example\\"')
 #'
 #' @keywords internal
 NULL
