@@ -2,7 +2,8 @@ sanitizer_map <- list(
   "\\" = "\\\\",
   '"' = '\\\"',
   "\r" = "\\r",
-  "\n" = "\\n")
+  "\n" = "\\n"
+)
 
 
 #' Sanitization for ndJSON.
