@@ -8,7 +8,7 @@ home:
 template:
   bootstrap: 5
   includes:
-    in_header: <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    in_header: <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 reference:
   - title: Condition log handlers
