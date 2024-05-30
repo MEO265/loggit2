@@ -7,14 +7,16 @@
 write_ndjson(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE)
 }
 \arguments{
-\item{log_df}{Data frame of log data. Rows are converted to \code{ndjson} entries,
-with the columns as the fields.}
+\item{log_df}{A \code{data.frame}. Entries are converted to \code{ndjson}, with the columns as the fields.}
 
-\item{logfile}{Log file to write to.}
+\item{logfile}{Path of log file to write to.}
 
-\item{echo}{Echo the \code{ndjson} entry to the R console?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 
-\item{overwrite}{Overwrite previous log file data?}
+\item{overwrite}{Overwrite previous log file?}
+}
+\value{
+Invisible \code{NULL}.
 }
 \description{
 Write ndJSON-formatted log file

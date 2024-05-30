@@ -1,20 +1,23 @@
-#' Diagnostic Messages Log Handler
+#' Message Log Handler
 #'
 #' This function is identical to base R's [`message`][base::message],
 #' but it includes logging of the exception message via `loggit()`.
 #'
-#' @inherit base::message params
+#' @param .loggit Should the condition message be added to the log?
 #'
-#' @param .loggit Should `loggit()` execute?
-#' @param echo Should `loggit()`'s log entry be echoed to the console, as well?
+#' @inheritParams base::message
+#' @inheritParams loggit
 #'
 #' @return Invisible `NULL`.
 #'
 #' @family handlers
 #'
 #' @examples
-#'   if (2 < 1) message("Don't say such silly things!")
+#' \dontrun{
+#'   message("Don't say such silly things!")
 #'
+#'   message("Don't say such silly things!", appendLF = FALSE, echo = FALSE)
+#' }
 #' @export
 message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE) {
   # If the input is a condition, the base function does not allow additional input
@@ -44,7 +47,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 }
 
 
-#' Warning Messages Log Handler
+#' Warning Log Handler
 #'
 #' This function is identical to base R's [`warning`][base::warning],
 #' but it includes logging of the exception message via `loggit()`.
@@ -55,7 +58,11 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 #' @family handlers
 #'
 #' @examples
-#'   if (2 < 1) warning("You may want to review that math, and so this is your warning")
+#' \dontrun{
+#'   warning("You may want to review that math")
+#'
+#'   warning("You may want to review that math", immediate = FALSE, echo = FALSE)
+#' }
 #'
 #' @export
 warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
@@ -86,7 +93,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
   }
 }
 
-#' Stop Function Log Handler
+#' Stop Log Handler
 #'
 #' This function is identical to base R's [`stop`][base::stop],
 #' but it includes logging of the exception message via `loggit()`.
@@ -99,7 +106,11 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #' @family handlers
 #'
 #' @examples
-#'   if (2 < 1) stop("This is a completely false condition, which throws an error")
+#' \dontrun{
+#'   stop("This is a completely false condition")
+#'
+#'   stop("This is a completely false condition", echo = FALSE)
+#' }
 #'
 #' @export
 stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
@@ -128,7 +139,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 }
 
 
-#' Conditional Stop Function Log Handler
+#' Conditional Stop Log Handler
 #'
 #' This function is identical to base R's [`stopifnot`][base::stopifnot],
 #' but it includes logging of the exception message via `loggit()`.
@@ -152,7 +163,11 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #' @family handlers
 #'
 #' @examples
-#'   stopifnot("This is a completely false condition, which throws an error" = TRUE)
+#' \dontrun{
+#'  stopifnot("This is a completely false condition" = FALSE)
+#'
+#'  stopifnot(5L == 5L, "This is a completely false condition" = FALSE, echo = FALSE)
+#' }
 #'
 #' @export
 stopifnot <- function(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE) {

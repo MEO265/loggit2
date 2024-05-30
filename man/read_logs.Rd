@@ -2,30 +2,31 @@
 % Please edit documentation in R/utils.R
 \name{read_logs}
 \alias{read_logs}
-\title{Return log file as an R data frame}
+\title{Get log as \code{data.frame}}
 \usage{
 read_logs(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE)
 }
 \arguments{
-\item{logfile}{Path to log file.}
+\item{logfile}{Path to log file to read from.}
 
-\item{unsanitize}{Should the log data be unsanitized?}
+\item{unsanitize}{Should escaped special characters be unescaped?}
 
 \item{last_first}{Should the last log entry be the first row of the data frame?}
 }
 \value{
-A \code{data.frame}.
+A \code{data.frame}, with the columns as the fields in the log file.
 }
 \description{
-This function returns a \code{data.frame} containing all the logs in the provided \code{ndjson} log file.
+Returns a \code{data.frame} containing all the logs in the provided \code{ndjson} log file.
 }
 \details{
 \code{read_logs()} returns a \code{data.frame} with the empty character columns "timestamp", "log_lvl" and "log_msg"
 if the log file has no entries.
 }
 \examples{
-  set_logfile(file.path(tempdir(), "loggit.log"), confirm = FALSE)
-  message("Test log message")
+\dontrun{
   read_logs()
 
+  read_logs(last_first = TRUE)
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/loggit.R
 \name{loggit}
 \alias{loggit}
-\title{Log entries to file}
+\title{Log messages and R objects}
 \usage{
 loggit(
   log_lvl,
@@ -14,27 +14,36 @@ loggit(
 )
 }
 \arguments{
-\item{log_lvl}{Log level coerceable to \code{character}. For details see parameter \code{custom_log_lvl}.}
+\item{log_lvl}{Log level. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}
 
-\item{log_msg}{Main log message. Will be coerced to class \code{character}.}
+\item{log_msg}{Log message. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}
 
-\item{...}{Named arguments, each a atomic vector of length one, you wish to log.
+\item{...}{Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to \code{character}.
 The names of the arguments are treated as column names in the log.}
 
-\item{echo}{Should the log file entry be printed to the console as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
-\item{logfile}{Log file to write to.}
+\item{logfile}{Path of log file to write to.}
 }
 \value{
 Invisible \code{NULL}.
 }
 \description{
-Log entries to a \href{https://github.com/ndjson}{ndjson} log file, defined by \code{\link[=set_logfile]{set_logfile()}}.
+Log messages and R objects to a \href{https://github.com/ndjson}{ndjson} log file.
 }
 \examples{
-  loggit("INFO", "This is a message", but_maybe = "you want more fields?",
-  sure = "why not?", like = 2, or = 10, what = "ever")
+\dontrun{
+  loggit("DEBUG", "This is a message")
 
+  loggit("INFO", "This is a message", echo = FALSE)
+
+  loggit("CUSTOM", "This is a message of a custom log_lvl", custom_log_lvl = TRUE)
+
+  loggit(
+   "INFO", "This is a message", but_maybe = "you want more fields?",
+    sure = "why not?", like = 2, or = 10, what = "ever"
+  )
+}
 }

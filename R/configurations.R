@@ -4,7 +4,7 @@
 
 #' Set Log File
 #'
-#' Set the log file that loggit will write to.
+#' Set the log file that loggit will write to by default.
 #'
 #' @param logfile Absolut or relative path to log file.
 #' An attempt is made to convert the path into a canonical absolute form using [normalizePath()].
@@ -17,8 +17,10 @@
 #'
 #' @return Invisible `NULL`.
 #'
-#' @examples set_logfile(file.path(tempdir(), "loggit.log"))
-#'
+#' @examples
+#' \dontrun{
+#'   set_logfile("path/to/logfile.log")
+#' }
 #' @export
 set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
@@ -33,7 +35,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
 
 #' Get Log File
 #'
-#' Return the log file that `loggit()` will write to.
+#' Return the log file that `loggit()` will write to by default.
 #'
 #' @return The log file path.
 #'
@@ -49,6 +51,11 @@ get_logfile <- function() {
 #'
 #' Set timestamp format for use in output logs.
 #'
+#' @param ts_format ISO date format.
+#' @param confirm Print confirmation message of timestamp format?
+#'
+#' @return Invisible `NULL`.
+#'
 #' @details This function performs no time format validations, but will echo out the current time in
 #' the provided format for manual validation.
 #'
@@ -56,12 +63,10 @@ get_logfile <- function() {
 #' the host system's time configuration to provide this. This is to enforce
 #' consistency across software running on the host.
 #'
-#' @param ts_format ISO date format.
-#' @param confirm Print confirmation message of timestamp format?
-#'
-#' @return Invisible `NULL`.
-#'
-#' @examples set_timestamp_format("%Y-%m-%d %H:%M:%S")
+#' @examples
+#' \dontrun{
+#'   set_timestamp_format("%Y-%m-%d %H:%M:%S")
+#' }
 #'
 #' @export
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {

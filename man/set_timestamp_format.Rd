@@ -26,6 +26,8 @@ the host system's time configuration to provide this. This is to enforce
 consistency across software running on the host.
 }
 \examples{
-set_timestamp_format("\%Y-\%m-\%d \%H:\%M:\%S")
+\dontrun{
+  set_timestamp_format("\%Y-\%m-\%d \%H:\%M:\%S")
+}
 
 }

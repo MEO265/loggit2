@@ -1,20 +1,18 @@
-#' Return log file as an R data frame
+#' Get log as `data.frame`
 #'
-#' This function returns a `data.frame` containing all the logs in the provided `ndjson` log file.
+#' Returns a `data.frame` containing all the logs in the provided `ndjson` log file.
 #'
-#' @param logfile Path to log file.
-#' @inheritParams read_ndjson
-#'
-#' @return A `data.frame`.
+#' @inherit read_ndjson return params
 #'
 #' @details `read_logs()` returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg"
 #' if the log file has no entries.
 #'
 #' @examples
-#'   set_logfile(file.path(tempdir(), "loggit.log"), confirm = FALSE)
-#'   message("Test log message")
+#' \dontrun{
 #'   read_logs()
 #'
+#'   read_logs(last_first = TRUE)
+#' }
 #' @export
 read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE) {
 
@@ -40,18 +38,13 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' @return Invisible `NULL`.
 #'
 #' @examples
-#'   # Truncate "default" log file to 100 lines
-#'   set_logfile()
-#'   for (i in 1:150) {loggit("INFO", i, echo = FALSE)}
-#'   rotate_logs(100)
+#' \dontrun{
+#'   rotate_logs()
 #'
-#'   # Truncate a different log file to 250 lines
-#'   another_log <- file.path(tempdir(), "another.log")
-#'   set_logfile(another_log)
-#'   for (i in 1:300) {loggit("INFO", i, echo = FALSE)}
-#'   set_logfile() # clears pointer to other log file
-#'   rotate_logs(250, another_log)
+#'   rotate_logs(rotate_lines = 0L)
 #'
+#'   rotate_logs(rotate_lines = 1000L, logfile = "my_log.log")
+#' }
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(rotate_lines >= 0L, "Log file does not exist" = file.exists(logfile))
@@ -89,13 +82,22 @@ find_call <- function() {
 
 #' Write log to csv file
 #'
-#' @param file Path to write csv file to
-#' @param logfile Path to log file to read from
-#' @param unsanitize Should the line breaks at the end of messages be not escaped?
-#' @param ... Additional arguments to pass to `utils::write.table()`
+#' Creates a csv file from the ndjson log file.
+#'
+#' @param file Path to write csv file to.
+#' @param ... Additional arguments to pass to `utils::write.csv()`.
 #' @inheritParams read_logs
 #'
 #' @return Invisible `NULL`.
+#'
+#' @details Unescaping of special characters can lead to unexpected results. Use `unsanitize = TRUE` with caution.
+#'
+#' @examples
+#' \dontrun{
+#'   convert_to_csv("my_log.csv")
+#'
+#'   convert_to_csv("my_log.csv", logfile = "my_log.log", last_first = TRUE)
+#' }
 #'
 #' @export
 convert_to_csv <- function(file, logfile = get_logfile(), unsanitize = FALSE, last_first = FALSE, ...) {
