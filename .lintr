@@ -59,6 +59,20 @@ linters: list(
   redundant_ifelse_linter(),
   regex_subset_linter(),
   repeat_linter(),
-  routine_registration_linter()
+  routine_registration_linter(),
+  scalar_in_linter(),
+  # semicolon_linter(),
+  seq_linter(),
+  sort_linter(),
+  spaces_inside_linter(),
+  spaces_left_parentheses_linter(),
+  sprintf_linter(),
+  string_boundary_linter(),
+  strings_as_factors_linter(),
+  system_file_linter(),
+  T_and_F_symbol_linter(),
+  todo_comment_linter(),
+  trailing_blank_lines_linter(),
+  trailing_whitespace_linter()
   )
 encoding: "UTF-8"

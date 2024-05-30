@@ -27,4 +27,3 @@ test_that("test timestamp configuration", {
   expect_silent(set_timestamp_format(ts_format = old, confirm = FALSE))
   expect_identical(get_timestamp_format(), old)
 })
-

@@ -144,7 +144,9 @@ test_that("stopifnot", {
   log_actual <- read_logs()
   expect_setequal(names(log_actual), c("timestamp", "log_lvl", "log_msg"))
   log_actual$timestamp <- NULL
-  log_expected <- data.frame(log_lvl = "ERROR", log_msg = c("This is a stop if not error", "Should not echo"))
+  log_expected <- data.frame(
+    log_lvl = "ERROR", log_msg = c("This is a stop if not error", "Should not echo"), stringsAsFactors = FALSE
+  )
   expect_identical(log_actual, log_expected)
 })
 

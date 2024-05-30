@@ -34,9 +34,9 @@ cleanup()
 
 test_that("write_logs() special cases", {
   # Ignore NAs
-  log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_)
+  log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_, stringsAsFactors = FALSE)
   write_ndjson(log_data, echo = FALSE)
   log_file <- read_logs()
-  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_))
+  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_, stringsAsFactors = FALSE))
 })
 cleanup()

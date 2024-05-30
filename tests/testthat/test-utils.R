@@ -74,7 +74,10 @@ test_that("rotate_logs preserves sanitization", {
 test_that("read_logs on empty log", {
   set_logfile(get_logfile(), confirm = FALSE, create = TRUE)
   log_df <- read_logs()
-  expect_identical(log_df, data.frame(timestamp = character(), log_lvl = character(), log_msg = character()))
+  expect_identical(
+    log_df,
+    data.frame(timestamp = character(), log_lvl = character(), log_msg = character(), stringsAsFactors = FALSE)
+  )
 })
 cleanup()
 
