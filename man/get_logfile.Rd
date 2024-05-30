@@ -10,7 +10,7 @@ get_logfile()
 The log file path.
 }
 \description{
-Return the log file that \code{loggit()} will write to.
+Return the log file that \code{loggit()} will write to by default.
 }
 \examples{
 get_logfile()

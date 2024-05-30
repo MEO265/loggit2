@@ -19,13 +19,14 @@ If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
 Invisible \code{NULL}.
 }
 \description{
-Set the log file that loggit will write to.
+Set the log file that loggit will write to by default.
 }
 \details{
 No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 Therefore, the default behavior is to create a file named \code{loggit.log} in your system's temporary directory.
 }
 \examples{
-set_logfile(file.path(tempdir(), "loggit.log"))
-
+\dontrun{
+  set_logfile("path/to/logfile.log")
+}
 }
