@@ -7,7 +7,7 @@
 #' @inheritParams loggit
 #'
 #' @details If `loggit2` handlers are already used in the expression, this can lead to conditions being logged
-#' twice (in the same or different files)
+#' twice (in the same or different files).
 #'
 #' @return The result of the expression.
 #'

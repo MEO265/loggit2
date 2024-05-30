@@ -84,8 +84,8 @@ find_call <- function() {
 #'
 #' Creates a csv file from the ndjson log file.
 #'
-#' @param file Path to write csv file to
-#' @param ... Additional arguments to pass to `utils::write.csv()`
+#' @param file Path to write csv file to.
+#' @param ... Additional arguments to pass to `utils::write.csv()`.
 #' @inheritParams read_logs
 #'
 #' @return Invisible `NULL`.

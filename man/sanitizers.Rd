@@ -11,10 +11,10 @@ default_ndjson_sanitizer(string)
 default_ndjson_unsanitizer(string)
 }
 \arguments{
-\item{string}{A character vector}
+\item{string}{A character vector.}
 }
 \value{
-A character vector
+A character vector.
 }
 \description{
 \emph{Sanitizer} and \emph{unsanitizer} are needed because the \code{ndjson} format requires that each line be a valid JSON object,

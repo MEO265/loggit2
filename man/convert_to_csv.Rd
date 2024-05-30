@@ -13,7 +13,7 @@ convert_to_csv(
 )
 }
 \arguments{
-\item{file}{Path to write csv file to}
+\item{file}{Path to write csv file to.}
 
 \item{logfile}{Path to log file to read from.}
 
@@ -21,7 +21,7 @@ convert_to_csv(
 
 \item{last_first}{Should the last log entry be the first row of the data frame?}
 
-\item{...}{Additional arguments to pass to \code{utils::write.csv()}}
+\item{...}{Additional arguments to pass to \code{utils::write.csv()}.}
 }
 \value{
 Invisible \code{NULL}.

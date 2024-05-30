@@ -12,9 +12,9 @@ sanitizer_map <- list(
 #' thus special characters must be escaped. The functions worke in such a way that the concatenation
 #' `unsanitizer(sanitizer())` corresponds to the identity function.
 #'
-#' @param string A character vector
+#' @param string A character vector.
 #'
-#' @return A character vector
+#' @return A character vector.
 #'
 #' @details
 #' The default sanatizer and unsanatizer are based on the following mapping:
