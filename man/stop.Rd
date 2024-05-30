@@ -2,7 +2,7 @@
 % Please edit documentation in R/handlers.R
 \name{stop}
 \alias{stop}
-\title{Stop Function Log Handler}
+\title{Stop Log Handler}
 \usage{
 stop(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE)
 }
@@ -17,9 +17,9 @@ stop(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE)
 \item{domain}{see \code{\link[base]{gettext}}.  If \code{NA}, messages will
     not be translated.}
 
-\item{.loggit}{Should \code{loggit()} execute?}
+\item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }
 \value{
 No return value.
@@ -29,7 +29,11 @@ This function is identical to base R's \code{\link[base:stop]{stop}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{
-  if (2 < 1) stop("This is a completely false condition, which throws an error")
+\dontrun{
+  stop("This is a completely false condition")
+
+  stop("This is a completely false condition", echo = FALSE)
+}
 
 }
 \seealso{

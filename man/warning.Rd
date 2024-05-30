@@ -2,7 +2,7 @@
 % Please edit documentation in R/handlers.R
 \name{warning}
 \alias{warning}
-\title{Warning Messages Log Handler}
+\title{Warning Log Handler}
 \usage{
 warning(
   ...,
@@ -31,9 +31,9 @@ warning(
 \item{domain}{see \code{\link[base]{gettext}}.  If \code{NA}, messages will
     not be translated, see also the note in \code{\link[base]{stop}}.}
 
-\item{.loggit}{Should \code{loggit()} execute?}
+\item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }
 \value{
 The warning message as \code{\link[base]{character}} string, invisibly.
@@ -43,7 +43,11 @@ This function is identical to base R's \code{\link[base:warning]{warning}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{
-  if (2 < 1) warning("You may want to review that math, and so this is your warning")
+\dontrun{
+  warning("You may want to review that math")
+
+  warning("You may want to review that math", immediate = FALSE, echo = FALSE)
+}
 
 }
 \seealso{

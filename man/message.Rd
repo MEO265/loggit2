@@ -2,7 +2,7 @@
 % Please edit documentation in R/handlers.R
 \name{message}
 \alias{message}
-\title{Diagnostic Messages Log Handler}
+\title{Message Log Handler}
 \usage{
 message(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE)
 }
@@ -17,9 +17,9 @@ message(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE)
 \item{appendLF}{logical: should messages given as a character string
     have a newline appended?}
 
-\item{.loggit}{Should \code{loggit()} execute?}
+\item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }
 \value{
 Invisible \code{NULL}.
@@ -29,8 +29,11 @@ This function is identical to base R's \code{\link[base:message]{message}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{
-  if (2 < 1) message("Don't say such silly things!")
+\dontrun{
+  message("Don't say such silly things!")
 
+  message("Don't say such silly things!", appendLF = FALSE, echo = FALSE)
+}
 }
 \seealso{
 Other handlers: 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/handlers.R
 \name{stopifnot}
 \alias{stopifnot}
-\title{Conditional Stop Function Log Handler}
+\title{Conditional Stop Log Handler}
 \usage{
 stopifnot(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE)
 }
@@ -32,16 +32,20 @@ If names are provided to \code{...}, they will be used in lieu of the default er
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
 
-\item{.loggit}{Should \code{loggit()} execute?}
+\item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should \code{loggit()}'s log entry be echoed to the console, as well?}
+\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
 }
 \description{
 This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},
 but it includes logging of the exception message via \code{loggit()}.
 }
 \examples{
-  stopifnot("This is a completely false condition, which throws an error" = TRUE)
+\dontrun{
+ stopifnot("This is a completely false condition" = FALSE)
+
+ stopifnot(5L == 5L, "This is a completely false condition" = FALSE, echo = FALSE)
+}
 
 }
 \seealso{
