@@ -29,8 +29,8 @@ test_that("message works as it does in base R", {
   expect_silent(suppressMessages(message("this should be ", "concatenated ", "in the log", echo = FALSE)))
   logdata <- read_logs()
   logdata <- logdata[nrow(logdata),]
-  expect_identical(logdata$log_lvl, "INFO")
-  expect_identical(logdata$log_msg, "this should be concatenated in the log\n")
+  expect_identical(logdata[["log_lvl"]], "INFO")
+  expect_identical(logdata[["log_msg"]], "this should be concatenated in the log\n")
 
   # Condition is accepted as input
   sm <- simpleMessage(message = "Test message", call = str2lang("base::print(x)"))
@@ -64,8 +64,8 @@ test_that("warning works as it does in base R", {
   expect_silent(suppressWarnings(warning("this should be ", "concatenated ", "in the log", echo = FALSE)))
   logdata <- read_logs()
   logdata <- logdata[nrow(logdata),]
-  expect_identical(logdata$log_lvl, "WARN")
-  expect_identical(logdata$log_msg, "this should be concatenated in the log")
+  expect_identical(logdata[["log_lvl"]], "WARN")
+  expect_identical(logdata[["log_msg"]], "this should be concatenated in the log")
 
   # Condition is accepted as input
   sw <- simpleWarning(message = "Test message", call = str2lang("base::print(x)"))
@@ -97,8 +97,8 @@ test_that("stop works as it does in base R", {
   expect_silent(try(stop("this should be ", "concatenated ", "in the log", echo = FALSE), silent = TRUE))
   logdata <- read_logs()
   logdata <- logdata[nrow(logdata),]
-  expect_identical(logdata$log_lvl, "ERROR")
-  expect_identical(logdata$log_msg, "this should be concatenated in the log")
+  expect_identical(logdata[["log_lvl"]], "ERROR")
+  expect_identical(logdata[["log_msg"]], "this should be concatenated in the log")
 
   # Condition is accepted as input
   se <- simpleError(message = "Test message", call = str2lang("base::print(x)"))
@@ -143,7 +143,7 @@ test_that("stopifnot", {
   stopifnot("Should not show" = TRUE)
   log_actual <- read_logs()
   expect_setequal(names(log_actual), c("timestamp", "log_lvl", "log_msg"))
-  log_actual$timestamp <- NULL
+  log_actual[["timestamp"]] <- NULL
   log_expected <- data.frame(
     log_lvl = "ERROR", log_msg = c("This is a stop if not error", "Should not echo"), stringsAsFactors = FALSE
   )

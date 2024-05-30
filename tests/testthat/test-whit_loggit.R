@@ -23,8 +23,8 @@ test_that("Message, warning, and error get writen to the log file", {
 
   logs_json <- read_logs()
   expect_identical(nrow(logs_json), 4L)
-  expect_identical(logs_json$log_lvl, c("INFO", "WARN", "INFO", "ERROR"))
-  expect_identical(logs_json$log_msg, c("A message\n", "A warning", "A message\n", "An error"))
+  expect_identical(logs_json[["log_lvl"]], c("INFO", "WARN", "INFO", "ERROR"))
+  expect_identical(logs_json[["log_msg"]], c("A message\n", "A warning", "A message\n", "An error"))
 })
 cleanup()
 
@@ -51,8 +51,8 @@ test_that("Different log files for handler and with_loggit", {
   expect_identical(get_logfile(), default_logfile)
   default_log <- read_logs(logfile = default_logfile)
   with_log <- read_logs(logfile = with_logfile)
-  expect_identical(default_log$log_lvl, with_log$log_lvl)
-  expect_identical(default_log$log_msg, with_log$log_msg)
+  expect_identical(default_log[["log_lvl"]], with_log[["log_lvl"]])
+  expect_identical(default_log[["log_msg"]], with_log[["log_msg"]])
 
 })
 cleanup()

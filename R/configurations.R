@@ -25,8 +25,8 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
   if (create && !file.exists(logfile)) file.create(logfile)
-  .config$logfile <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
-  if (confirm) base::message("Log file set to ", .config$logfile)
+  .config[["logfile"]] <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
+  if (confirm) base::message("Log file set to ", .config[["logfile"]])
   invisible(NULL)
 }
 
@@ -41,7 +41,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
 #'
 #' @export
 get_logfile <- function() {
-  .config$logfile
+  .config[["logfile"]]
 }
 
 
@@ -65,7 +65,7 @@ get_logfile <- function() {
 #'
 #' @export
 set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TRUE) {
-  .config$ts_format <- ts_format
+  .config[["ts_format"]] <- ts_format
   if (confirm) {
     base::message(
       "Timestamp format set to ", ts_format, ".\n",
@@ -86,5 +86,5 @@ set_timestamp_format <- function(ts_format = "%Y-%m-%dT%H:%M:%S%z", confirm = TR
 #'
 #' @export
 get_timestamp_format <- function() {
-  .config$ts_format
+  .config[["ts_format"]]
 }

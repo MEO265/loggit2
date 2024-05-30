@@ -9,8 +9,8 @@ test_that("loggit writes handler messages to file", {
   logs_json <- read_logs()
 
   expect_identical(nrow(logs_json), 3L)
-  expect_identical(logs_json$log_lvl, c("INFO", "WARN", "ERROR"))
-  expect_identical(logs_json$log_msg, c(msg, warn, err))
+  expect_identical(logs_json[["log_lvl"]], c("INFO", "WARN", "ERROR"))
+  expect_identical(logs_json[["log_msg"]], c(msg, warn, err))
 })
 cleanup()
 

@@ -1,7 +1,7 @@
 # Each test context needs to wipe the log file etc., so define cleanup()
 # function here
 cleanup <- function() {
-  file.remove(.config$logfile)
+  file.remove(.config[["logfile"]])
 }
 
 expect_identical_condition <-
@@ -27,8 +27,10 @@ expect_identical_condition <-
       testthat::fail("Expected don't throws an error.")
     }
 
-    if (actual$message != expected$message) {
-      testthat::fail(sprintf("Actual message is '%s' and expected is '%s'.", actual$message, expected$message))
+    if (actual[["message"]] != expected[["message"]]) {
+      testthat::fail(
+        sprintf("Actual message is '%s' and expected is '%s'.", actual[["message"]], expected[["message"]])
+      )
     }
 
     if (ignore_call) {
@@ -36,16 +38,16 @@ expect_identical_condition <-
       return(invisible())
     }
 
-    if (xor(is.null(actual$call), is.null(expected$call))) {
-      if (is.null(actual$call)) {
-        fail(sprintf("Actual has no call, but expected has '%s'.", deparse(expected$call)))
+    if (xor(is.null(actual[["call"]]), is.null(expected[["call"]]))) {
+      if (is.null(actual[["call"]])) {
+        fail(sprintf("Actual has no call, but expected has '%s'.", deparse(expected[["call"]])))
       } else {
-        fail(sprintf("Actual has call '%s', and expected has non.", deparse(actual$call)))
+        fail(sprintf("Actual has call '%s', and expected has non.", deparse(actual[["call"]])))
       }
     }
 
-    actual_call <- deparse(actual$call)
-    expected_call <- deparse(expected$call)
+    actual_call <- deparse(actual[["call"]])
+    expected_call <- deparse(expected[["call"]])
 
     if (remove_namespace) {
       actual_call <- sub(pattern = "^[A-Za-z0-9]*::", replacement = "", actual_call)

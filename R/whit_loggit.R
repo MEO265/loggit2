@@ -16,13 +16,13 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = TRUE) {
   withCallingHandlers(
     exp,
     error = function(e) {
-      loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo, logfile = logfile)
+      loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, logfile = logfile)
     },
     warning = function(w) {
-      loggit(log_lvl = "WARN", log_msg = w$message, echo = echo, logfile = logfile)
+      loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, logfile = logfile)
     },
     message = function(m) {
-      loggit(log_lvl = "INFO", log_msg = m$message, echo = echo, logfile = logfile)
+      loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, logfile = logfile)
     }
   )
 }

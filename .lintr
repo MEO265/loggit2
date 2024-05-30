@@ -22,7 +22,7 @@ linters: list(
   expect_null_linter(),
   expect_true_false_linter(),
   expect_type_linter(),
-  # extraction_operator_linter()
+  extraction_operator_linter(),
   fixed_regex_linter(),
   for_loop_index_linter(),
   function_argument_linter(),
