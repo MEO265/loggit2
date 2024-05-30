@@ -20,6 +20,7 @@
   If `NA` the log level set by `set_log_level()` is used to determine if the condition should be logged.
   This is the new default behavior, but since the default log level is `"DEBUG"` this should not change
   the behavior of existing code.
+* All `set_*` functions now return the previous value of the setting.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
