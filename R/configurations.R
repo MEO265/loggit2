@@ -97,7 +97,7 @@ get_timestamp_format <- function() {
 
 #' Set Log Level
 #'
-#' @param level Log level to set.
+#' @param level Log level to set, as a string or integer.
 #' @param confirm Print confirmation message of log level?
 #'
 #' @return Invisible `NULL`.
@@ -108,6 +108,15 @@ get_timestamp_format <- function() {
 #'  WARNING: 2
 #'  ERROR: 1
 #'  NONE: 0
+#'
+#' @examples
+#' \dontrun{
+#'  set_log_level("DEBUG")
+#'  set_log_level("INFO")
+#'
+#'  set_log_level(4)
+#'  set_log_level(3)
+#' }
 #'
 #' @export
 set_log_level <- function(level = "DEBUG", confirm = TRUE) {
@@ -128,13 +137,18 @@ get_log_level <- function() {
 
 #' Set echo
 #'
-#' @param echo Logical. Should log messages be echoed to `stdout`?
+#' @param echo Should log messages be echoed to `stdout`?
 #' @param confirm Print confirmation message of echo setting?
 #'
 #' @return Invisible `NULL`.
 #'
-#' @export
+#' @examples
+#' \dontrun{
+#'  set_echo(TRUE)
+#'  set_echo(FALSE)
+#' }
 #'
+#' @export
 set_echo <- function(echo = TRUE, confirm = TRUE) {
   .config[["echo"]] <- echo
   if (confirm) base::message("Echo set to ", echo)

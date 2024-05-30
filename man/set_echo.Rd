@@ -7,7 +7,7 @@
 set_echo(echo = TRUE, confirm = TRUE)
 }
 \arguments{
-\item{echo}{Logical. Should log messages be echoed to \code{stdout}?}
+\item{echo}{Should log messages be echoed to \code{stdout}?}
 
 \item{confirm}{Print confirmation message of echo setting?}
 }
@@ -16,4 +16,11 @@ Invisible \code{NULL}.
 }
 \description{
 Set echo
+}
+\examples{
+\dontrun{
+ set_echo(TRUE)
+ set_echo(FALSE)
+}
+
 }

@@ -7,7 +7,7 @@
 set_log_level(level = "DEBUG", confirm = TRUE)
 }
 \arguments{
-\item{level}{Log level to set.}
+\item{level}{Log level to set, as a string or integer.}
 
 \item{confirm}{Print confirmation message of log level?}
 }
@@ -24,4 +24,14 @@ INFO: 3
 WARNING: 2
 ERROR: 1
 NONE: 0
+}
+\examples{
+\dontrun{
+ set_log_level("DEBUG")
+ set_log_level("INFO")
+
+ set_log_level(4)
+ set_log_level(3)
+}
+
 }
