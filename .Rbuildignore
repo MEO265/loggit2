@@ -16,3 +16,4 @@ Makefile
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.lintr$
