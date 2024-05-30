@@ -9,8 +9,8 @@ test_that("loggit writes handler messages to file", {
   logs_json <- read_logs()
 
   expect_identical(nrow(logs_json), 3L)
-  expect_identical(logs_json$log_lvl, c("INFO", "WARN", "ERROR"))
-  expect_identical(logs_json$log_msg, c(msg, warn, err))
+  expect_identical(logs_json[["log_lvl"]], c("INFO", "WARN", "ERROR"))
+  expect_identical(logs_json[["log_msg"]], c(msg, warn, err))
 })
 cleanup()
 
@@ -32,7 +32,7 @@ test_that("loggit multiplies values with warning", {
   )
 
   expect_warning(
-    loggit(log_lvl = "INFO", log_msg = c("foo", "bar"), value = 1, echo = FALSE),
+    loggit(log_lvl = "INFO", log_msg = c("foo", "bar"), value = 1L, echo = FALSE),
     regexp = "^log_msg should be of length one, only the first element will be used.$"
   )
 
@@ -42,7 +42,7 @@ test_that("loggit multiplies values with warning", {
   )
 
   expect_error(
-    loggit(log_lvl = "INFO", log_msg = "foo", value = 1, "4", echo = FALSE),
+    loggit(log_lvl = "INFO", log_msg = "foo", value = 1L, "4", echo = FALSE),
     regexp = "^All custom log fields should be named.$"
   )
 
@@ -53,6 +53,6 @@ cleanup()
 test_that("Log file is returned via read_logs()", {
   message("msg", echo = FALSE)
   log_df <- read_logs()
-  expect_true("data.frame" %in% class(log_df))
+  expect_true(is.data.frame(log_df))
 })
 cleanup()

@@ -27,7 +27,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
     tryCatch({
       base::message(..1)
     }, message = function(m) {
-      if (.loggit) loggit(log_lvl = "INFO", log_msg = m$message, echo = echo)
+      if (.loggit) loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
       # If signalCondition was used there would be no output to the console
       base::message(m)
     })
@@ -35,8 +35,8 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
     tryCatch({
       base::message(..., domain = domain, appendLF = appendLF)
     }, message = function(m) {
-      m <- simpleMessage(message = m$message, call = call)
-      if (.loggit) loggit(log_lvl = "INFO", log_msg = m$message, echo = echo)
+      m <- simpleMessage(message = m[["message"]], call = call)
+      if (.loggit) loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
       # If signalCondition was used there would be no output to the console
       base::message(m)
     })
@@ -70,7 +70,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     tryCatch({
       base::warning(..1)
     }, warning = function(w) {
-      if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
+      if (.loggit) loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
       # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
@@ -78,8 +78,8 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     tryCatch({
       base::warning(..., call. = call., immediate. = immediate., noBreaks. = noBreaks., domain = domain)
     }, warning = function(w) {
-      w <- simpleWarning(message = w$message, call = call)
-      if (.loggit) loggit(log_lvl = "WARN", log_msg = w$message, echo = echo)
+      w <- simpleWarning(message = w[["message"]], call = call)
+      if (.loggit) loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
       # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
@@ -113,15 +113,15 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
     tryCatch({
       base::stop(..1)
     }, error = function(e) {
-      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
+      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
       base::stop(e)
     })
   } else {
     tryCatch({
       base::stop(..., call. = call., domain = domain)
     }, error = function(e) {
-      e <- simpleError(message = e$message, call = call)
-      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e$message, echo = echo)
+      e <- simpleError(message = e[["message"]], call = call)
+      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
       signalCondition(e)
     })
   }
@@ -166,8 +166,8 @@ stopifnot <- function(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE
   tryCatch({
     eval.parent(stop_call, 1L)
   }, error = function(e) {
-    cond <- simpleError(message = e$message, call = call)
-    if (.loggit) loggit(log_lvl = "ERROR", log_msg = cond$message, echo = echo)
+    cond <- simpleError(message = e[["message"]], call = call)
+    if (.loggit) loggit(log_lvl = "ERROR", log_msg = cond[["message"]], echo = echo)
     signalCondition(cond = cond)
   })
 }

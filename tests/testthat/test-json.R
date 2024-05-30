@@ -18,7 +18,7 @@ test_that("write_logs() and read_logs() work in tandem", {
 
   # jk, set timestamps equal, since CRAN tests started failing because of
   # just-barely-different results
-  log_df_got$timestamp <- NULL
+  log_df_got[["timestamp"]] <- NULL
 
   expect_identical(log_df_want, log_df_got)
 })
@@ -34,9 +34,9 @@ cleanup()
 
 test_that("write_logs() special cases", {
   # Ignore NAs
-  log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_)
+  log_data <- data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_, stringsAsFactors = FALSE)
   write_ndjson(log_data, echo = FALSE)
   log_file <- read_logs()
-  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_))
+  expect_identical(log_file, data.frame(log_lvl = c("foo", "bar"), log_msg = NA_character_, stringsAsFactors = FALSE))
 })
 cleanup()

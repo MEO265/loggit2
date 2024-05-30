@@ -22,7 +22,9 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 
   log <- read_ndjson(logfile, unsanitize = unsanitize, last_first = last_first)
 
-  if (nrow(log) == 0L) log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character())
+  if (nrow(log) == 0L) {
+    log <- data.frame(timestamp = character(), log_lvl = character(), log_msg = character(), stringsAsFactors = FALSE)
+  }
 
   return(log)
 }

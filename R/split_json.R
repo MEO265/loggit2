@@ -1,3 +1,3 @@
 split_ndjson <- function(x) {
-  .Call("split_ndjson", x)
+  .Call(c_split_ndjson, x)
 }
