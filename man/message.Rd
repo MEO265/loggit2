@@ -4,7 +4,7 @@
 \alias{message}
 \title{Message Log Handler}
 \usage{
-message(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE)
+message(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = TRUE)
 }
 \arguments{
 \item{...}{zero or more objects which can be coerced to character
@@ -17,7 +17,8 @@ message(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE)
 \item{appendLF}{logical: should messages given as a character string
     have a newline appended?}
 
-\item{.loggit}{Should the condition message be added to the log?}
+\item{.loggit}{Should the condition message be added to the log?
+If \code{NA} the log level set by \code{set_log_level()} is used to determine if the condition should be logged.}
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }

@@ -10,7 +10,7 @@ warning(
   immediate. = FALSE,
   noBreaks. = FALSE,
   domain = NULL,
-  .loggit = TRUE,
+  .loggit = NA,
   echo = TRUE
 )
 }
@@ -31,7 +31,8 @@ warning(
 \item{domain}{see \code{\link[base]{gettext}}.  If \code{NA}, messages will
     not be translated, see also the note in \code{\link[base]{stop}}.}
 
-\item{.loggit}{Should the condition message be added to the log?}
+\item{.loggit}{Should the condition message be added to the log?
+If \code{NA} the log level set by \code{set_log_level()} is used to determine if the condition should be logged.}
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }

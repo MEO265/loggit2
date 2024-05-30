@@ -16,6 +16,10 @@
 * A global log level can now be set using `set_log_level()`, which is used by all functions unless otherwise stated.
   The log levels are: `"DEBUG"`, `"INFO"`, `"WARN"`, `"ERROR"` and `"NONE"`.
 * Add `set_echo()` to control globally whether log messages are echoed to the console.
+* All condition log handlers (e.g. `warning()`) allow `NA` for parameter `.loggit`. 
+  If `NA` the log level set by `set_log_level()` is used to determine if the condition should be logged.
+  This is the new default behavior, but since the default log level is `"DEBUG"` this should not change
+  the behavior of existing code.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
