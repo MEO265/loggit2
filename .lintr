@@ -74,6 +74,7 @@ linters: list(
   todo_comment_linter(),
   trailing_blank_lines_linter(),
   trailing_whitespace_linter(),
+  # undesirable_function_linter, # To configure
   unnecessary_concatenation_linter(),
   unnecessary_lambda_linter(),
   unnecessary_nested_if_linter(),
