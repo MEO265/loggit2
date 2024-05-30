@@ -18,16 +18,11 @@ Invisible \code{NULL}.
 Truncates the log file to the line count provided as \code{rotate_lines}.
 }
 \examples{
-  # Truncate "default" log file to 100 lines
-  set_logfile()
-  for (i in 1:150) {loggit("INFO", i, echo = FALSE)}
-  rotate_logs(100)
+\dontrun{
+  rotate_logs()
 
-  # Truncate a different log file to 250 lines
-  another_log <- file.path(tempdir(), "another.log")
-  set_logfile(another_log)
-  for (i in 1:300) {loggit("INFO", i, echo = FALSE)}
-  set_logfile() # clears pointer to other log file
-  rotate_logs(250, another_log)
+  rotate_logs(rotate_lines = 0L)
 
+  rotate_logs(rotate_lines = 1000L, logfile = "my_log.log")
+}
 }

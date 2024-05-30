@@ -15,17 +15,25 @@ convert_to_csv(
 \arguments{
 \item{file}{Path to write csv file to}
 
-\item{logfile}{Path to log file to read from}
+\item{logfile}{Path to log file to read from # TODO: Inherit from \code{read_logs}?}
 
-\item{unsanitize}{Should the line breaks at the end of messages be not escaped?}
+\item{unsanitize}{Should the line breaks at the end of messages be not escaped? # TODO: Inherit from \code{read_logs}?}
 
 \item{last_first}{Should the last log entry be the first row of the data frame?}
 
-\item{...}{Additional arguments to pass to \code{utils::write.table()}}
+\item{...}{Additional arguments to pass to \code{utils::write.csv()}}
 }
 \value{
 Invisible \code{NULL}.
 }
 \description{
-Write log to csv file
+Creates a csv file from the ndjson log file.
+}
+\examples{
+\dontrun{
+  convert_to_csv("my_log.csv")
+
+  convert_to_csv("my_log.csv", logfile = "my_log.log", last_first = TRUE)
+}
+
 }
