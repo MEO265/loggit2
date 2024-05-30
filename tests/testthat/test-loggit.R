@@ -53,6 +53,6 @@ cleanup()
 test_that("Log file is returned via read_logs()", {
   message("msg", echo = FALSE)
   log_df <- read_logs()
-  expect_true("data.frame" %in% class(log_df))
+  expect_true(is.data.frame(log_df))
 })
 cleanup()
