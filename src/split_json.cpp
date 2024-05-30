@@ -4,7 +4,15 @@
 #include <Rinternals.h>
 #include "loggit.h"
 
-
+//' Convert a JSON string
+//'
+//' Split a JSON strings into keys and values.
+//'
+//' @param strSEXP A JSON string.
+//'
+//' @return A list of two character vectors: `keys` and `values`.
+//'
+//' @keywords internal
 extern "C" SEXP split_json(SEXP strSEXP) {
     const char* str = CHAR(STRING_ELT(strSEXP, 0));
     std::vector<std::string> keys;
@@ -95,6 +103,16 @@ extern "C" SEXP split_json(SEXP strSEXP) {
     return ans;
 }
 
+
+//' Convert a ndJSON object
+//'
+//' Split a vector of JSON strings into a list of R objects.
+//'
+//' @param strVecSEXP A vector of JSON strings.
+//'
+//' @return A list with the same length as `x`, each containing two character vectors: `keys` and `values`.
+//'
+//' @keywords internal
 extern "C" SEXP split_ndjson(SEXP strVecSEXP) {
     if (!Rf_isString(strVecSEXP)) {
         Rf_error("Input must be a character vector.");
