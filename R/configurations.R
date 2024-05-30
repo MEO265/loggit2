@@ -128,7 +128,7 @@ get_log_level <- function() {
 
 #' Set echo
 #'
-#' @param echo Logical. Should log messages be echoed to the console?
+#' @param echo Logical. Should log messages be echoed to `stdout`?
 #' @param confirm Print confirmation message of echo setting?
 #'
 #' @return Invisible `NULL`.
@@ -143,7 +143,7 @@ set_echo <- function(echo = TRUE, confirm = TRUE) {
 
 #' Get echo
 #'
-#' @return Logical. Are log messages echoed to the console?
+#' @return Logical. Are log messages echoed to `stdout`?
 #'
 #' @export
 get_echo <- function() {

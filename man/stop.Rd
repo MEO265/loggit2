@@ -19,7 +19,7 @@ stop(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE)
 
 \item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }
 \value{
 No return value.

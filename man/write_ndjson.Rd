@@ -16,7 +16,7 @@ write_ndjson(
 
 \item{logfile}{Path of log file to write to.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{overwrite}{Overwrite previous log file?}
 }

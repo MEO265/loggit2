@@ -33,7 +33,7 @@ warning(
 
 \item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }
 \value{
 The warning message as \code{\link[base]{character}} string, invisibly.

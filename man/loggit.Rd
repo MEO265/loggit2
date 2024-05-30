@@ -22,7 +22,7 @@ loggit(
 \item{...}{Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to \code{character}.
 The names of the arguments are treated as column names in the log.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 

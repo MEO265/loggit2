@@ -7,7 +7,7 @@
 get_echo()
 }
 \value{
-Logical. Are log messages echoed to the console?
+Logical. Are log messages echoed to \code{stdout}?
 }
 \description{
 Get echo

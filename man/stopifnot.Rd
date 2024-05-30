@@ -34,7 +34,7 @@ If names are provided to \code{...}, they will be used in lieu of the default er
 
 \item{.loggit}{Should the condition message be added to the log?}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }
 \description{
 This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},
