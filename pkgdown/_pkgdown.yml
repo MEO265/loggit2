@@ -2,13 +2,17 @@ url: http://www.r-loggit.org/
 
 home:
   title: Easy-to-Use, Dependencyless Logger for R
+  description: An easy-to-use 'ndjson' logger, providing logging wrappers for base R's `message()`, `warning()`, and `stop()` functions, among others.
   sidebar:
     structure: [links, license, dev]
 
 template:
   bootstrap: 5
   includes:
-    in_header: <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    in_header: <link rel="icon" type="image/svg+xml" href="https://filedn.eu/ldV4y5YKQXjQ0wNYvKjlJrp/favicon.svg">
+  opengraph:
+    image:
+      src: https://filedn.eu/ldV4y5YKQXjQ0wNYvKjlJrp/opengraph_filled_2.png
 
 reference:
   - title: Condition log handlers
