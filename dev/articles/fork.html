@@ -19,11 +19,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Why the Fork?">
 <meta property="og:description" content="loggit2">
+<meta property="og:image" content="https://filedn.eu/ldV4y5YKQXjQ0wNYvKjlJrp/opengraph_filled_2.png">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<![endif]--><link rel="icon" type="image/svg+xml" href="https://filedn.eu/ldV4y5YKQXjQ0wNYvKjlJrp/favicon.svg">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -128,7 +129,7 @@ as its base equivalent.</p>
 <span><span class="co">#&gt; This is another message</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -136,7 +137,7 @@ as its base equivalent.</p>
 <span><span class="co">#&gt; Warning: This is another warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -144,7 +145,7 @@ as its base equivalent.</p>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
 <p>For further information and comparisons look <a href="#further-comparisons">here</a>.</p>
 </div>
@@ -161,7 +162,7 @@ existing code (without logs) unnecessarily complicated.</p>
 <span><span class="co">#&gt; Error: This is an error</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"TRUE is not true"</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"This is an error"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">&lt;</span> <span class="fl">1L</span>, <span class="st">"This is another error"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
 <span><span class="co">#&gt; Error: This is an error</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -235,11 +236,11 @@ as its <code>{base}</code> equivalent.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning in f(): This is another warning</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-05-30T18:55:56+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-05-31T17:03:39+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
 <span><span class="co">#&gt; Error in f(): This is another error</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
