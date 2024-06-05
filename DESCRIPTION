@@ -13,7 +13,7 @@ Authors@R: c(
     person("Ryan", "Price", role = c("fnd", "aut"))
   )
 License: MIT + file LICENSE
-Depends: R (>= 3.4.0)
+Depends: R (>= 4.0.0)
 Suggests:
     knitr (>= 1.19),
     rmarkdown (>= 1.8),
