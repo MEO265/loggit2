@@ -93,3 +93,20 @@ test_that("convert_to_csv", {
   expect_snapshot_file(file.path(tmp_dir, "test_reverse.csv"))
   expect_snapshot_file(file.path(tmp_dir, "test_with_lf.csv"))
 })
+
+library(testthat)
+
+# Test for get_lvl_name function
+test_that("get_lvl_name", {
+  expect_identical(get_lvl_name(0L), "NONE")
+  expect_identical(get_lvl_name(1L), "ERROR")
+  expect_identical(get_lvl_name(2L), "WARN")
+  expect_identical(get_lvl_name(3L), "INFO")
+  expect_identical(get_lvl_name(4L), "DEBUG")
+
+  expect_error(get_lvl_name(1), "is.integer(level) is not TRUE", fixed = TRUE)
+  expect_error(get_lvl_name(TRUE), "is.integer(level) is not TRUE", fixed = TRUE)
+
+  expect_error(get_lvl_name(-1L), "level >= 0L is not TRUE")
+  expect_error(get_lvl_name(5L), "level <= 4L is not TRUE")
+})
