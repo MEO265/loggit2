@@ -110,3 +110,16 @@ test_that("get_lvl_name", {
   expect_error(get_lvl_name(-1L), "level >= 0L is not TRUE")
   expect_error(get_lvl_name(5L), "level <= 4L is not TRUE")
 })
+
+test_that("get_lvl_int", {
+  expect_identical(get_lvl_int("NONE"), 0L)
+  expect_identical(get_lvl_int("ERROR"), 1L)
+  expect_identical(get_lvl_int("WARN"), 2L)
+  expect_identical(get_lvl_int("INFO"), 3L)
+  expect_identical(get_lvl_int("DEBUG"), 4L)
+
+  expect_error(get_lvl_int(TRUE), "is.character(level) is not TRUE", fixed = TRUE)
+  expect_error(get_lvl_int(1), "is.character(level) is not TRUE", fixed = TRUE)
+
+  expect_error(get_lvl_int("INVALID"), "level %in% .* is not TRUE")
+})
