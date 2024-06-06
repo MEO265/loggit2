@@ -44,14 +44,17 @@ The log file can be set either via the environment variable `FILE_LOGGIT2`, the 
 
 ```{r, echo = -1}
 setwd(tempdir())
-old_log <- loggit2::set_logfile("logfile.log")
-loggit2::loggit(log_lvl = "DEBUG", "This message will be logged to `logfile.log`.")
+old_log <- loggit2::set_logfile(logfile = "logfile.log")
+loggit2::loggit(
+  log_lvl = "DEBUG",
+  log_msg = "This message will be logged to `logfile.log`."
+)
 
 
 loggit2::loggit(
-        log_lvl = "DEBUG",
-        log_msg = "This message will be logged to `otherlogfile.log`.",
-        logfile = "otherlogfile.log"
+  log_lvl = "DEBUG",
+  log_msg = "This message will be logged to `otherlogfile.log`.",
+  logfile = "otherlogfile.log"
 )
 
 
@@ -66,14 +69,23 @@ loggit2::set_logfile(old_log)
 The log level can be set either via the environment variable `LEVEL_LOGGIT2` or the function `set_log_level()`. The `.loggit` argument can also be passed to the wrappers of the base R condition handler to enforce logging (`TRUE`) or suppress it (`FALSE`). The logging function `loggit()` can enforce logging through the `ignore_log_level` argument. `with_loggit()` allows setting a log level for the code block being executed.
 ```{r, error = TRUE}
 old_log_lvl <- loggit2::set_log_level("INFO")
-loggit2::message("This message will be logged because the log level is set to INFO.")
-loggit2::loggit(log_lvl = "DEBUG", "This message will not be logged because the log level is set to INFO.")
-loggit2::loggit(log_lvl = "DEBUG", "This message will be logged because the log level is ignored.", ignore_log_level = TRUE)
-loggit2::warning("This warning message will not be logged because .loggit is set to FALSE.", .loggit = FALSE)
+loggit2::message("This message will be logged, since the log level is INFO.")
+loggit2::loggit(
+  log_lvl = "DEBUG",
+  log_msg = "This message will not be logged, since the log level is INFO."
+)
+loggit2::loggit(
+  log_lvl = "DEBUG", "This message will be logged because the log level is ignored.",
+  ignore_log_level = TRUE
+)
+loggit2::warning(
+  "This warning message will not be logged, since .loggit = FALSE.",
+  .loggit = FALSE
+)
 
 loggit2::set_log_level("ERROR")
-loggit2::warning("This warning message will not be logged because the log level is set to ERROR.")
-loggit2::message("This message will be logged because .loggit is set to TRUE.", .loggit = TRUE)
+loggit2::warning("This warning will not be logged, since the log level is set to ERROR.")
+loggit2::message("This message will be logged, since .loggit = TRUE.", .loggit = TRUE)
 loggit2::stop("This error message will be logged because the log level is set to ERROR.")
 
 loggit2::with_loggit(log_level = "DEBUG", {
@@ -92,7 +104,7 @@ loggit2::message("This message will be logged and output to the console.", echo 
 
 loggit2::set_echo(TRUE, confirm = FALSE)
 loggit2::message("This message will be logged and output to the console.")
-loggit2::message("This message will be logged, but it will not be output to the console.", echo = FALSE)
+loggit2::message("This message will be logged, but it will not be echoed.", echo = FALSE)
 
 loggit2::with_loggit(echo = FALSE, {
   base::message("This message will be logged, but it will not be output to the console.")
