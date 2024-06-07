@@ -30,6 +30,7 @@ This is particularly useful for code that cannot be customized, e.g. from third-
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -63,7 +64,12 @@ This is particularly useful for code that cannot be customized, e.g. from third-
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">with_loggit</span><span class="op">(</span><span class="va">exp</span>, logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>, echo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">with_loggit</span><span class="op">(</span></span>
+<span>  <span class="va">exp</span>,</span>
+<span>  logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  echo <span class="op">=</span> <span class="fu"><a href="get_echo.html">get_echo</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  log_level <span class="op">=</span> <span class="fu"><a href="get_log_level.html">get_log_level</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,7 +83,11 @@ This is particularly useful for code that cannot be customized, e.g. from third-
 
 
 <dt>echo</dt>
-<dd><p>Should the log entry (json) be echod to <code>stdout</code> as well?</p></dd>
+<dd><p>Should the log entry (json) be echoed to <code>stdout</code> as well?</p></dd>
+
+
+<dt>log_level</dt>
+<dd><p>The log level to use.</p></dd>
 
 </dl></div>
     <div class="section level2">

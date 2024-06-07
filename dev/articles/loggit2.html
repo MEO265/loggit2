@@ -53,6 +53,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -108,6 +109,9 @@ Repository Policy&lt;/a&gt;:&lt;/p&gt;
 clipboards), nor anywhere else on the file system apart from the R
 session’s temporary directory &lt;code&gt;[...]&lt;/code&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;'><sup>1</sup></a></p>
+<p>In order to use the full potential of <code>loggit2</code>, it is
+advisable to take a look at the <a href="further_configurations.html">further configurations</a> after
+reading this vignette.</p>
 </div>
 <div class="section level2">
 <h2 id="logging">Logging<a class="anchor" aria-label="anchor" href="#logging"></a>
@@ -135,7 +139,7 @@ using <code><a href="https://github.com/MEO265/loggit2" class="external-link">li
 <span><span class="co">#&gt; This is another message</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
 <span><span class="co">#&gt; This is a message</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -143,7 +147,7 @@ using <code><a href="https://github.com/MEO265/loggit2" class="external-link">li
 <span><span class="co">#&gt; Warning: This is another warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is a warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -151,7 +155,7 @@ using <code><a href="https://github.com/MEO265/loggit2" class="external-link">li
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is an error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is an error</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -159,7 +163,7 @@ using <code><a href="https://github.com/MEO265/loggit2" class="external-link">li
 <span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
 <span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
 <p>Besides the <code>echo</code> parameter, the functions have an
 additional parameter <code>.loggit</code>, which allows to deactivate
@@ -175,11 +179,11 @@ the logging such that the function behaves exactly like the base
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                       log_msg</span></span>
-<span><span class="co">#&gt; 1 2024-06-05T13:54:55+0000    INFO           This is a message\n</span></span>
-<span><span class="co">#&gt; 2 2024-06-05T13:54:55+0000    WARN             This is a warning</span></span>
-<span><span class="co">#&gt; 3 2024-06-05T13:54:55+0000   ERROR              This is an error</span></span>
-<span><span class="co">#&gt; 4 2024-06-05T13:54:55+0000   ERROR     This is another condition</span></span>
-<span><span class="co">#&gt; 5 2024-06-05T13:54:55+0000    WARN This is a alternative warning</span></span></code></pre>
+<span><span class="co">#&gt; 1 2024-06-07T21:16:09+0000    INFO           This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2024-06-07T21:16:09+0000    WARN             This is a warning</span></span>
+<span><span class="co">#&gt; 3 2024-06-07T21:16:09+0000   ERROR              This is an error</span></span>
+<span><span class="co">#&gt; 4 2024-06-07T21:16:09+0000   ERROR     This is another condition</span></span>
+<span><span class="co">#&gt; 5 2024-06-07T21:16:09+0000    WARN This is a alternative warning</span></span></code></pre>
 </details>
 </div>
 <div class="section level3">
@@ -192,7 +196,7 @@ directly during the call and creating arbitrary fields in the log.</p>
 log.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="st">"This is a message"</span>, ID <span class="op">=</span> <span class="fl">1L</span>, boole <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"WARN"</span>, <span class="st">"This is a alternative warning"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -208,14 +212,14 @@ log.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"CRITICAL"</span>, <span class="st">"Critical error 2"</span>, custom_log_lvl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}</span></span></code></pre></div>
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp  log_lvl                       log_msg   ID boole     Why</span></span>
-<span><span class="co">#&gt; 1 2024-06-05T13:54:55+0000     INFO             This is a message    1  TRUE    &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 2024-06-05T13:54:55+0000     WARN This is a alternative warning &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3 2024-06-05T13:54:55+0000    DEBUG             This is a message &lt;NA&gt;  &lt;NA&gt; Because</span></span>
-<span><span class="co">#&gt; 4 2024-06-05T13:54:55+0000 CRITICAL              Critical error 2 &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span></code></pre>
+<span><span class="co">#&gt; 1 2024-06-07T21:16:09+0000     INFO             This is a message    1  TRUE    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2 2024-06-07T21:16:09+0000     WARN This is a alternative warning &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 2024-06-07T21:16:09+0000    DEBUG             This is a message &lt;NA&gt;  &lt;NA&gt; Because</span></span>
+<span><span class="co">#&gt; 4 2024-06-07T21:16:09+0000 CRITICAL              Critical error 2 &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span></code></pre>
 </details>
 </div>
 <div class="section level3">
@@ -242,7 +246,7 @@ used as usual.&lt;/p&gt;"><sup>3</sup></a> or needing to modify the code.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span><span class="fu">fun_b</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-06-05T13:54:55+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-06-07T21:16:09+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}</span></span>
 <span><span class="co">#&gt; Warning in fun_b(): This is a second warning</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -261,11 +265,11 @@ used as usual.&lt;/p&gt;"><sup>3</sup></a> or needing to modify the code.</p>
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
-<span><span class="co">#&gt; 1 2024-06-05T13:54:55+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 2 2024-06-05T13:54:55+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 3 2024-06-05T13:54:55+0000    WARN        This is a warning</span></span>
-<span><span class="co">#&gt; 4 2024-06-05T13:54:55+0000    INFO      This is a message\n</span></span>
-<span><span class="co">#&gt; 5 2024-06-05T13:54:55+0000   ERROR         This is not TRUE</span></span></code></pre>
+<span><span class="co">#&gt; 1 2024-06-07T21:16:09+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2024-06-07T21:16:09+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2024-06-07T21:16:09+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2024-06-07T21:16:09+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2024-06-07T21:16:09+0000   ERROR         This is not TRUE</span></span></code></pre>
 </details>
 </div>
 </div>
@@ -282,11 +286,11 @@ using <code><a href="../reference/read_logs.html">read_logs()</a></code>.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
-<span><span class="co">#&gt; 1 2024-06-05T13:54:55+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 2 2024-06-05T13:54:55+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 3 2024-06-05T13:54:55+0000    WARN        This is a warning</span></span>
-<span><span class="co">#&gt; 4 2024-06-05T13:54:55+0000    INFO      This is a message\n</span></span>
-<span><span class="co">#&gt; 5 2024-06-05T13:54:55+0000   ERROR         This is not TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 2024-06-07T21:16:09+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2024-06-07T21:16:09+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2024-06-07T21:16:09+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2024-06-07T21:16:09+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2024-06-07T21:16:09+0000   ERROR         This is not TRUE</span></span></code></pre></div>
 <p>Alternatively, the log can also be saved as a CSV file using
 <code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -303,8 +307,8 @@ Shiny app hosted on a server), the log can be restricted to the last
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl             log_msg</span></span>
-<span><span class="co">#&gt; 1 2024-06-05T13:54:55+0000    INFO This is a message\n</span></span>
-<span><span class="co">#&gt; 2 2024-06-05T13:54:55+0000   ERROR    This is not TRUE</span></span></code></pre>
+<span><span class="co">#&gt; 1 2024-06-07T21:16:09+0000    INFO This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2024-06-07T21:16:09+0000   ERROR    This is not TRUE</span></span></code></pre>
 </details><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_logs.html">rotate_logs</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span></span></code></pre></div>
 <details><summary>

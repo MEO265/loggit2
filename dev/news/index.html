@@ -28,6 +28,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -70,6 +71,10 @@ If custom <code>sanitizer</code>s were previously used, they could simply be exe
 This was previously (unintentionally) guaranteed by replacing the <code>NA</code> with <code>"__NA__"</code>.</li>
 <li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now allows reading the logs in reverse order using <code>last_first</code> argument.</li>
+<li>A global log level can now be set using <code><a href="../reference/set_log_level.html">set_log_level()</a></code>, which is used by all functions unless otherwise stated. The log levels are: <code>"DEBUG"</code>, <code>"INFO"</code>, <code>"WARN"</code>, <code>"ERROR"</code> and <code>"NONE"</code>.</li>
+<li>Add <code><a href="../reference/set_echo.html">set_echo()</a></code> to control globally whether log messages are echoed to the console.</li>
+<li>All condition log handlers (e.g. <code><a href="../reference/warning.html">warning()</a></code>) allow <code>NA</code> for parameter <code>.loggit</code>. If <code>NA</code> the log level set by <code><a href="../reference/set_log_level.html">set_log_level()</a></code> is used to determine if the condition should be logged. This is the new default behavior, but since the default log level is <code>"DEBUG"</code> this should not change the behavior of existing code.</li>
+<li>All <code>set_*</code> functions now return the previous value of the setting.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bugfixes-development-version">Bugfixes<a class="anchor" aria-label="anchor" href="#bugfixes-development-version"></a></h3>

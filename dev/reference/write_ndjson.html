@@ -28,6 +28,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -60,7 +61,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_ndjson</span><span class="op">(</span><span class="va">log_df</span>, logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>, echo <span class="op">=</span> <span class="cn">TRUE</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_ndjson</span><span class="op">(</span></span>
+<span>  <span class="va">log_df</span>,</span>
+<span>  logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  echo <span class="op">=</span> <span class="fu"><a href="get_echo.html">get_echo</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,7 +80,7 @@
 
 
 <dt>echo</dt>
-<dd><p>Should the log entry (json) be echod to <code>stdout</code> as well?</p></dd>
+<dd><p>Should the log entry (json) be echoed to <code>stdout</code> as well?</p></dd>
 
 
 <dt>overwrite</dt>

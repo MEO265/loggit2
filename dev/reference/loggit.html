@@ -28,6 +28,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -64,9 +65,10 @@
 <span>  <span class="va">log_lvl</span>,</span>
 <span>  <span class="va">log_msg</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  echo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  echo <span class="op">=</span> <span class="fu"><a href="get_echo.html">get_echo</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  custom_log_lvl <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  logfile <span class="op">=</span> <span class="fu"><a href="get_logfile.html">get_logfile</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  ignore_log_level <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,7 +88,7 @@ The names of the arguments are treated as column names in the log.</p></dd>
 
 
 <dt>echo</dt>
-<dd><p>Should the log entry (json) be echod to <code>stdout</code> as well?</p></dd>
+<dd><p>Should the log entry (json) be echoed to <code>stdout</code> as well?</p></dd>
 
 
 <dt>custom_log_lvl</dt>
@@ -95,6 +97,10 @@ The names of the arguments are treated as column names in the log.</p></dd>
 
 <dt>logfile</dt>
 <dd><p>Path of log file to write to.</p></dd>
+
+
+<dt>ignore_log_level</dt>
+<dd><p>Ignore the log level set by <code><a href="set_log_level.html">set_log_level()</a></code>?</p></dd>
 
 </dl></div>
     <div class="section level2">

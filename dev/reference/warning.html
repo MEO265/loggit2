@@ -30,6 +30,7 @@ but it includes logging of the exception message via loggit()."><meta property="
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fork.html">Why the Fork?</a>
+    <a class="dropdown-item" href="../articles/further_configurations.html">Further Configurations</a>
   </div>
 </li>
 <li class="nav-item">
@@ -69,8 +70,8 @@ but it includes logging of the exception message via <code><a href="loggit.html"
 <span>  immediate. <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  noBreaks. <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  domain <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  .loggit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  echo <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  .loggit <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  echo <span class="op">=</span> <span class="fu"><a href="get_echo.html">get_echo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,11 +104,12 @@ but it includes logging of the exception message via <code><a href="loggit.html"
 
 
 <dt>.loggit</dt>
-<dd><p>Should the condition message be added to the log?</p></dd>
+<dd><p>Should the condition message be added to the log?
+If <code>NA</code> the log level set by <code><a href="set_log_level.html">set_log_level()</a></code> is used to determine if the condition should be logged.</p></dd>
 
 
 <dt>echo</dt>
-<dd><p>Should the log entry (json) be echod to <code>stdout</code> as well?</p></dd>
+<dd><p>Should the log entry (json) be echoed to <code>stdout</code> as well?</p></dd>
 
 </dl></div>
     <div class="section level2">

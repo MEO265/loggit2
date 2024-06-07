@@ -7,6 +7,9 @@
     <loc>http://www.r-loggit.org/dev/articles/fork.html</loc>
   </url>
   <url>
+    <loc>http://www.r-loggit.org/dev/articles/further_configurations.html</loc>
+  </url>
+  <url>
     <loc>http://www.r-loggit.org/dev/articles/index.html</loc>
   </url>
   <url>
@@ -22,13 +25,28 @@
     <loc>http://www.r-loggit.org/dev/news/index.html</loc>
   </url>
   <url>
+    <loc>http://www.r-loggit.org/dev/reference/convert_lvl_input.html</loc>
+  </url>
+  <url>
     <loc>http://www.r-loggit.org/dev/reference/convert_to_csv.html</loc>
   </url>
   <url>
     <loc>http://www.r-loggit.org/dev/reference/find_call.html</loc>
   </url>
   <url>
+    <loc>http://www.r-loggit.org/dev/reference/get_echo.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/get_log_level.html</loc>
+  </url>
+  <url>
     <loc>http://www.r-loggit.org/dev/reference/get_logfile.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/get_lvl_int.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/get_lvl_name.html</loc>
   </url>
   <url>
     <loc>http://www.r-loggit.org/dev/reference/get_timestamp_format.html</loc>
@@ -55,10 +73,28 @@
     <loc>http://www.r-loggit.org/dev/reference/sanitizers.html</loc>
   </url>
   <url>
+    <loc>http://www.r-loggit.org/dev/reference/set_echo.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/set_log_level.html</loc>
+  </url>
+  <url>
     <loc>http://www.r-loggit.org/dev/reference/set_logfile.html</loc>
   </url>
   <url>
     <loc>http://www.r-loggit.org/dev/reference/set_timestamp_format.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/setup_echo.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/setup_log_level.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/setup_logfile.html</loc>
+  </url>
+  <url>
+    <loc>http://www.r-loggit.org/dev/reference/setup_timestamp_format.html</loc>
   </url>
   <url>
     <loc>http://www.r-loggit.org/dev/reference/split_ndjson.html</loc>
