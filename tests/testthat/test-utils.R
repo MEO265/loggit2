@@ -123,3 +123,22 @@ test_that("get_lvl_int", {
 
   expect_error(get_lvl_int("INVALID"), "level %in% .* is not TRUE")
 })
+
+test_that("convert_lvl_input", {
+  expect_identical(convert_lvl_input(level = 0L), 0L)
+  expect_identical(convert_lvl_input(level = 1L), 1L)
+  expect_identical(convert_lvl_input(level = 4L), 4L)
+
+  expect_identical(convert_lvl_input(level = 0.0), 0L)
+  expect_identical(convert_lvl_input(level = 1.0), 1L)
+  expect_identical(convert_lvl_input(level = 4.0), 4L)
+
+  expect_identical(convert_lvl_input(level = "NONE"), 0L)
+  expect_identical(convert_lvl_input(level = "ERROR"), 1L)
+  expect_identical(convert_lvl_input(level = "DEBUG"), 4L)
+  
+  expect_error(convert_lvl_input(level = -1L))
+  expect_error(convert_lvl_input(level = 5))
+
+  expect_error(convert_lvl_input(level = "INVALID"))
+})
