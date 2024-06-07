@@ -27,3 +27,16 @@ test_that("test timestamp configuration", {
   expect_silent(set_timestamp_format(ts_format = old, confirm = FALSE))
   expect_identical(get_timestamp_format(), old)
 })
+
+test_that("test echo configuration", {
+  old <- get_echo()
+  on.exit(set_echo(old, confirm = FALSE))
+
+  expect_message(set_echo(echo = TRUE), regexp = "Echo set to TRUE.")
+  expect_output(message("test"), regexp = "\"test\\n\"", fixed = TRUE)
+  expect_output(message("test", echo = FALSE), regexp = NA)
+
+  expect_silent(set_echo(echo = FALSE, confirm = FALSE))
+  expect_output(message("test", echo = TRUE), regexp = "\"test\\n\"", fixed = TRUE)
+  expect_output(message("test"), regexp = NA)
+})
