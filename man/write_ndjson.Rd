@@ -4,14 +4,19 @@
 \alias{write_ndjson}
 \title{Write ndJSON-formatted log file}
 \usage{
-write_ndjson(log_df, logfile = get_logfile(), echo = TRUE, overwrite = FALSE)
+write_ndjson(
+  log_df,
+  logfile = get_logfile(),
+  echo = get_echo(),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{log_df}{A \code{data.frame}. Entries are converted to \code{ndjson}, with the columns as the fields.}
 
 \item{logfile}{Path of log file to write to.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{overwrite}{Overwrite previous log file?}
 }

@@ -23,6 +23,9 @@ straightforward or as integral as you want to make it.
 No preparations are needed to use `loggit2`. However, it is recommended to explicitly set a log file using
 `loggit2::set_logfile("path/to/your/file")`, as `loggit2` defaults to creating a file in your temporary directory.[^1]
 
+In order to use the full potential of `loggit2`, it is advisable to take a look at the
+[further configurations](further_configurations.html) after reading this vignette.
+
 ## Logging
 There are three ways to populate the log in `loggit2`. First, through wrapper functions of the base `R` condition
 handler, second, via the `loggit()` log function, and third, by logging (external) expressions using `with_loggit()`.

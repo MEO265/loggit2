@@ -4,6 +4,7 @@
 #' but it includes logging of the exception message via `loggit()`.
 #'
 #' @param .loggit Should the condition message be added to the log?
+#'   If `NA` the log level set by `set_log_level()` is used to determine if the condition should be logged.
 #'
 #' @inheritParams base::message
 #' @inheritParams loggit
@@ -19,7 +20,7 @@
 #'   message("Don't say such silly things!", appendLF = FALSE, echo = FALSE)
 #' }
 #' @export
-message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = TRUE) {
+message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the message must be set manually
   # to avoid loggit2::message being displayed as a call
@@ -30,7 +31,9 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
     tryCatch({
       base::message(..1)
     }, message = function(m) {
-      if (.loggit) loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       # If signalCondition was used there would be no output to the console
       base::message(m)
     })
@@ -39,7 +42,9 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
       base::message(..., domain = domain, appendLF = appendLF)
     }, message = function(m) {
       m <- simpleMessage(message = m[["message"]], call = call)
-      if (.loggit) loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       # If signalCondition was used there would be no output to the console
       base::message(m)
     })
@@ -66,7 +71,7 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = TRUE, echo = 
 #'
 #' @export
 warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
-                    domain = NULL, .loggit = TRUE, echo = TRUE) {
+                    domain = NULL, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the warning must be set manually
   # to avoid loggit2::warning being displayed as a call
@@ -77,7 +82,9 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     tryCatch({
       base::warning(..1)
     }, warning = function(w) {
-      if (.loggit) loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
@@ -86,7 +93,9 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
       base::warning(..., call. = call., immediate. = immediate., noBreaks. = noBreaks., domain = domain)
     }, warning = function(w) {
       w <- simpleWarning(message = w[["message"]], call = call)
-      if (.loggit) loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       # If signalCondition was used there would be no output to the console
       base::warning(w)
     })
@@ -113,7 +122,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
 #' }
 #'
 #' @export
-stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) {
+stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo()) {
   # If the input is a condition, the base function does not allow additional input
   # If the input is not a condition, the call of the error must be set manually
   # to avoid loggit2::stop being displayed as a call
@@ -124,7 +133,9 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
     tryCatch({
       base::stop(..1)
     }, error = function(e) {
-      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       base::stop(e)
     })
   } else {
@@ -132,7 +143,9 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
       base::stop(..., call. = call., domain = domain)
     }, error = function(e) {
       e <- simpleError(message = e[["message"]], call = call)
-      if (.loggit) loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
+      if (!isFALSE(.loggit)) {
+        loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      }
       signalCondition(e)
     })
   }
@@ -170,7 +183,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = TRUE, echo = TRUE) 
 #' }
 #'
 #' @export
-stopifnot <- function(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE) {
+stopifnot <- function(..., exprs, exprObject, local, .loggit = NA, echo = get_echo()) {
   # Since no calling function can be detected within tryCatch from base::stopifnot
   call <- if (p <- sys.parent(1L)) sys.call(p)
   # Required to avoid early (and simultaneous) evaluation of the arguments.
@@ -182,7 +195,9 @@ stopifnot <- function(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE
     eval.parent(stop_call, 1L)
   }, error = function(e) {
     cond <- simpleError(message = e[["message"]], call = call)
-    if (.loggit) loggit(log_lvl = "ERROR", log_msg = cond[["message"]], echo = echo)
+    if (!isFALSE(.loggit)) {
+      loggit(log_lvl = "ERROR", log_msg = cond[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+    }
     signalCondition(cond = cond)
   })
 }

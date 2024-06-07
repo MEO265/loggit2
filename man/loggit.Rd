@@ -8,9 +8,10 @@ loggit(
   log_lvl,
   log_msg,
   ...,
-  echo = TRUE,
+  echo = get_echo(),
   custom_log_lvl = FALSE,
-  logfile = get_logfile()
+  logfile = get_logfile(),
+  ignore_log_level = FALSE
 )
 }
 \arguments{
@@ -21,11 +22,13 @@ loggit(
 \item{...}{Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to \code{character}.
 The names of the arguments are treated as column names in the log.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
 \item{logfile}{Path of log file to write to.}
+
+\item{ignore_log_level}{Ignore the log level set by \code{set_log_level()}?}
 }
 \value{
 Invisible \code{NULL}.

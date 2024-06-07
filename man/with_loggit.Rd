@@ -4,14 +4,21 @@
 \alias{with_loggit}
 \title{Log any expressions}
 \usage{
-with_loggit(exp, logfile = get_logfile(), echo = TRUE)
+with_loggit(
+  exp,
+  logfile = get_logfile(),
+  echo = get_echo(),
+  log_level = get_log_level()
+)
 }
 \arguments{
 \item{exp}{An \code{expression} to evaluate.}
 
 \item{logfile}{Path of log file to write to.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
+
+\item{log_level}{The log level to use.}
 }
 \value{
 The result of the expression.

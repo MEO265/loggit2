@@ -4,7 +4,7 @@
 \alias{stopifnot}
 \title{Conditional Stop Log Handler}
 \usage{
-stopifnot(..., exprs, exprObject, local, .loggit = TRUE, echo = TRUE)
+stopifnot(..., exprs, exprObject, local, .loggit = NA, echo = get_echo())
 }
 \arguments{
 \item{..., exprs}{any number of \code{R} expressions, which should each evaluate to (a logical vector of all) \code{TRUE}.
@@ -32,9 +32,10 @@ If names are provided to \code{...}, they will be used in lieu of the default er
     evaluated; by default the one from where \code{stopifnot()} has been
     called.}
 
-\item{.loggit}{Should the condition message be added to the log?}
+\item{.loggit}{Should the condition message be added to the log?
+If \code{NA} the log level set by \code{set_log_level()} is used to determine if the condition should be logged.}
 
-\item{echo}{Should the log entry (json) be echod to \code{stdout} as well?}
+\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }
 \description{
 This function is identical to base R's \code{\link[base:stopifnot]{stopifnot}},
