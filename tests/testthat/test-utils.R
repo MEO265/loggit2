@@ -136,9 +136,9 @@ test_that("convert_lvl_input", {
   expect_identical(convert_lvl_input(level = "NONE"), 0L)
   expect_identical(convert_lvl_input(level = "ERROR"), 1L)
   expect_identical(convert_lvl_input(level = "DEBUG"), 4L)
-  
+
   expect_error(convert_lvl_input(level = -1L))
-  expect_error(convert_lvl_input(level = 5))
+  expect_error(convert_lvl_input(level = 5.0))
 
   expect_error(convert_lvl_input(level = "INVALID"))
 })
