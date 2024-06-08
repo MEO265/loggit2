@@ -40,7 +40,7 @@ loggit::stop("This is an error")
 #> Error in loggit::stop("This is an error"): This is an error
 ```
 In `{loggit2}`, each condition handler shows the same call as its base equivalent.
-```{r, error = TRUE}
+```{r, error = TRUE, collapse = TRUE}
 base::message("This is another message")
 loggit2::message("This is another message")
 
@@ -58,7 +58,7 @@ In `{loggit}`, there are no "condition log handlers" (i.e., functions that work 
 write to the log) for `base::stopifnot()`. This makes the migration of existing code (without logs) unnecessarily complicated.
 
 In `loggit2`, this has been added:
-```{r, error = TRUE}
+```{r, error = TRUE, collapse = TRUE}
 base::stopifnot("TRUE is not true" = TRUE, "This is an error" = 3L < 1L, "This is another error" = FALSE)
 loggit2::stopifnot("TRUE is not true" = TRUE, "This is an error" = 3L < 1L, "This is another error" = FALSE)
 ```
@@ -102,7 +102,7 @@ f()
 ```
 
 In `{loggit2}`, each condition handler shows the same call as its `{base}` equivalent.
-```{r, error = TRUE}
+```{r, error = TRUE, collapse = TRUE}
 f <- function() {
   base::message("This is another message")
   base::warning("This is another warning")
