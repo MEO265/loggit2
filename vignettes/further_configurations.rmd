@@ -42,7 +42,7 @@ The configuration options of `loggit2` are described below. For details, refer t
 The log file can be set either via the environment variable `FILE_LOGGIT2`, the function `set_log_file()`, or the `logfile` argument of the logging functions `loggit()` and `with_loggit()`. The wrappers of the base R condition handler always use the session-wide configuration.
 
 
-```{r, echo = -1, collapse = TRUE}
+```{r, echo = -1}
 setwd(tempdir())
 old_log <- loggit2::set_logfile(logfile = "logfile.log")
 loggit2::loggit(
@@ -67,7 +67,7 @@ loggit2::set_logfile(old_log)
 
 ### Log level
 The log level can be set either via the environment variable `LEVEL_LOGGIT2` or the function `set_log_level()`. The `.loggit` argument can also be passed to the wrappers of the base R condition handler to enforce logging (`TRUE`) or suppress it (`FALSE`). The logging function `loggit()` can enforce logging through the `ignore_log_level` argument. `with_loggit()` allows setting a log level for the code block being executed.
-```{r, error = TRUE, collapse = TRUE}
+```{r, error = TRUE}
 old_log_lvl <- loggit2::set_log_level("INFO")
 loggit2::message("This message will be logged, since the log level is INFO.")
 loggit2::loggit(
@@ -97,7 +97,7 @@ loggit2::set_log_level(old_log_lvl)
 
 ### Echo
 Whether log messages should also be output to `stdout` can be controlled via the environment variable `ECHO_LOGGIT2` or the function `set_echo()`. Additionally, all logging functions and wrappers of the base R condition handler allow direct control via the `echo` argument.
-```{r, collapse = TRUE}
+```{r}
 old_echo <- loggit2::set_echo(FALSE)
 loggit2::message("This message will not be logged, but it will be output to the console.")
 loggit2::message("This message will be logged and output to the console.", echo = TRUE)
@@ -115,7 +115,7 @@ loggit2::set_echo(old_echo)
 ### Timestamp format
 The format of the timestamp can be controlled via the environment variable `TIMESTAMP_LOGGIT2` or the function `set_timestamp_format()`.
 
-```{r, collapse = TRUE}
+```{r}
 old_ts <- loggit2::set_timestamp_format("%H:%M:%S")
 loggit2::message("This message will be logged with a timestamp in the format HH:MM:SS.")
 
