@@ -57,59 +57,59 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="loggit2-development-version">loggit2 (development version)<a class="anchor" aria-label="anchor" href="#loggit2-development-version"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
-<ul><li>Custom <code>sanitizer</code>s and <code>unsanitizer</code>s are no longer supported. This decision was made because no active user is known and this functionality severely limits further development.<br>
-If custom <code>sanitizer</code>s were previously used, they could simply be executed before or after instead in <code><a href="../reference/loggit.html">loggit()</a></code> or <code><a href="../reference/read_logs.html">read_logs()</a></code>. If custom sanitizer has been used to get around bugs, please report them so that they can be fixed.</li>
-<li>Special characters are no longer escaped by replacement, but rather by “\”.</li>
+<h3 id="breaking-changes-development-version">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>Custom <code>sanitizer</code>s and <code>unsanitizer</code>s are no longer supported. This decision was made because no active user is known, and this functionality severely limits further development. If custom <code>sanitizer</code>s were previously used, they can simply be executed before or after <code><a href="../reference/loggit.html">loggit()</a></code> or <code><a href="../reference/read_logs.html">read_logs()</a></code>.<br>
+If custom sanitizers were used to circumvent bugs, please report them, so they can be fixed.</li>
+<li>Special characters are no longer escaped by replacement, but rather by <code>"\"</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Add <code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code> to convert log files to CSV format.</li>
-<li>Add <code><a href="../reference/with_loggit.html">with_loggit()</a></code> to log third-party code or to easily use different <code><a href="../reference/loggit.html">loggit()</a></code>-parameters for a chunk of code.</li>
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>Added <code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code> to convert log files to CSV format.</li>
+<li>Added <code><a href="../reference/with_loggit.html">with_loggit()</a></code> to log third-party code or to easily use different <code><a href="../reference/loggit.html">loggit()</a></code> parameters for a chunk of code.</li>
 <li>
-<code>NA</code>s are now stored as <code>null</code> in the json log. And <code><a href="../reference/read_logs.html">read_logs()</a></code> also restores these as <code>NA</code>.<br>
-This was previously (unintentionally) guaranteed by replacing the <code>NA</code> with <code>"__NA__"</code>.</li>
+<code>NA</code>s are now stored as <code>null</code> in the JSON log, and <code><a href="../reference/read_logs.html">read_logs()</a></code> also restores these as <code>NA</code>. This was previously (unintentionally) guaranteed by replacing the <code>NA</code> with <code>"__NA__"</code>.</li>
 <li>
-<code><a href="../reference/read_logs.html">read_logs()</a></code> now allows reading the logs in reverse order using <code>last_first</code> argument.</li>
-<li>A global log level can now be set using <code><a href="../reference/set_log_level.html">set_log_level()</a></code>, which is used by all functions unless otherwise stated. The log levels are: <code>"DEBUG"</code>, <code>"INFO"</code>, <code>"WARN"</code>, <code>"ERROR"</code> and <code>"NONE"</code>.</li>
-<li>Add <code><a href="../reference/set_echo.html">set_echo()</a></code> to control globally whether log messages are echoed to the console.</li>
-<li>All condition log handlers (e.g. <code><a href="../reference/warning.html">warning()</a></code>) allow <code>NA</code> for parameter <code>.loggit</code>. If <code>NA</code> the log level set by <code><a href="../reference/set_log_level.html">set_log_level()</a></code> is used to determine if the condition should be logged. This is the new default behavior, but since the default log level is <code>"DEBUG"</code> this should not change the behavior of existing code.</li>
+<code><a href="../reference/read_logs.html">read_logs()</a></code> now allows reading the logs in reverse order using the <code>last_first</code> argument.</li>
+<li>A global log level can now be set using <code><a href="../reference/set_log_level.html">set_log_level()</a></code>, which is used by all functions unless otherwise stated. The log levels are: <code>"DEBUG"</code>, <code>"INFO"</code>, <code>"WARN"</code>, <code>"ERROR"</code>, and <code>"NONE"</code>.</li>
+<li>Added <code><a href="../reference/set_echo.html">set_echo()</a></code> to control globally whether log messages are echoed to the console.</li>
+<li>All condition log handlers (e.g., <code><a href="../reference/warning.html">warning()</a></code>) allow <code>NA</code> for the parameter <code>.loggit</code>. If <code>NA</code>, the log level set by <code><a href="../reference/set_log_level.html">set_log_level()</a></code> is used to determine if the condition should be logged. This is the new default behavior, but since the default log level is <code>"DEBUG"</code>, this should not change the behavior of existing code.</li>
 <li>All <code>set_*</code> functions now return the previous value of the setting.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bugfixes-development-version">Bugfixes<a class="anchor" aria-label="anchor" href="#bugfixes-development-version"></a></h3>
 <ul><li>
-<code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty character values <code>""</code>, as in <code>{"key": ""}</code>, as such.<br>
-Previously, empty fields were read as <code>NA</code>. This meant that when <code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> was used, these entries could completely disappear from the respective json object</li>
+<code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty character values <code>""</code>, as in <code>{"key": ""}</code>. Previously, empty fields were read as <code>NA</code>. This meant that when <code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> was used, these entries could completely disappear from the respective JSON object.</li>
 <li>
 <code><a href="../reference/loggit.html">loggit()</a></code> now does not unintentionally “repair” argument names of log entries. Previously, the names were replaced by <code>check.names</code> of <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code>, which could lead to unexpected behavior. Names that are not valid JSON keys are now escaped according to the JSON standard.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-changes-development-version">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-development-version"></a></h3>
+<h3 id="minor-changes-development-version">Minor Changes<a class="anchor" aria-label="anchor" href="#minor-changes-development-version"></a></h3>
 <ul><li>
-<code><a href="../reference/read_logs.html">read_logs()</a></code> now returns a <code>data.frame</code> with the empty character columns “timestamp”, “log_lvl” and “log_msg” instead of an empty (0x0) <code>data.frame</code> if the log file has no entries.</li>
-<li>The Json reading functions are more tolerant of manual changes to the log.</li>
+<code><a href="../reference/read_logs.html">read_logs()</a></code> now returns a <code>data.frame</code> with the empty character columns “timestamp”, “log_lvl”, and “log_msg” instead of an empty (0x0) <code>data.frame</code> if the log file has no entries.</li>
+<li>The JSON reading functions are more tolerant of manual changes to the log.</li>
 <li>The parameter <code>exprs</code> was added to <code><a href="../reference/stopifnot.html">stopifnot()</a></code> and included in the documentation. This has no impact on functionality due to the specific way <code><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">base::stopifnot()</a></code> is called internally.</li>
 <li>
-<code><a href="../reference/loggit.html">loggit()</a></code> now throws an error if there are unnamed <code>...</code> arguments. Previously, these were silently named, by <code>fix.empty.names</code> of <code>data.frame</code>, which could lead to unexpected behavior.</li>
+<code><a href="../reference/loggit.html">loggit()</a></code> now throws an error if there are unnamed <code>...</code> arguments. Previously, these were silently named by <code>fix.empty.names</code> of <code>data.frame</code>, which could lead to unexpected behavior.</li>
 <li>
-<code><a href="../reference/loggit.html">loggit()</a></code> now also checks the length of the <code>log_lvl</code> and <code>log_msg</code> arguments and only uses the first element. Previously, the log entry had been multiplied, leading to unintended consequences, regarding <code>custom_log_lvl</code>.</li>
+<code><a href="../reference/loggit.html">loggit()</a></code> now also checks the length of the <code>log_lvl</code> and <code>log_msg</code> arguments and only uses the first element. Previously, the log entry had been multiplied, leading to unintended consequences regarding <code>custom_log_lvl</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="internals-development-version">Internals<a class="anchor" aria-label="anchor" href="#internals-development-version"></a></h3>
 <ul><li>
-<code>write_ndjson</code> no longer warns if the log contains unsanitized line breaks. This warning could only be generated by package-internal errors (therefore nonsensical in the cran package) or by a custom <code>sanitizer</code>, but in this case only this one character was specifically tested and thus provides a false sense of security.</li>
+<code>write_ndjson</code> no longer warns if the log contains unsanitized line breaks. This warning could only be generated by package-internal errors (therefore nonsensical in the CRAN package) or by a custom <code>sanitizer</code>, but in this case only this one character was specifically tested and thus provides a false sense of security.</li>
 <li>The package now requires compilation. This is necessary because the JSON parser was written in C++ for faster reading.</li>
+<li>
+<code>loggit2</code> now requires at least R 4.0.0.</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.2" id="loggit2-222">loggit2 2.2.2<a class="anchor" aria-label="anchor" href="#loggit2-222"></a></h2><p class="text-muted">CRAN release: 2024-05-03</p>
 <div class="section level3">
-<h3 id="breaking-changes-2-2-2">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-2-2"></a></h3>
+<h3 id="breaking-changes-2-2-2">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-2-2"></a></h3>
 <ul><li>Custom <code>sanitizer</code>s and <code>unsanitizer</code>s must be able to process character vectors. Previously, only the processing of vectors of length one was explicitly required.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-2-2-2">New features<a class="anchor" aria-label="anchor" href="#new-features-2-2-2"></a></h3>
+<h3 id="new-features-2-2-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-2-2-2"></a></h3>
 <ul><li>
 <code><a href="../reference/message.html">message()</a></code>, <code><a href="../reference/warning.html">warning()</a></code>, and <code><a href="../reference/stop.html">stop()</a></code> now accept conditions as input like their base R equivalents.</li>
 <li>New <code><a href="../reference/stopifnot.html">stopifnot()</a></code> handler.</li>
@@ -121,36 +121,33 @@ Previously, empty fields were read as <code>NA</code>. This meant that when <cod
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> processes entries with <code>": "</code> correctly. Previously, entries were truncated and/or assigned to incorrect columns.</li>
 <li>
-<code><a href="../reference/message.html">message()</a></code>, <code><a href="../reference/warning.html">warning()</a></code>, and <code><a href="../reference/stop.html">stop()</a></code> now use the same call in their messages and their condition objects as their base R equivalents and no longer give themselves as the call.<br>
-For <code><a href="../reference/warning.html">warning()</a></code> and <code><a href="../reference/stop.html">stop()</a></code>, there can be deviations in very rare cases, as the function that determines the call for these in base R is not provided at the R or C level, nor the necessary C header.</li>
+<code><a href="../reference/message.html">message()</a></code>, <code><a href="../reference/warning.html">warning()</a></code>, and <code><a href="../reference/stop.html">stop()</a></code> now use the same call in their messages and their condition objects as their base R equivalents and no longer give themselves as the call. For <code><a href="../reference/warning.html">warning()</a></code> and <code><a href="../reference/stop.html">stop()</a></code>, there can be deviations in very rare cases, as the function that determines the call for these in base R is not provided at the R or C level, nor is the necessary C header.</li>
 <li>
-<code><a href="../reference/set_logfile.html">set_logfile()</a></code> now attempts to convert relative paths to absolute paths.<br>
-This prevents the logfile from being inadvertently changed when switching (even temporarily) the Working Directory. If this unintended side effect was used intentionally, the same effect can be achieved by explicitly resetting the path.</li>
+<code><a href="../reference/set_logfile.html">set_logfile()</a></code> now attempts to convert relative paths to absolute paths. This prevents the logfile from being inadvertently changed when switching (even temporarily) the working directory. If this unintended side effect was used intentionally, the same effect can be achieved by explicitly resetting the path.</li>
 <li>
-<code><a href="../reference/set_logfile.html">set_logfile()</a></code> now correctly outputs the randomly generated temporary file as the new path in its confirmation message, when <code>NULL</code> is given as an argument.</li>
+<code><a href="../reference/set_logfile.html">set_logfile()</a></code> now correctly outputs the randomly generated temporary file as the new path in its confirmation message when <code>NULL</code> is given as an argument.</li>
 <li>
 <code>rotate_logs(rotate_lines = 0L)</code> now empties the log as expected. Additionally, an error is thrown for negative values.</li>
 <li>
-<code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> preserves the original sanitization of the log entries. Previously, the sanitization was lost when the log was rotated, for values between 0 and the number of log-entries.</li>
+<code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> preserves the original sanitization of the log entries. Previously, the sanitization was lost when the log was rotated for values between 0 and the number of log entries.</li>
 <li>
-<code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty log fields as <code>NA_character_</code>. Previously, empty fields were read as <code>""</code>, when first entry of the field was empty.</li>
+<code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty log fields as <code>NA_character_</code>. Previously, empty fields were read as <code>""</code> when the first entry of the field was empty.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-changes-2-2-2">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-2-2"></a></h3>
-<ul><li>All <code>set_*</code> functions use <code>message</code> instead of <code>print</code> for confirmation. This ensures that the confirmations no longer interfere with the log via echo.</li>
+<h3 id="minor-changes-2-2-2">Minor Changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-2-2"></a></h3>
+<ul><li>All <code>set_*</code> functions use <code><a href="../reference/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> for confirmation. This ensures that the confirmations no longer interfere with the log via echo.</li>
 <li>
-<code><a href="../reference/sanitizers.html">default_ndjson_sanitizer()</a></code>, which was not exported but is visible in the documentation, now follows the rules for sanitizer</li>
+<code><a href="../reference/sanitizers.html">default_ndjson_sanitizer()</a></code>, which was not exported but is visible in the documentation, now follows the rules for sanitizers.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-2-2-2">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-2-2"></a></h3>
-<ul><li>Functions that were only for internal use (and were not exported) were marked as such and are no longer visible in the index</li>
+<ul><li>Functions that were only for internal use (and were not exported) were marked as such and are no longer visible in the index.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="fork-2-2-2">Fork<a class="anchor" aria-label="anchor" href="#fork-2-2-2"></a></h3>
-<ul><li>The name changed from <code>loggit</code> to <code>loggit2</code>
-</li>
-<li>The maintainership has been transferred from “Ryan Price” to “Matthias Ollech”</li>
-<li>For news of older versions, see Ryan Price’s <code>loggit</code> package</li>
+<ul><li>The name changed from <code>loggit</code> to <code>loggit2</code>.</li>
+<li>The maintainership has been transferred from “Ryan Price” to “Matthias Ollech”.</li>
+<li>For news of older versions, see Ryan Price’s <code>loggit</code> package.</li>
 </ul></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
