@@ -13,13 +13,13 @@ Authors@R: c(
     person("Ryan", "Price", role = c("fnd", "aut"))
   )
 License: MIT + file LICENSE
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.0)
 Suggests:
     knitr (>= 1.19),
     rmarkdown (>= 1.8),
-    testthat (>= 3.0.0),
+    testthat (>= 3.0),
     utils
-URL: https://github.com/MEO265/loggit2, http://www.r-loggit.org/
+URL: https://github.com/MEO265/loggit2, https://r-loggit.org/
 BugReports: https://github.com/MEO265/loggit2/issues
 RoxygenNote: 7.3.1
 Encoding: UTF-8
