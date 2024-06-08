@@ -5,7 +5,7 @@ output:
     variant: gfm
 vignette: >
   %\VignetteIndexEntry{README}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knit}
   %\VignetteEncoding{UTF-8}
 ---
 

@@ -3,7 +3,7 @@ title: "Why the Fork?"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Why the Fork?}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
