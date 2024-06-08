@@ -1,95 +1,75 @@
 # loggit2 2.3.0
 
-## Breaking changes
-* Custom `sanitizer`s and `unsanitizer`s are no longer supported. This decision was made because no active 
-  user is known and this functionality severely limits further development.  
-  If custom `sanitizer`s were previously used, they could simply be executed before or after instead in `loggit()` 
-  or `read_logs()`. If custom sanitizer has been used to get around bugs, please report them so that they can be fixed.
-* Special characters are no longer escaped by replacement, but rather by "\\".
+## Breaking Changes
+* Custom `sanitizer`s and `unsanitizer`s are no longer supported. This decision was made because no active user is known,
+  and this functionality severely limits further development. If custom `sanitizer`s were previously used,
+  they can simply be executed before or after `loggit()` or `read_logs()`.  
+  If custom sanitizers were used to circumvent bugs, please report them, so they can be fixed.
+* Special characters are no longer escaped by replacement, but rather by `"\"`.
 
-## New features
-* Add `convert_to_csv()` to convert log files to CSV format.
-* Add `with_loggit()` to log third-party code or to easily use different `loggit()`-parameters for a chunk of code.
-* `NA`s are now stored as `null` in the json log. And `read_logs()` also restores these as `NA`.  
-  This was previously (unintentionally) guaranteed by replacing the `NA` with `"__NA__"`.
-* `read_logs()` now allows reading the logs in reverse order using `last_first` argument.
-* A global log level can now be set using `set_log_level()`, which is used by all functions unless otherwise stated.
-  The log levels are: `"DEBUG"`, `"INFO"`, `"WARN"`, `"ERROR"` and `"NONE"`.
-* Add `set_echo()` to control globally whether log messages are echoed to the console.
-* All condition log handlers (e.g. `warning()`) allow `NA` for parameter `.loggit`. 
-  If `NA` the log level set by `set_log_level()` is used to determine if the condition should be logged.
-  This is the new default behavior, but since the default log level is `"DEBUG"` this should not change
-  the behavior of existing code.
+## New Features
+* Added `convert_to_csv()` to convert log files to CSV format.
+* Added `with_loggit()` to log third-party code or to easily use different `loggit()` parameters for a chunk of code.
+* `NA`s are now stored as `null` in the JSON log, and `read_logs()` also restores these as `NA`. This was previously (unintentionally) guaranteed by replacing the `NA` with `"__NA__"`.
+* `read_logs()` now allows reading the logs in reverse order using the `last_first` argument.
+* A global log level can now be set using `set_log_level()`, which is used by all functions unless otherwise stated. The log levels are: `"DEBUG"`, `"INFO"`, `"WARN"`, `"ERROR"`, and `"NONE"`.
+* Added `set_echo()` to control globally whether log messages are echoed to the console.
+* All condition log handlers (e.g., `warning()`) allow `NA` for the parameter `.loggit`. If `NA`, the log level set by `set_log_level()` is used
+  to determine if the condition should be logged. This is the new default behavior, but since the default log level is `"DEBUG"`, this should not change the behavior of existing code.
 * All `set_*` functions now return the previous value of the setting.
 
 ## Bugfixes 
-* `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`, as such.  
+* `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`. 
   Previously, empty fields were read as `NA`. This meant that when `rotate_logs()` was used,
-  these entries could completely disappear from the respective json object
+  these entries could completely disappear from the respective JSON object.
 * `loggit()` now does not unintentionally “repair” argument names of log entries. 
   Previously, the names were replaced by `check.names` of `data.frame()`, which could lead to unexpected behavior.
   Names that are not valid JSON keys are now escaped according to the JSON standard.
 
-## Minor changes
-* `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl" and "log_msg" 
-  instead of an empty (0x0) `data.frame` if the log file has no entries.
-* The Json reading functions are more tolerant of manual changes to the log.
-* The parameter `exprs` was added to `stopifnot()` and included in the documentation. This has no impact on 
-  functionality due to the specific way `base::stopifnot()` is called internally.
-* `loggit()` now throws an error if there are unnamed `...` arguments. 
-  Previously, these were silently named, by `fix.empty.names` of `data.frame`, which could lead to unexpected behavior.
+## Minor Changes
+* `read_logs()` now returns a `data.frame` with the empty character columns "timestamp", "log_lvl", and "log_msg" instead of an empty (0x0) `data.frame` if the log file has no entries.
+* The JSON reading functions are more tolerant of manual changes to the log.
+* The parameter `exprs` was added to `stopifnot()` and included in the documentation. This has no impact on functionality due to the specific way `base::stopifnot()` is called internally.
+* `loggit()` now throws an error if there are unnamed `...` arguments. Previously, these were silently named by `fix.empty.names` of `data.frame`, which could lead to unexpected behavior.
 * `loggit()` now also checks the length of the `log_lvl` and `log_msg` arguments and only uses the first element. 
-  Previously, the log entry had been multiplied, leading to unintended consequences, regarding `custom_log_lvl`.
+  Previously, the log entry had been multiplied, leading to unintended consequences regarding `custom_log_lvl`.
 
 ## Internals
-* `write_ndjson` no longer warns if the log contains unsanitized line breaks.
-  This warning could only be generated by package-internal errors (therefore nonsensical in the cran package)
-  or by a custom `sanitizer`, but in this case only this one character was specifically tested and thus provides a
-  false sense of security.
+* `write_ndjson` no longer warns if the log contains unsanitized line breaks. This warning could only be generated by package-internal errors
+  (therefore nonsensical in the CRAN package) or by a custom `sanitizer`, but in this case only this one character was specifically tested and thus provides a false sense of security.
 * The package now requires compilation. This is necessary because the JSON parser was written in C++ for faster reading.
 
 # loggit2 2.2.2
 
-## Breaking changes
-* Custom `sanitizer`s and `unsanitizer`s must be able to process character vectors. 
+## Breaking Changes
+* Custom `sanitizer`s and `unsanitizer`s must be able to process character vectors.
   Previously, only the processing of vectors of length one was explicitly required.
 
-## New features
+## New Features
 * `message()`, `warning()`, and `stop()` now accept conditions as input like their base R equivalents.
-* New `stopifnot()` handler. 
+* New `stopifnot()` handler.
 * `set_logfile()` has a new argument `create` that allows the user to create the file if it does not exist.
 
 ## Bugfixes 
 * `read_logs()` processes entries with `": "` correctly. 
   Previously, entries were truncated and/or assigned to incorrect columns.
-* `message()`, `warning()`, and `stop()` now use the same call in their messages and 
-  their condition objects as their base R equivalents and no longer give themselves as the call.  
-  For `warning()` and `stop()`, there can be deviations in very rare cases, as the function that 
-  determines the call for these in base R is not provided at the R or C level, nor the necessary C header.
-* `set_logfile()` now attempts to convert relative paths to absolute paths.  
-  This prevents the logfile from being inadvertently changed when switching
-  (even temporarily) the Working Directory. If this unintended side effect was used
-  intentionally, the same effect can be achieved by explicitly resetting the path.
-* `set_logfile()` now correctly outputs the randomly generated temporary file as 
-  the new path in its confirmation message, when `NULL` is given as an argument.
-* `rotate_logs(rotate_lines = 0L)` now empties the log as expected. 
-  Additionally, an error is thrown for negative values.
-* `rotate_logs()` preserves the original sanitization of the log entries. 
-  Previously, the sanitization was lost when the log was rotated, for values between 0 and the number of log-entries.
-* `read_logs()` now correctly reads empty log fields as `NA_character_`. 
-  Previously, empty fields were read as `""`, when first entry of the field was empty.
+* `message()`, `warning()`, and `stop()` now use the same call in their messages and their condition objects as their base R equivalents and no longer give themselves as the call. 
+  For `warning()` and `stop()`, there can be deviations in very rare cases, as the function that determines the call for these in base R is not provided at the R or C level, nor is the necessary C header.
+* `set_logfile()` now attempts to convert relative paths to absolute paths. This prevents the logfile from being inadvertently changed when switching (even temporarily) the working directory. 
+  If this unintended side effect was used intentionally, the same effect can be achieved by explicitly resetting the path.
+* `set_logfile()` now correctly outputs the randomly generated temporary file as the new path in its confirmation message when `NULL` is given as an argument.
+* `rotate_logs(rotate_lines = 0L)` now empties the log as expected. Additionally, an error is thrown for negative values.
+* `rotate_logs()` preserves the original sanitization of the log entries. Previously, the sanitization was lost when the log was rotated for values between 0 and the number of log entries.
+* `read_logs()` now correctly reads empty log fields as `NA_character_`. Previously, empty fields were read as `""` when the first entry of the field was empty.
 
-## Minor changes
-* All `set_*` functions use `message` instead of `print` for confirmation.
-  This ensures that the confirmations no longer interfere with the log via echo.
-* `default_ndjson_sanitizer()`, which was not exported but is visible in the documentation, 
-  now follows the rules for sanitizer
+## Minor Changes
+* All `set_*` functions use `message()` instead of `print()` for confirmation. This ensures that the confirmations no longer interfere with the log via echo.
+* `default_ndjson_sanitizer()`, which was not exported but is visible in the documentation, now follows the rules for sanitizers.
 
 ## Documentation
-* Functions that were only for internal use (and were not exported) were marked as such
-  and are no longer visible in the index
+* Functions that were only for internal use (and were not exported) were marked as such and are no longer visible in the index.
 
 ## Fork
-* The name changed from `loggit` to `loggit2`
-* The maintainership has been transferred from "Ryan Price" to "Matthias Ollech"
-* For news of older versions, see Ryan Price's `loggit` package
+* The name changed from `loggit` to `loggit2`.
+* The maintainership has been transferred from "Ryan Price" to "Matthias Ollech".
+* For news of older versions, see Ryan Price's `loggit` package.
