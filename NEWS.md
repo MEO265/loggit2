@@ -1,4 +1,4 @@
-# loggit2 (development version)
+# loggit2 2.3.0
 
 ## Breaking Changes
 * Custom `sanitizer`s and `unsanitizer`s are no longer supported. This decision was made because no active user is known,
@@ -17,6 +17,7 @@
 * All condition log handlers (e.g., `warning()`) allow `NA` for the parameter `.loggit`. If `NA`, the log level set by `set_log_level()` is used
   to determine if the condition should be logged. This is the new default behavior, but since the default log level is `"DEBUG"`, this should not change the behavior of existing code.
 * All `set_*` functions now return the previous value of the setting.
+* The default settings can now be controlled by the system environment variables `FILE_LOGGIT2`, `TIMESTAMP_LOGGIT2`, `ECHO_LOGGIT2` and `LEVEL_LOGGIT2`.
 
 ## Bugfixes 
 * `read_logs()` now correctly reads empty character values `""`, as in `{"key": ""}`. 
