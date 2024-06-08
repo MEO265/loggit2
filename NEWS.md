@@ -1,4 +1,4 @@
-# loggit2 2.3.0
+# loggit2 (development version)
 
 ## Breaking Changes
 * Custom `sanitizer`s and `unsanitizer`s are no longer supported. This decision was made because no active user is known,
