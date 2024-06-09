@@ -41,19 +41,13 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   withCallingHandlers(
     exp,
     error = function(e) {
-      if (log_error) {
-        loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, logfile = log_con, ignore_log_level = TRUE)
-      }
+      if (log_error) loggit_internal(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, logfile = log_con)
     },
     warning = function(w) {
-      if (log_warn) {
-        loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, logfile = log_con, ignore_log_level = TRUE)
-      }
+      if (log_warn) loggit_internal(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, logfile = log_con)
     },
     message = function(m) {
-      if (log_info) {
-        loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, logfile = log_con, ignore_log_level = TRUE)
-      }
+      if (log_info) loggit_internal(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, logfile = log_con)
     }
   )
 }
