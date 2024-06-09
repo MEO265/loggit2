@@ -133,8 +133,10 @@ get_lvl_name <- function(level) {
 #'
 #' @keywords internal
 get_lvl_int <- function(level) {
-  base::stopifnot(is.character(level), level %in% c("NONE", "ERROR", "WARN", "INFO", "DEBUG"))
-  match(level, c("NONE", "ERROR", "WARN", "INFO", "DEBUG")) - 1L
+  base::stopifnot(is.character(level))
+  idx <- base::match(level, c("NONE", "ERROR", "WARN", "INFO", "DEBUG"))
+  base::stopifnot("Log level not 'NONE', 'ERROR', 'WARN', 'INFO' or 'DEBUG'" = !is.na(idx))
+  return(idx - 1L)
 }
 
 #' Convert Log Level Input to Integer
