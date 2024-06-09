@@ -14,7 +14,7 @@ write_ndjson(
 \arguments{
 \item{log_df}{A \code{data.frame}. Entries are converted to \code{ndjson}, with the columns as the fields.}
 
-\item{logfile}{Path of log file to write to.}
+\item{logfile}{A \code{connection}, or a character string naming the file to write to.}
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 

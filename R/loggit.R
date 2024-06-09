@@ -7,6 +7,7 @@ NULL
 #'
 #' @param log_lvl Log level. A atomic vector of length one (usually `character`). Will be coerced to `character`.
 #' @param log_msg Log message. A atomic vector of length one (usually `character`). Will be coerced to `character`.
+#' @param logfile Path of log file to write to.
 #' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?

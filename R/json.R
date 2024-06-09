@@ -60,7 +60,7 @@ default_ndjson_unsanitizer <- function(string) {
 #' Write ndJSON-formatted log file
 #'
 #' @param log_df A `data.frame`. Entries are converted to `ndjson`, with the columns as the fields.
-#' @param logfile Path of log file to write to.
+#' @param logfile A `connection`, or a character string naming the file to write to.
 #' @param echo Should the log entry (json) be echoed to `stdout` as well?
 #' @param overwrite Overwrite previous log file?
 #'
