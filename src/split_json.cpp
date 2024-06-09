@@ -21,7 +21,7 @@ extern "C" SEXP split_json(SEXP strSEXP) {
     std::vector<bool> valuesNA;
     std::string token;
     bool inQuotes = false;
-    int backslashCount = 0;
+    bool escaped = false;
     bool isKey = true;
 
     int start = 0;
@@ -40,13 +40,13 @@ extern "C" SEXP split_json(SEXP strSEXP) {
         if (ch == ' ' && !inQuotes) continue; // Skip spaces outside quotes
 
         if (ch == '\\') {
-            backslashCount++;
+            escaped = !escaped;
             token += ch;
-        } else if (ch == '"' && (backslashCount % 2 == 0)) {
+        } else if (!escaped && ch == '"') {
             inQuotes = !inQuotes;
             token += ch;
-            backslashCount = 0;
-        } else if ((ch == ',' || ch == ':') && !inQuotes) {
+            escaped = false;
+        } else if (!inQuotes && (ch == ',' || ch == ':')) {
             bool isNA = token == "null";
             if (token.front() == '"' && token.back() == '"' && token.size() > 1) {
                 token = token.substr(1, token.size() - 2); // Remove quotes
@@ -61,10 +61,10 @@ extern "C" SEXP split_json(SEXP strSEXP) {
                 isKey = true; // Next token will be a key
             }
             token.clear();
-            backslashCount = 0;
+            escaped = false;
         } else {
             token += ch;
-            backslashCount = 0;
+            escaped = false;
         }
     }
 
