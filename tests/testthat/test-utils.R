@@ -121,7 +121,11 @@ test_that("get_lvl_int", {
   expect_error(get_lvl_int(TRUE), "is.character(level) is not TRUE", fixed = TRUE)
   expect_error(get_lvl_int(1.0), "is.character(level) is not TRUE", fixed = TRUE)
 
-  expect_error(get_lvl_int("INVALID"), "level %in% .* is not TRUE")
+  expect_error(
+    get_lvl_int("INVALID"),
+    regexp = "Log level not 'NONE', 'ERROR', 'WARN', 'INFO' or 'DEBUG'",
+    fixed = TRUE
+  )
 })
 
 test_that("convert_lvl_input", {

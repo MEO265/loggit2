@@ -31,8 +31,8 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = ge
     tryCatch({
       base::message(..1)
     }, message = function(m) {
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 3L)) {
+        loggit_internal(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
       }
       # If signalCondition was used there would be no output to the console
       base::message(m)
@@ -42,8 +42,8 @@ message <- function(..., domain = NULL, appendLF = TRUE, .loggit = NA, echo = ge
       base::message(..., domain = domain, appendLF = appendLF)
     }, message = function(m) {
       m <- simpleMessage(message = m[["message"]], call = call)
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "INFO", log_msg = m[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 3L)) {
+        loggit_internal(log_lvl = "INFO", log_msg = m[["message"]], echo = echo)
       }
       # If signalCondition was used there would be no output to the console
       base::message(m)
@@ -82,8 +82,8 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     tryCatch({
       base::warning(..1)
     }, warning = function(w) {
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 2L)) {
+        loggit_internal(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
       }
       # If signalCondition was used there would be no output to the console
       base::warning(w)
@@ -93,8 +93,8 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
       base::warning(..., call. = call., immediate. = immediate., noBreaks. = noBreaks., domain = domain)
     }, warning = function(w) {
       w <- simpleWarning(message = w[["message"]], call = call)
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "WARN", log_msg = w[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 2L)) {
+        loggit_internal(log_lvl = "WARN", log_msg = w[["message"]], echo = echo)
       }
       # If signalCondition was used there would be no output to the console
       base::warning(w)
@@ -133,8 +133,8 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo
     tryCatch({
       base::stop(..1)
     }, error = function(e) {
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 1L)) {
+        loggit_internal(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
       }
       base::stop(e)
     })
@@ -143,8 +143,8 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo
       base::stop(..., call. = call., domain = domain)
     }, error = function(e) {
       e <- simpleError(message = e[["message"]], call = call)
-      if (!isFALSE(.loggit)) {
-        loggit(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+      if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 1L)) {
+        loggit_internal(log_lvl = "ERROR", log_msg = e[["message"]], echo = echo)
       }
       signalCondition(e)
     })
@@ -195,8 +195,8 @@ stopifnot <- function(..., exprs, exprObject, local, .loggit = NA, echo = get_ec
     eval.parent(stop_call, 1L)
   }, error = function(e) {
     cond <- simpleError(message = e[["message"]], call = call)
-    if (!isFALSE(.loggit)) {
-      loggit(log_lvl = "ERROR", log_msg = cond[["message"]], echo = echo, ignore_log_level = isTRUE(.loggit))
+    if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 1L)) {
+      loggit_internal(log_lvl = "ERROR", log_msg = cond[["message"]], echo = echo)
     }
     signalCondition(cond = cond)
   })

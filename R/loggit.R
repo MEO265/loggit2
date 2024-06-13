@@ -7,6 +7,7 @@ NULL
 #'
 #' @param log_lvl Log level. A atomic vector of length one (usually `character`). Will be coerced to `character`.
 #' @param log_msg Log message. A atomic vector of length one (usually `character`). Will be coerced to `character`.
+#' @param logfile Path of log file to write to.
 #' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?
@@ -57,27 +58,61 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
     return(invisible(NULL))
   }
 
-  timestamp <- format(Sys.time(), format = .config[["ts_format"]])
-
   if (...length() > 0L) {
-    dots <- list(...)
-    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-    if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
-      base::stop("All custom log fields should be named.")
-    }
-    if (any(lengths(dots) > 1L)) {
-      base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
-    }
-    log_df <- data.frame(
-      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
-      stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
-    )
+    loggit_dots(log_lvl = log_lvl, log_msg = log_msg, ..., echo = echo, logfile = logfile)
   } else {
-    log_df <- data.frame(
-      timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
-      stringsAsFactors = FALSE
-    )
+    loggit_internal(log_lvl = log_lvl, log_msg = log_msg, echo = echo, logfile = logfile)
   }
 
+  return(invisible(NULL))
+}
+
+#' Internal logging function
+#'
+#' This function is used internally by the `loggit` function to log messages and levels.
+#' No checks are performed on the input, so it should used with caution.
+#'
+#' @inheritParams write_ndjson
+#' @inheritParams loggit
+#'
+#' @return Invisible `NULL`.
+#'
+#' @keywords internal
+loggit_internal <- function(log_lvl, log_msg, echo, logfile = get_logfile()) {
+  timestamp <- format(Sys.time(), format = .config[["ts_format"]])
+  log_df <- data.frame(
+    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
+    stringsAsFactors = FALSE
+  )
+
+  write_ndjson(log_df, echo = echo, logfile = logfile)
+}
+
+#' Internal logging function for custom log fields
+#'
+#' This function is used internally by the `loggit` function to log messages, levels, and custom fields.
+#' Similar to `loggit_internal`, but with additional custom fields, and checks on those fields.
+#'
+#' @inheritParams write_ndjson
+#' @inheritParams loggit
+#'
+#' @return Invisible `NULL`.
+#'
+#' @keywords internal
+loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
+  dots <- list(...)
+  # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+  if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
+    base::stop("All custom log fields should be named.")
+  }
+  if (any(lengths(dots) > 1L)) {
+    base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
+  }
+
+  timestamp <- format(Sys.time(), format = .config[["ts_format"]])
+  log_df <- data.frame(
+    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
+    stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
+  )
   write_ndjson(log_df, echo = echo, logfile = logfile)
 }
