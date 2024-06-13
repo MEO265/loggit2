@@ -80,6 +80,39 @@ find_call <- function() {
   return(sys.call(-2L))
 }
 
+#' Find Call Stack
+#'
+#' This function is designed to inspect the call hierarchy and identify the call stack down to a specific call.
+#'
+#' @param call The specific call to stop at in the call hierarchy.
+#'
+#' @return Character vector of deparsed calls
+#'
+#' @keywords internal
+find_call_stack <- function(call) {
+
+  stopifnot(is.call(call))
+
+  calls <- sys.calls()
+
+  # Ignore any wrapper environments above the global R environment
+  # For example necessary in JetBrains IDEs
+  id_first <- match(0L, sys.parents(), nomatch = 1L)
+  # If the first call (this function) is the last call, there is no call stack
+  if (id_first == length(calls)) return(NA_character_)
+  calls <- calls[seq.int(from = id_first, length.out = length(calls) - id_first)]
+
+  # Since R does not provide sufficient ways to compare calls, we need to deparse them
+  calls <- vapply(calls, FUN = deparse1, FUN.VALUE = character(1L))
+  id_last <- length(calls) - match(deparse1(call), rev(calls), nomatch = NA_integer_) + 1L
+
+  # If the call is not part of the call stack, return NA
+  if (is.na(id_last)) return(NA_character_)
+
+  calls <- calls[seq_len(id_last)]
+  return(calls)
+}
+
 #' Write log to csv file
 #'
 #' Creates a csv file from the ndjson log file.
