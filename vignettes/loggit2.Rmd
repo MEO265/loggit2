@@ -1,5 +1,6 @@
 ---
 title: "Getting Started"
+description: "An introduction to the basic functionality of `loggit2`."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}

@@ -1,5 +1,6 @@
 ---
 title: "Why the Fork?"
+description: "What does `loggit2` offer that `loggit` doesn't? And why was a fork necessary?"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Why the Fork?}
