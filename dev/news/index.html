@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">loggit2</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.2.9999</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.3.0.9999</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,13 +57,23 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="loggit2-development-version">loggit2 (development version)<a class="anchor" aria-label="anchor" href="#loggit2-development-version"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="minor-changes-development-version">Minor Changes<a class="anchor" aria-label="anchor" href="#minor-changes-development-version"></a></h3>
+<ul><li>Some small changes to increase logging speed</li>
+<li>
+<code>wìth_loggit()</code> now opens a connection to the log file at the beginning of the block and closes it at the end. This increases the speed of logging noticeably, especially for many log entries.<br>
+The log file will be created if it does not exist, even if no log entries are written.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.0" id="loggit2-230">loggit2 2.3.0<a class="anchor" aria-label="anchor" href="#loggit2-230"></a></h2><p class="text-muted">CRAN release: 2024-06-08</p>
+<div class="section level3">
+<h3 id="breaking-changes-2-3-0">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-3-0"></a></h3>
 <ul><li>Custom <code>sanitizer</code>s and <code>unsanitizer</code>s are no longer supported. This decision was made because no active user is known, and this functionality severely limits further development. If custom <code>sanitizer</code>s were previously used, they can simply be executed before or after <code><a href="../reference/loggit.html">loggit()</a></code> or <code><a href="../reference/read_logs.html">read_logs()</a></code>.<br>
 If custom sanitizers were used to circumvent bugs, please report them, so they can be fixed.</li>
 <li>Special characters are no longer escaped by replacement, but rather by <code>"\"</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-2-3-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-2-3-0"></a></h3>
 <ul><li>Added <code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code> to convert log files to CSV format.</li>
 <li>Added <code><a href="../reference/with_loggit.html">with_loggit()</a></code> to log third-party code or to easily use different <code><a href="../reference/loggit.html">loggit()</a></code> parameters for a chunk of code.</li>
 <li>
@@ -74,16 +84,17 @@ If custom sanitizers were used to circumvent bugs, please report them, so they c
 <li>Added <code><a href="../reference/set_echo.html">set_echo()</a></code> to control globally whether log messages are echoed to the console.</li>
 <li>All condition log handlers (e.g., <code><a href="../reference/warning.html">warning()</a></code>) allow <code>NA</code> for the parameter <code>.loggit</code>. If <code>NA</code>, the log level set by <code><a href="../reference/set_log_level.html">set_log_level()</a></code> is used to determine if the condition should be logged. This is the new default behavior, but since the default log level is <code>"DEBUG"</code>, this should not change the behavior of existing code.</li>
 <li>All <code>set_*</code> functions now return the previous value of the setting.</li>
+<li>The default settings can now be controlled by the system environment variables <code>FILE_LOGGIT2</code>, <code>TIMESTAMP_LOGGIT2</code>, <code>ECHO_LOGGIT2</code> and <code>LEVEL_LOGGIT2</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="bugfixes-development-version">Bugfixes<a class="anchor" aria-label="anchor" href="#bugfixes-development-version"></a></h3>
+<h3 id="bugfixes-2-3-0">Bugfixes<a class="anchor" aria-label="anchor" href="#bugfixes-2-3-0"></a></h3>
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now correctly reads empty character values <code>""</code>, as in <code>{"key": ""}</code>. Previously, empty fields were read as <code>NA</code>. This meant that when <code><a href="../reference/rotate_logs.html">rotate_logs()</a></code> was used, these entries could completely disappear from the respective JSON object.</li>
 <li>
 <code><a href="../reference/loggit.html">loggit()</a></code> now does not unintentionally “repair” argument names of log entries. Previously, the names were replaced by <code>check.names</code> of <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code>, which could lead to unexpected behavior. Names that are not valid JSON keys are now escaped according to the JSON standard.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-changes-development-version">Minor Changes<a class="anchor" aria-label="anchor" href="#minor-changes-development-version"></a></h3>
+<h3 id="minor-changes-2-3-0">Minor Changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-3-0"></a></h3>
 <ul><li>
 <code><a href="../reference/read_logs.html">read_logs()</a></code> now returns a <code>data.frame</code> with the empty character columns “timestamp”, “log_lvl”, and “log_msg” instead of an empty (0x0) <code>data.frame</code> if the log file has no entries.</li>
 <li>The JSON reading functions are more tolerant of manual changes to the log.</li>
@@ -94,7 +105,7 @@ If custom sanitizers were used to circumvent bugs, please report them, so they c
 <code><a href="../reference/loggit.html">loggit()</a></code> now also checks the length of the <code>log_lvl</code> and <code>log_msg</code> arguments and only uses the first element. Previously, the log entry had been multiplied, leading to unintended consequences regarding <code>custom_log_lvl</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="internals-development-version">Internals<a class="anchor" aria-label="anchor" href="#internals-development-version"></a></h3>
+<h3 id="internals-2-3-0">Internals<a class="anchor" aria-label="anchor" href="#internals-2-3-0"></a></h3>
 <ul><li>
 <code>write_ndjson</code> no longer warns if the log contains unsanitized line breaks. This warning could only be generated by package-internal errors (therefore nonsensical in the CRAN package) or by a custom <code>sanitizer</code>, but in this case only this one character was specifically tested and thus provides a false sense of security.</li>
 <li>The package now requires compilation. This is necessary because the JSON parser was written in C++ for faster reading.</li>
