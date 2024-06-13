@@ -1,5 +1,6 @@
 ---
 title: "Further Configurations"
+description: "An overview of the configuration options of loggit2."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Further Configurations}
