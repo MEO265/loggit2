@@ -4,7 +4,7 @@
 * Some small changes to increase logging speed
 * `wìth_loggit()` now opens a connection to the log file at the beginning of the block and closes it at the end.
   This increases the speed of logging noticeably, especially for many log entries.  
-  The log file will be created if it does not exist, even if no log entries are written.
+  The log file will be created during logging, but will automatically be removed if no log entries were made.
 
 # loggit2 2.3.0
 
