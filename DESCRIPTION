@@ -2,7 +2,7 @@ Package: loggit2
 Title: Easy-to-Use, Dependencyless Logger
 Description:
     An easy-to-use 'ndjson' (newline-delimited 'JSON') logger.
-    It provides a set of wrappings for base R's message(), warning(), and
+    It provides a set of wrappers for base R's message(), warning(), and
     stop() functions that maintain identical functionality, but also log
     the handler message to an 'ndjson' log file.
     No change in existing code is necessary to use this package, 
