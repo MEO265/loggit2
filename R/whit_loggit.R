@@ -35,8 +35,13 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_warn <- log_level >= 2L
   log_info <- log_level >= 3L
 
+  exists_on_start <- file.exists(logfile)
   log_con <- file(description = logfile, open = "a")
-  on.exit(close(con = log_con))
+  on.exit({
+    close(con = log_con)
+    if (!exists_on_start && file.size(logfile) == 0L) file.remove(logfile) # nocov
+  }, add = TRUE, after = FALSE)
+
 
   withCallingHandlers(
     exp,

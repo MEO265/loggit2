@@ -4,7 +4,7 @@
 \alias{loggit_dots}
 \title{Internal logging function for custom log fields}
 \usage{
-loggit_dots(log_lvl, log_msg, ..., echo, logfile)
+loggit_dots(log_lvl, log_msg, ..., echo, logfile = get_logfile())
 }
 \arguments{
 \item{log_lvl}{Log level. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}
