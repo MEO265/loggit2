@@ -39,7 +39,7 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_con <- file(description = logfile, open = "a")
   on.exit({
     close(con = log_con)
-    if (!exists_on_start && file.size(logfile) == 0) file.remove(logfile)
+    if (!exists_on_start && file.size(logfile) == 0L) file.remove(logfile)
   }, add = TRUE, after = FALSE)
 
 
