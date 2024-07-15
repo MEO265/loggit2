@@ -3,10 +3,6 @@ title: "README"
 output:
   md_document:
     variant: gfm
-vignette: >
-  %\VignetteIndexEntry{README}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
