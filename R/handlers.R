@@ -76,7 +76,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
   # If the input is not a condition, the call of the warning must be set manually
   # to avoid loggit2::warning being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
-  call <- find_call()
+  call <- if (call.) find_call()
 
   if (is_condition) {
     tryCatch({
@@ -90,7 +90,7 @@ warning <- function(..., call. = TRUE, immediate. = FALSE, noBreaks. = FALSE,
     })
   } else {
     tryCatch({
-      base::warning(..., call. = call., immediate. = immediate., noBreaks. = noBreaks., domain = domain)
+      base::warning(..., call. = FALSE, immediate. = immediate., noBreaks. = noBreaks., domain = domain)
     }, warning = function(w) {
       w <- simpleWarning(message = w[["message"]], call = call)
       if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 2L)) {
@@ -127,7 +127,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo
   # If the input is not a condition, the call of the error must be set manually
   # to avoid loggit2::stop being displayed as a call
   is_condition <- (...length() == 1L && inherits(..1, "condition"))
-  call <- find_call()
+  call <- if (call.) find_call()
 
   if (is_condition) {
     tryCatch({
@@ -140,7 +140,7 @@ stop <- function(..., call. = TRUE, domain = NULL, .loggit = NA, echo = get_echo
     })
   } else {
     tryCatch({
-      base::stop(..., call. = call., domain = domain)
+      base::stop(..., call. = FALSE, domain = domain)
     }, error = function(e) {
       e <- simpleError(message = e[["message"]], call = call)
       if (isTRUE(.loggit) || (!isFALSE(.loggit) && get_log_level() >= 1L)) {
