@@ -43,7 +43,7 @@
 <ul><li>Some small changes to increase logging speed</li>
 <li>
 <code>wìth_loggit()</code> now opens a connection to the log file at the beginning of the block and closes it at the end. This increases the speed of logging noticeably, especially for many log entries.<br>
-The log file will be created if it does not exist, even if no log entries are written.</li>
+The log file will be created during logging, but will automatically be removed if no log entries were made.</li>
 </ul></div>
 </div>
     <div class="section level2">
