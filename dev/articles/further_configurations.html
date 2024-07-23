@@ -122,12 +122,12 @@ the base R condition handler always use the session-wide
 configuration.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old_log</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_logfile.html">set_logfile</a></span><span class="op">(</span>logfile <span class="op">=</span> <span class="st">"logfile.log"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Log file set to /tmp/Rtmp9KMme0/logfile.log</span></span>
+<span><span class="co">#&gt; Log file set to /tmp/RtmpF1mPOT/logfile.log</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span></span>
 <span>  log_lvl <span class="op">=</span> <span class="st">"DEBUG"</span>,</span>
 <span>  log_msg <span class="op">=</span> <span class="st">"This message will be logged to `logfile.log`."</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `logfile.log`."}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `logfile.log`."}</span></span>
 <span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span></span>
@@ -135,17 +135,17 @@ configuration.</p>
 <span>  log_msg <span class="op">=</span> <span class="st">"This message will be logged to `otherlogfile.log`."</span>,</span>
 <span>  logfile <span class="op">=</span> <span class="st">"otherlogfile.log"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `otherlogfile.log`."}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `otherlogfile.log`."}</span></span>
 <span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span>logfile <span class="op">=</span> <span class="st">"logfile2.log"</span>, <span class="op">{</span></span>
 <span>  <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This message will be logged to `logfile2.log`."</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged to `logfile2.log`.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "INFO", "log_msg": "This message will be logged to `logfile2.log`.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged to `logfile2.log`.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_logfile.html">set_logfile</a></span><span class="op">(</span><span class="va">old_log</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Log file set to /tmp/Rtmp9KMme0/loggit.log</span></span></code></pre></div>
+<span><span class="co">#&gt; Log file set to /tmp/RtmpF1mPOT/loggit.log</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="log-level">Log level<a class="anchor" aria-label="anchor" href="#log-level"></a>
@@ -162,7 +162,7 @@ allows setting a log level for the code block being executed.</p>
 <code class="sourceCode R"><span><span class="va">old_log_lvl</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_log_level.html">set_log_level</a></span><span class="op">(</span><span class="st">"INFO"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Log level set to 3 (INFO)</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged, since the log level is INFO."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since the log level is INFO.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since the log level is INFO.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged, since the log level is INFO.</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span></span>
 <span>  log_lvl <span class="op">=</span> <span class="st">"DEBUG"</span>,</span>
@@ -172,7 +172,7 @@ allows setting a log level for the code block being executed.</p>
 <span>  log_lvl <span class="op">=</span> <span class="st">"DEBUG"</span>, <span class="st">"This message will be logged because the log level is ignored."</span>,</span>
 <span>  ignore_log_level <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged because the log level is ignored."}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged because the log level is ignored."}</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span></span>
 <span>  <span class="st">"This warning message will not be logged, since .loggit = FALSE."</span>,</span>
 <span>  .loggit <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -184,16 +184,16 @@ allows setting a log level for the code block being executed.</p>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This warning will not be logged, since the log level is set to ERROR."</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: This warning will not be logged, since the log level is set to ERROR.</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged, since .loggit = TRUE."</span>, .loggit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since .loggit = TRUE.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since .loggit = TRUE.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged, since .loggit = TRUE.</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This error message will be logged because the log level is set to ERROR."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "ERROR", "log_msg": "This error message will be logged because the log level is set to ERROR."}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "ERROR", "log_msg": "This error message will be logged because the log level is set to ERROR."}</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This error message will be logged because the log level is set to ERROR.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span>log_level <span class="op">=</span> <span class="st">"DEBUG"</span>, <span class="op">{</span></span>
 <span>  <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This message will be logged because the log level is set to DEBUG."</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged because the log level is set to DEBUG.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:26+0000", "log_lvl": "INFO", "log_msg": "This message will be logged because the log level is set to DEBUG.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged because the log level is set to DEBUG.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_log_level.html">set_log_level</a></span><span class="op">(</span><span class="va">old_log_lvl</span><span class="op">)</span></span>
@@ -213,12 +213,12 @@ control via the <code>echo</code> argument.</p>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will not be logged, but it will be output to the console."</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This message will not be logged, but it will be output to the console.</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged and output to the console."</span>, echo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:27+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged and output to the console.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_echo.html">set_echo</a></span><span class="op">(</span><span class="cn">TRUE</span>, confirm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged and output to the console."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-15T21:08:14+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-23T17:56:27+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged and output to the console.</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged, but it will not be echoed."</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This message will be logged, but it will not be echoed.</span></span>
@@ -240,14 +240,14 @@ variable <code>TIMESTAMP_LOGGIT2</code> or the function
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old_ts</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_timestamp_format.html">set_timestamp_format</a></span><span class="op">(</span><span class="st">"%H:%M:%S"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Timestamp format set to %H:%M:%S.</span></span>
-<span><span class="co">#&gt; Current time in this format: 21:08:14</span></span>
+<span><span class="co">#&gt; Current time in this format: 17:56:27</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This message will be logged with a timestamp in the format HH:MM:SS."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "21:08:14", "log_lvl": "INFO", "log_msg": "This message will be logged with a timestamp in the format HH:MM:SS.\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "17:56:27", "log_lvl": "INFO", "log_msg": "This message will be logged with a timestamp in the format HH:MM:SS.\n"}</span></span>
 <span><span class="co">#&gt; This message will be logged with a timestamp in the format HH:MM:SS.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/set_timestamp_format.html">set_timestamp_format</a></span><span class="op">(</span><span class="va">old_ts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Timestamp format set to %Y-%m-%dT%H:%M:%S%z.</span></span>
-<span><span class="co">#&gt; Current time in this format: 2024-07-15T21:08:14+0000</span></span></code></pre></div>
+<span><span class="co">#&gt; Current time in this format: 2024-07-23T17:56:27+0000</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
