@@ -27,9 +27,9 @@ expect_identical_condition <-
       testthat::fail("Expected don't throws an error.")
     }
 
-    if (actual[["message"]] != expected[["message"]]) {
+    if (conditionMessage(actual) != conditionMessage(expected)) {
       testthat::fail(
-        sprintf("Actual message is '%s' and expected is '%s'.", actual[["message"]], expected[["message"]])
+        sprintf("Actual message is '%s' and expected is '%s'.", conditionMessage(actual), conditionMessage(expected))
       )
     }
 
