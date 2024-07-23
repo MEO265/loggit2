@@ -152,6 +152,21 @@ test_that("stopifnot", {
 
 cleanup()
 
+test_that("Test for call", {
+  f <- function() warning("This is a stop error")
+  expect_identical_warning(f(), base::warning(simpleWarning(message = "This is a stop error", call = str2lang("f()"))))
+  f <- function() warning("This is a stop error", call. = FALSE)
+  expect_identical_warning(f(), base::warning(simpleWarning(message = "This is a stop error", call = NULL)))
+
+  f <- function() stop("This is a stop error")
+  expect_identical_error(f(), base::stop(simpleError(message = "This is a stop error", call = str2lang("f()"))))
+  f <- function() stop("This is a stop error", call. = FALSE)
+  expect_identical_error(f(), base::stop(simpleError(message = "This is a stop error", call = NULL)))
+})
+
+
+cleanup()
+
 test_that("split_ndjson error", {
   expect_error(split_ndjson(3L), "Input must be a character vector.")
 })
