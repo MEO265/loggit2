@@ -1,4 +1,4 @@
-# loggit2 (development version)
+# loggit2 2.3.1
 
 ## Bugfixes
 * `warning()` and `stop()` now respect `call. = FALSE`.
