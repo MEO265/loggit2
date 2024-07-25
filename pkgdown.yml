@@ -1,12 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
-  fork: fork.html
+  articles/fork: fork.html
   further_configurations: further_configurations.html
   loggit2: loggit2.html
-last_built: 2024-06-08T10:46Z
+last_built: 2024-07-25T16:35Z
 urls:
   reference: https://r-loggit.org/reference
   article: https://r-loggit.org/articles
-
