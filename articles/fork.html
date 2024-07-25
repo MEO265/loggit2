@@ -68,7 +68,7 @@
       <h1>Why the Fork?</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MEO265/loggit2/blob/main/vignettes/articles/fork.rmd" class="external-link"><code>vignettes/articles/fork.rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MEO265/loggit2/blob/v2.3.1/vignettes/articles/fork.rmd" class="external-link"><code>vignettes/articles/fork.rmd</code></a></small>
       <div class="d-none name"><code>fork.rmd</code></div>
     </div>
 
@@ -111,19 +111,19 @@ as its base equivalent.</p>
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): This is another error</span></span></code></pre></div>
 <p>For further information and comparisons look <a href="#further-comparisons">here</a>.</p>
 </div>
@@ -139,7 +139,7 @@ existing code (without logs) unnecessarily complicated.</p>
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"TRUE is not true"</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"This is an error"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">&lt;</span> <span class="fl">1L</span>, <span class="st">"This is another error"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error: This is an error</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"TRUE is not true"</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"This is an error"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">&lt;</span> <span class="fl">1L</span>, <span class="st">"This is another error"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
 <span><span class="co">#&gt; Error: This is an error</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -212,11 +212,11 @@ as its <code>{base}</code> equivalent.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning in f(): This is another warning</span></span>
-<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:35:15+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2024-07-25T16:49:49+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
 <span><span class="co">#&gt; Error in f(): This is another error</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
