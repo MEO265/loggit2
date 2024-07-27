@@ -75,7 +75,7 @@ find_call <- function() {
   if (length(parents) <= 2L) return(NULL) # nocov
   # Ignore any wrapper environments above the global R environment
   # For example necessary in JetBrains IDEs
-  id <- match(0L, parents)
+  id <- match(0L, parents, nomatch = 0L)
   if (id >= length(parents) - 1L) return(NULL) # nocov
   return(sys.call(-2L))
 }
