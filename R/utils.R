@@ -155,3 +155,30 @@ convert_lvl_input <- function(level) {
   }
   level
 }
+
+#' Convert Call to String
+#'
+#' @param call Call object.
+#' @param full_stack Include the full call stack?
+#'
+#' @return Deparsed call as string.
+#'
+#' @keywords internal
+call_2_string <- function(call, full_stack = TRUE) {
+  if (is.null(call)) return(NA_character_)
+  call_str <- deparse1(call)
+  if (full_stack) {
+    # Truncate the call stack after the `call`
+    call_stack <- vapply(sys.calls(), deparse1, FUN.VALUE = character(1L))
+    call_match <- match(call_str, rev(call_stack))
+    base::stopifnot("Call not found in context" = !is.na(call_match))
+    call_match <- length(call_stack) - call_match + 1L
+    # Ignore any wrapper environments above the global R environment
+    # For example necessary in JetBrains IDEs
+    parents <- sys.parents()[seq_len(call_match)]
+    base_id <- match(0L, parents, nomatch = 0L)
+    call_stack <- call_stack[base_id:call_match]
+    call_str <- paste(call_stack, collapse = "\n")
+  }
+  return(call_str)
+}
