@@ -105,6 +105,10 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
   if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
     base::stop("All custom log fields should be named.")
   }
+  if ("timestamp" %in% names(dots)) {
+    base::warning("The 'timestamp' field is reserved for the log timestamp.")
+    dots <- dots[names(dots) != "timestamp"]
+  }
   if (any(lengths(dots) > 1L)) {
     base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
   }
