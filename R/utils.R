@@ -164,7 +164,7 @@ convert_lvl_input <- function(level) {
 #' @return Deparsed call as string.
 #'
 #' @keywords internal
-call_2_string <- function(call, full_stack = TRUE) {
+call_2_string <- function(call, full_stack = FALSE) {
   if (is.null(call)) return(NA_character_)
   call_str <- deparse1(call)
   if (full_stack) {

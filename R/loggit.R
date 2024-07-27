@@ -78,12 +78,11 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-loggit_internal <- function(log_lvl, log_msg, echo, logfile = get_logfile()) {
+loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo, logfile = get_logfile(), full_stack = get_call()[["full_stack"]]) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
-  log_df <- data.frame(
-    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
-    stringsAsFactors = FALSE
-  )
+  log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
+  if(get_call()[["log_call"]]) log_df[["log_call"]] <- call_2_string(log_call, full_stack = full_stack)
+  log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   write_ndjson(log_df, echo = echo, logfile = logfile)
 }
@@ -105,18 +104,18 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
   if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
     base::stop("All custom log fields should be named.")
   }
-  if ("timestamp" %in% names(dots)) {
+  if (any(c("timestamp", "log_call") %in% names(dots))) {
     base::warning("The 'timestamp' field is reserved for the log timestamp.")
-    dots <- dots[names(dots) != "timestamp"]
+    dots <- dots[!names(dots) %in% c("timestamp", "log_call")]
   }
   if (any(lengths(dots) > 1L)) {
     base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
   }
 
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
-  log_df <- data.frame(
-    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
-    stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
-  )
+  log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
+  if(get_call()[["log_call"]]) log_df[["log_call"]] <- NA_character_
+  log_df <- c(log_df, dots)
+  log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
   write_ndjson(log_df, echo = echo, logfile = logfile)
 }

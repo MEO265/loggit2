@@ -167,3 +167,7 @@ set_echo <- function(echo = TRUE, confirm = TRUE) {
 get_echo <- function() {
   .config[["echo"]]
 }
+
+get_call <- function() {
+  list(log_call = .config[["log_call"]], full_stack = .config[["full_stack"]])
+}
