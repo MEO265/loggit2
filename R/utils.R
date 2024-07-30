@@ -169,16 +169,37 @@ call_2_string <- function(call, full_stack = FALSE) {
   call_str <- deparse1(call)
   if (full_stack) {
     # Truncate the call stack after the `call`
-    call_stack <- vapply(sys.calls(), deparse1, FUN.VALUE = character(1L))
+    raw_call_stack <- sys.calls()
+    call_stack <- vapply(raw_call_stack, deparse1, FUN.VALUE = character(1L))
     call_match <- match(call_str, rev(call_stack))
+    # Shorten to 150 characters
+    call_stack <- vapply(call_stack, substr, FUN.VALUE = character(1L), start = 1L, stop = 150L)
+    print(vapply(raw_call_stack, get_file_loc, FUN.VALUE = character(1L)))
+    call_stack <- paste0(call_stack, vapply(raw_call_stack, get_file_loc, FUN.VALUE = character(1L)))
     base::stopifnot("Call not found in context" = !is.na(call_match))
     call_match <- length(call_stack) - call_match + 1L
     # Ignore any wrapper environments above the global R environment
     # For example necessary in JetBrains IDEs
     parents <- sys.parents()[seq_len(call_match)]
+    funcs <- lapply(sys.parents(), sys.function)
+    pkgs <- vapply(funcs, get_package_name, FUN.VALUE = character(1L))
+    call_stack <- paste0(call_stack[seq_len(call_match)], " [in ", pkgs, "]")
     base_id <- match(0L, parents, nomatch = 0L)
     call_stack <- call_stack[base_id:call_match]
     call_str <- paste(call_stack, collapse = "\n")
   }
   return(call_str)
+}
+
+get_file_loc <- function(x) {
+  srcloc <- if (!is.null(srcref <- attr(x, "srcref"))) {
+    srcfile <- attr(srcref, "srcfile")
+    paste0(" [at ", basename(srcfile$filename), "#", srcref[1], "]")
+  } else {
+    ""
+  }
+}
+
+get_package_name <- function(x) {
+  environmentName(environment(x))
 }
