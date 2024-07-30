@@ -29,7 +29,7 @@
 #' }
 #'
 #' @export
-with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level()) {
+with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level(), call_options = get_call_options()) {
   log_level <- convert_lvl_input(log_level)
   log_error <- log_level >= 1L
   log_warn <- log_level >= 2L

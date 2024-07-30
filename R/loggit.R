@@ -78,10 +78,10 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo, logfile = get_logfile(), full_stack = get_call()[["full_stack"]]) {
+loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo, logfile = get_logfile(), call_options = get_call_options()) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
-  if(get_call()[["log_call"]]) log_df[["log_call"]] <- call_2_string(log_call, full_stack = full_stack)
+  if(call_options[["log_call"]]) log_df[["log_call"]] <- call_2_string(log_call, full_stack = call_options[["full_stack"]])
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   write_ndjson(log_df, echo = echo, logfile = logfile)

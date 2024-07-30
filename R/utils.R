@@ -174,7 +174,7 @@ call_2_string <- function(call, full_stack = FALSE) {
     call_match <- match(call_str, rev(call_stack))
     # Shorten to 150 characters
     call_stack <- vapply(call_stack, substr, FUN.VALUE = character(1L), start = 1L, stop = 150L)
-    print(vapply(raw_call_stack, get_file_loc, FUN.VALUE = character(1L)))
+    # print(vapply(raw_call_stack, get_file_loc, FUN.VALUE = character(1L)))
     call_stack <- paste0(call_stack, vapply(raw_call_stack, get_file_loc, FUN.VALUE = character(1L)))
     base::stopifnot("Call not found in context" = !is.na(call_match))
     call_match <- length(call_stack) - call_match + 1L

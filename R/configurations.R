@@ -168,6 +168,6 @@ get_echo <- function() {
   .config[["echo"]]
 }
 
-get_call <- function() {
+get_call_options <- function() {
   list(log_call = .config[["log_call"]], full_stack = .config[["full_stack"]])
 }
