@@ -4,6 +4,5 @@
   setup_log_level()
   setup_logfile()
   setup_timestamp_format()
-  .config[["log_call"]] <- TRUE
-  .config[["full_stack"]] <- TRUE
+  setup_call_options()
 }
