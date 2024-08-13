@@ -4,7 +4,14 @@
 \alias{loggit_internal}
 \title{Internal logging function}
 \usage{
-loggit_internal(log_lvl, log_msg, echo, logfile = get_logfile())
+loggit_internal(
+  log_lvl,
+  log_msg,
+  log_call = NULL,
+  echo,
+  logfile = get_logfile(),
+  call_options = get_call_options()
+)
 }
 \arguments{
 \item{log_lvl}{Log level. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}

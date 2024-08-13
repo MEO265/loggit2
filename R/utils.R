@@ -158,10 +158,14 @@ convert_lvl_input <- function(level) {
 
 #' Convert Call to String
 #'
+#' Converts a call object to a string and optionally determines the full call stack.
+#'
 #' @param call Call object.
 #' @param full_stack Include the full call stack?
 #'
 #' @return Deparsed call as string.
+#'
+#' @details The full call stack can only be determined if the call is in the current context.
 #'
 #' @keywords internal
 call_2_string <- function(call, full_stack = FALSE) {
@@ -191,7 +195,17 @@ call_2_string <- function(call, full_stack = FALSE) {
   return(call_str)
 }
 
+#' Get file location
+#'
+#' Get the file location of a call object.
+#'
+#' @param x Call object.
+#'
+#' @return The file location as string.
+#'
+#' @keywords internal
 get_file_loc <- function(x) {
+  # This code is adapted from .traceback() in base R
   srcloc <- if (!is.null(srcref <- attr(x, "srcref"))) {
     srcfile <- attr(srcref, "srcfile")
     paste0(" [at ", basename(srcfile$filename), "#", srcref[1], "]")
@@ -200,6 +214,15 @@ get_file_loc <- function(x) {
   }
 }
 
+#' Get package name
+#'
+#' Get the package name of a function.
+#'
+#' @param x Function.
+#'
+#' @return The package name as string.
+#'
+#' @keywords internal
 get_package_name <- function(x) {
   environmentName(environment(x))
 }

@@ -8,7 +8,8 @@ with_loggit(
   exp,
   logfile = get_logfile(),
   echo = get_echo(),
-  log_level = get_log_level()
+  log_level = get_log_level(),
+  call_options = get_call_options()
 )
 }
 \arguments{
