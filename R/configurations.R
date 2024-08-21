@@ -187,15 +187,11 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
   base::stopifnot(
     ".arg_list must be a list" = is.list(.arg_list),
     # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-    "All arguments must be named." = length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
+    "All arguments must be named." =
+      length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
   )
 
   old <- get_call_options()
-
-  # TODO: Decide whar should be done if elements are missing in the list
-  # Option 1: Set to default -> log_call = FALSE, full_stack = FALSE <- Use this one
-  # Option 2: Keep the old value
-  # Option 3: Throw an error
 
   default <- list(log_call = FALSE, full_stack = FALSE)
 

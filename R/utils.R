@@ -208,7 +208,7 @@ get_file_loc <- function(x) {
   # This code is adapted from .traceback() in base R
   srcloc <- if (!is.null(srcref <- attr(x, "srcref"))) {
     srcfile <- attr(srcref, "srcfile")
-    paste0(" [at ", basename(srcfile$filename), "#", srcref[1], "]")
+    paste0(" [at ", basename(srcfile[["filename"]]), "#", srcref[[1L]], "]")
   } else {
     ""
   }

@@ -29,7 +29,7 @@
 #' }
 #'
 #' @export
-with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level(), call_options = get_call_options()) {
+with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level()) {
   log_level <- convert_lvl_input(log_level)
   log_error <- log_level >= 1L
   log_warn <- log_level >= 2L
@@ -46,13 +46,25 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   withCallingHandlers(
     exp,
     error = function(e) {
-      if (log_error) loggit_internal(log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = log_con)
+      if (log_error) {
+        loggit_internal(
+          log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = log_con
+        )
+      }
     },
     warning = function(w) {
-      if (log_warn) loggit_internal(log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w), echo = echo, logfile = log_con)
+      if (log_warn) {
+        loggit_internal(
+          log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w), echo = echo, logfile = log_con
+        )
+      }
     },
     message = function(m) {
-      if (log_info) loggit_internal(log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m), echo = echo, logfile = log_con)
+      if (log_info) {
+        loggit_internal(
+          log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m), echo = echo, logfile = log_con
+        )
+      }
     }
   )
 }
