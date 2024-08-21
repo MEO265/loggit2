@@ -8,7 +8,7 @@ loggit_internal(
   log_lvl,
   log_msg,
   log_call = NULL,
-  echo,
+  echo = get_echo(),
   logfile = get_logfile(),
   call_options = get_call_options()
 )
