@@ -81,7 +81,7 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo, logfile = get_logfile(), call_options = get_call_options()) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
-  if(call_options[["log_call"]]) log_df[["log_call"]] <- call_2_string(log_call, full_stack = call_options[["full_stack"]])
+  if (call_options[["log_call"]]) log_df[["log_call"]] <- call_2_string(log_call, full_stack = call_options[["full_stack"]])
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   write_ndjson(log_df, echo = echo, logfile = logfile)
@@ -105,7 +105,7 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
     base::stop("All custom log fields should be named.")
   }
   if (any(c("timestamp", "log_call") %in% names(dots))) {
-    base::warning("The 'timestamp' field is reserved for the log timestamp.")
+    base::warning("The 'timestamp' and 'log_call' fields are reserved and will be ignored.")
     dots <- dots[!names(dots) %in% c("timestamp", "log_call")]
   }
   if (any(lengths(dots) > 1L)) {
@@ -114,7 +114,7 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
 
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
-  if(get_call_options()[["log_call"]]) log_df[["log_call"]] <- NA_character_
+  if (get_call_options()[["log_call"]]) log_df[["log_call"]] <- NA_character_
   log_df <- c(log_df, dots)
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
   write_ndjson(log_df, echo = echo, logfile = logfile)
