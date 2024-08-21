@@ -114,7 +114,7 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
 
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
-  if(get_call()[["log_call"]]) log_df[["log_call"]] <- NA_character_
+  if(get_call_options()[["log_call"]]) log_df[["log_call"]] <- NA_character_
   log_df <- c(log_df, dots)
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
   write_ndjson(log_df, echo = echo, logfile = logfile)
