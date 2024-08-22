@@ -185,11 +185,12 @@ call_2_string <- function(call, full_stack = FALSE) {
     # Ignore any wrapper environments above the global R environment
     # For example necessary in JetBrains IDEs
     parents <- sys.parents()[seq_len(call_match)]
-    funcs <- lapply(sys.parents(), sys.function)
-    pkgs <- vapply(funcs, get_package_name, FUN.VALUE = character(1L))
-    call_stack <- paste0(call_stack[seq_len(call_match)], " [in ", pkgs, "]")
     base_id <- match(0L, parents, nomatch = 0L)
-    call_stack <- call_stack[base_id:call_match]
+    parents <- parents[base_id:call_match]
+    funcs <- lapply(parents, sys.function)
+    pkgs <- vapply(funcs, get_package_name, FUN.VALUE = character(1L))
+    pkgs[[1L]] <- ""
+    call_stack <- paste0(call_stack[base_id:call_match], pkgs)
     call_str <- paste(call_stack, collapse = "\n")
   }
   return(call_str)
@@ -220,9 +221,15 @@ get_file_loc <- function(x) {
 #'
 #' @param x Function.
 #'
-#' @return The package name as string.
+#' @return The package location as string.
 #'
 #' @keywords internal
 get_package_name <- function(x) {
-  environmentName(environment(x))
+  name <- environmentName(environment(x))
+
+  if (nchar(name) == 0L || name %in% c("R_EmptyEnv", "R_GlobalEnv")) {
+    return("")
+  } else {
+    return(paste0(" [in ", name, "]"))
+  }
 }
