@@ -1,3 +1,5 @@
+# loggit2 (development version)
+
 # loggit2 2.3.1
 
 ## Bugfixes
