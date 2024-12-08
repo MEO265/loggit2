@@ -72,18 +72,23 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #' This function is used internally by the `loggit` function to log messages and levels.
 #' No checks are performed on the input, so it should used with caution.
 #'
+#' @param log_call Call object to log as call leading to the log message.
+#' @param call_options List of options regarding logging of call objects. As set by `set_call_options()`.
+#'
 #' @inheritParams write_ndjson
 #' @inheritParams loggit
 #'
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-loggit_internal <- function(log_lvl, log_msg, echo, logfile = get_logfile()) {
+loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo(), logfile = get_logfile(),
+                            call_options = get_call_options()) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
-  log_df <- data.frame(
-    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg),
-    stringsAsFactors = FALSE
-  )
+  log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
+  if (call_options[["log_call"]]) {
+    log_df[["log_call"]] <- call_2_string(log_call, full_stack = call_options[["full_stack"]])
+  }
+  log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
   write_ndjson(log_df, echo = echo, logfile = logfile)
 }
@@ -105,14 +110,18 @@ loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
   if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
     base::stop("All custom log fields should be named.")
   }
+  if (any(c("timestamp", "log_call") %in% names(dots))) {
+    base::warning("The 'timestamp' and 'log_call' fields are reserved and will be ignored.")
+    dots <- dots[!names(dots) %in% c("timestamp", "log_call")]
+  }
   if (any(lengths(dots) > 1L)) {
     base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
   }
 
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
-  log_df <- data.frame(
-    timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg), dots,
-    stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE
-  )
+  log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
+  if (get_call_options()[["log_call"]]) log_df[["log_call"]] <- NA_character_
+  log_df <- c(log_df, dots)
+  log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
   write_ndjson(log_df, echo = echo, logfile = logfile)
 }

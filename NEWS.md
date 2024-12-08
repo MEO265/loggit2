@@ -1,5 +1,14 @@
 # loggit2 (development version)
 
+## New Features
+* `set_call_options()` offers new option to log condition calls or even the full call stack. `get_call_options()` returns the current settings.
+
+## Minor Changes
+* `loggit()` now checks the `...` arguments for use of reserved names, currently `log_call` and `timestamp`.
+
+## Internals
+*  Added fallback for `find_call()`.
+
 # loggit2 2.3.1
 
 ## Bugfixes

@@ -75,3 +75,14 @@ setup_log_level <- function() {
   }
   do.call(set_log_level, call_arg)
 }
+
+#' Set up the call options for the application
+#'
+#' This function sets the call options for the application.
+#'
+#' @inherit set_call_options return
+#'
+#' @keywords internal
+setup_call_options <- function() {
+  set_call_options(log_call = FALSE, full_stack = FALSE, confirm = FALSE)
+}

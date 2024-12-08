@@ -4,4 +4,5 @@
   setup_log_level()
   setup_logfile()
   setup_timestamp_format()
+  setup_call_options()
 }

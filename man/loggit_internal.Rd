@@ -4,16 +4,27 @@
 \alias{loggit_internal}
 \title{Internal logging function}
 \usage{
-loggit_internal(log_lvl, log_msg, echo, logfile = get_logfile())
+loggit_internal(
+  log_lvl,
+  log_msg,
+  log_call = NULL,
+  echo = get_echo(),
+  logfile = get_logfile(),
+  call_options = get_call_options()
+)
 }
 \arguments{
 \item{log_lvl}{Log level. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}
 
 \item{log_msg}{Log message. A atomic vector of length one (usually \code{character}). Will be coerced to \code{character}.}
 
+\item{log_call}{Call object to log as call leading to the log message.}
+
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{logfile}{A \code{connection}, or a character string naming the file to write to.}
+
+\item{call_options}{List of options regarding logging of call objects. As set by \code{set_call_options()}.}
 }
 \value{
 Invisible \code{NULL}.

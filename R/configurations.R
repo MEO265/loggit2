@@ -167,3 +167,60 @@ set_echo <- function(echo = TRUE, confirm = TRUE) {
 get_echo <- function() {
   .config[["echo"]]
 }
+
+#' Set Call Options
+#'
+#' @param ... Named arguments to set.
+#' @param .arg_list A list of named arguments to set.
+#' @param confirm Print confirmation message of call options setting?
+#'
+#' @return Invisible the previous call options.
+#'
+#' @details Call options are as follows:
+#'  * `log_call`: Log the call of an condition?
+#'  * `full_stack`: Log the full stack trace?
+#'
+#'  Only one of `...` or `.arg_list` can be provided.
+#'
+#' @export
+set_call_options <- function(..., .arg_list, confirm = TRUE) {
+  base::stopifnot(
+    "Only one of `...` or `.arg_list` can be provided." = xor(...length() > 0L, !missing(.arg_list))
+  )
+
+  if (...length() > 0L) return(set_call_options(.arg_list = list(...), confirm = confirm))
+
+  base::stopifnot(
+    ".arg_list must be a list" = is.list(.arg_list),
+    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+    "All arguments must be named." =
+      length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
+  )
+
+  old <- get_call_options()
+
+  default <- list(log_call = FALSE, full_stack = FALSE)
+
+  to_default <- setdiff(c("log_call", "full_stack"), names(.arg_list))
+  .arg_list[to_default] <- default[to_default]
+
+  .config[["log_call"]] <- .arg_list[["log_call"]]
+  .config[["full_stack"]] <- .arg_list[["full_stack"]]
+
+  if (confirm) {
+    base::message(
+      "Call options set to log_call = ", .config[["log_call"]], ", full_stack = ", .config[["full_stack"]], "."
+    )
+  }
+
+  return(invisible(old))
+}
+
+#' Get Call Options
+#'
+#' @return The call options.
+#'
+#' @export
+get_call_options <- function() {
+  list(log_call = .config[["log_call"]], full_stack = .config[["full_stack"]])
+}
