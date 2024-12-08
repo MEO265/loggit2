@@ -176,6 +176,12 @@ get_echo <- function() {
 #'
 #' @return Invisible the previous call options.
 #'
+#' @details Call options are as follows:
+#'  * `log_call`: Log the call of an condition?
+#'  * `full_stack`: Log the full stack trace?
+#'
+#'  Only one of `...` or `.arg_list` can be provided.
+#'
 #' @export
 set_call_options <- function(..., .arg_list, confirm = TRUE) {
   base::stopifnot(

@@ -19,3 +19,12 @@ Invisible the previous call options.
 \description{
 Set Call Options
 }
+\details{
+Call options are as follows:
+\itemize{
+\item \code{log_call}: Log the call of an condition?
+\item \code{full_stack}: Log the full stack trace?
+}
+
+Only one of \code{...} or \code{.arg_list} can be provided.
+}

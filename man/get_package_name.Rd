@@ -10,7 +10,7 @@ get_package_name(x)
 \item{x}{Function.}
 }
 \value{
-The package name as string.
+The package location as string.
 }
 \description{
 Get the package name of a function.

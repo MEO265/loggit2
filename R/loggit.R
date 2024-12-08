@@ -72,6 +72,9 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #' This function is used internally by the `loggit` function to log messages and levels.
 #' No checks are performed on the input, so it should used with caution.
 #'
+#' @param log_call Call object to log as call leading to the log message.
+#' @param call_options List of options regarding logging of call objects. As set by `set_call_options()`.
+#'
 #' @inheritParams write_ndjson
 #' @inheritParams loggit
 #'
