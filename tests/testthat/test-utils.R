@@ -146,3 +146,59 @@ test_that("convert_lvl_input", {
 
   expect_error(convert_lvl_input(level = "INVALID"))
 })
+
+test_that("call_2_string", {
+  # Test with empty call
+  expect_identical(call_2_string(NULL), NA_character_)
+  expect_identical(call_2_string(NULL, full_stack = TRUE), NA_character_)
+
+  # Test without full stack
+  test_call <- quote(loggit("INFO", "Test message"))
+  expect_identical(call_2_string(test_call), "loggit(\"INFO\", \"Test message\")")
+  test_call_complex <- quote(loggit("INFO", paste0("Test", " message")))
+  expect_identical(call_2_string(test_call_complex), "loggit(\"INFO\", paste0(\"Test\", \" message\"))")
+})
+
+test_that("get_file_loc", {
+  # Test with a call that has no file location
+  call_obj <- quote(a + 1)
+  expect_equal(get_file_loc(call_obj), "")
+
+  tmp <- tempfile(fileext = ".R")
+  writeLines(c(
+    "foo <- function(x) {\n1L + 1L\n}",
+    "foo2 <- function(x) {2L + 2L}"
+  ), tmp)
+  env <- new.env()
+  source(tmp, local = env, keep.source = TRUE)
+  expected <- paste0(" [at ", basename(tmp), "#1]")
+  expect_equal(get_file_loc(env$foo), expected)
+  expected <- paste0(" [at ", basename(tmp), "#4]")
+  expect_equal(get_file_loc(env$foo2), expected)
+
+  tmp <- tempfile(fileext = ".R")
+  writeLines("bar <- function(x) {1L + 1L}", tmp)
+  env <- new.env()
+  source(tmp, local = env, keep.source = FALSE)
+  expect_equal(get_file_loc(env$bar), "")
+})
+
+
+test_that("get_package_name handles various environments", {
+  # primitive function
+  expect_equal(get_package_name(sum), " [in base]")
+  # base function
+  expect_equal(get_package_name(mean), " [in base]")
+  # utils if available
+  if (requireNamespace("utils", quietly = TRUE)) {
+    expect_equal(get_package_name(utils::write.csv), " [in utils]")
+  }
+  # user-defined in global env
+  myfun <- function() NULL
+  expect_equal(get_package_name(myfun), "")
+  # user-defined in anonymous env
+  e <- new.env(parent = emptyenv())
+  dummy <- function() NULL
+  environment(dummy) <- e
+  expect_equal(get_package_name(dummy), "")
+})
