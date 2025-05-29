@@ -4,12 +4,14 @@
 \alias{call_2_string}
 \title{Convert Call to String}
 \usage{
-call_2_string(call, full_stack = FALSE)
+call_2_string(call, full_stack = FALSE, default_cutoff = 4L)
 }
 \arguments{
 \item{call}{Call object.}
 
 \item{full_stack}{Include the full call stack?}
+
+\item{default_cutoff}{Number of calls to cut from the end of the call stack if no matching call is found.}
 }
 \value{
 Deparsed call as string.
@@ -19,5 +21,6 @@ Converts a call object to a string and optionally determines the full call stack
 }
 \details{
 The full call stack can only be determined if the call is in the current context.
+The default cutoff is 4 because the only known case is an primitive error in \code{with_loggit()} which adds 4 calls to the stack.
 }
 \keyword{internal}
