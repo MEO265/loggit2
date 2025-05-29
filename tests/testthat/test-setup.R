@@ -93,3 +93,10 @@ test_that("setup_log_level", {
   expect_identical(get_log_level(), expected = 4L)
 
 })
+
+test_that("setup_call_options", {
+  old_call_options <- get_call_options()
+  on.exit(set_call_options(.arg_list = old_call_options, confirm = FALSE))
+  expect_silent(setup_call_options())
+  expect_identical(get_call_options(), expected = list(log_call = FALSE, full_stack = FALSE))
+})
