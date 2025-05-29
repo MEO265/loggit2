@@ -56,3 +56,43 @@ test_that("Log file is returned via read_logs()", {
   expect_true(is.data.frame(log_df))
 })
 cleanup()
+
+test_that("loggit warns on use of reserved fields", {
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", timestamp = "2023-01-01", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", log_call = "some call", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", timestamp = "2023-01-01", log_call = "some call", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+})
+cleanup()
+
+test_that("loggit handles call options correctly", {
+  old_options <- get_call_options()
+  on.exit(set_call_options(.arg_list = old_options, confirm = FALSE), add = TRUE)
+  set_call_options(log_call = TRUE, full_stack = FALSE, confirm = FALSE)
+  loggit(log_lvl = "INFO", log_msg = "test call options", echo = FALSE)
+  log_df <- read_logs()
+  expect_true("log_call" %in% names(log_df))
+  expect_true(is.na((log_df[["log_call"]])))
+})
+cleanup()
+
+test_that("loggit handles call options correctly (with ...)", {
+  old_options <- get_call_options()
+  on.exit(set_call_options(.arg_list = old_options, confirm = FALSE), add = TRUE)
+  set_call_options(log_call = TRUE, full_stack = FALSE, confirm = FALSE)
+  loggit(log_lvl = "INFO", log_msg = "test call options with dots", echo = FALSE, custom_field = "value")
+  log_df <- read_logs()
+  expect_true("custom_field" %in% names(log_df))
+  expect_identical(log_df[["custom_field"]], "value")
+})
+cleanup()

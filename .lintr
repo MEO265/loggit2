@@ -2,7 +2,7 @@ linters: list(
   absolute_path_linter(),
   any_duplicated_linter(),
   any_is_na_linter(),
-  assignment_linter(allow_cascading_assign = FALSE),
+  assignment_linter(),
   backport_linter("4.0.0"),
   boolean_arithmetic_linter(),
   brace_linter(allow_single_line = TRUE),
@@ -22,7 +22,6 @@ linters: list(
   expect_null_linter(),
   expect_true_false_linter(),
   expect_type_linter(),
-  extraction_operator_linter(),
   fixed_regex_linter(),
   for_loop_index_linter(),
   function_argument_linter(),
@@ -77,7 +76,7 @@ linters: list(
   # undesirable_function_linter, # To configure
   unnecessary_concatenation_linter(),
   unnecessary_lambda_linter(),
-  unnecessary_nested_if_linter(),
+  unnecessary_nesting_linter(),
   unreachable_code_linter(),
   vector_logic_linter(),
   whitespace_linter()

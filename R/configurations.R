@@ -185,10 +185,11 @@ get_echo <- function() {
 #' @export
 set_call_options <- function(..., .arg_list, confirm = TRUE) {
   base::stopifnot(
-    "Only one of `...` or `.arg_list` can be provided." = xor(...length() > 0L, !missing(.arg_list))
+    "Only one of `...` or `.arg_list` can be provided." = !(...length() > 0L && !missing(.arg_list))
   )
 
-  if (...length() > 0L) return(set_call_options(.arg_list = list(...), confirm = confirm))
+  # If no .arg_list is provided, use the ... arguments to call with .arg_list
+  if (missing(.arg_list)) return(set_call_options(.arg_list = list(...), confirm = confirm))
 
   base::stopifnot(
     ".arg_list must be a list" = is.list(.arg_list),
@@ -196,6 +197,13 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
     "All arguments must be named." =
       length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
   )
+
+  # Warn if unexpected arguments are provided
+  if (!all(names(.arg_list) %in% c("log_call", "full_stack"))) {
+    base::warning(
+      "Unexpected arguments provided: ", toString(setdiff(names(.arg_list), c("log_call", "full_stack")))
+    )
+  }
 
   old <- get_call_options()
 
