@@ -110,7 +110,7 @@ test_that("test call option configuration", {
   )
 
   # error when .arg_list is not named
-  bad_list <- list(TRUE, named = 1)
+  bad_list <- list(TRUE, named = 1L)
   expect_error(
     set_call_options(.arg_list = bad_list),
     "All arguments must be named"

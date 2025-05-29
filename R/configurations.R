@@ -199,7 +199,7 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
   )
 
   # Warn if unexpected arguments are provided
-  if (any(!names(.arg_list) %in% c("log_call", "full_stack"))) {
+  if (!all(names(.arg_list) %in% c("log_call", "full_stack"))) {
     base::warning(
       "Unexpected arguments provided: ", toString(setdiff(names(.arg_list), c("log_call", "full_stack")))
     )
