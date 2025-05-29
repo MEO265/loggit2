@@ -87,7 +87,9 @@ test_that("loggit handles call options correctly", {
 cleanup()
 
 test_that("loggit handles call options correctly (with ...)", {
-  # With additional ... arguments
+  old_options <- get_call_options()
+  on.exit(set_call_options(.arg_list = old_options, confirm = FALSE), add = TRUE)
+  set_call_options(log_call = TRUE, full_stack = FALSE, confirm = FALSE)
   loggit(log_lvl = "INFO", log_msg = "test call options with dots", echo = FALSE, custom_field = "value")
   log_df <- read_logs()
   expect_true("custom_field" %in% names(log_df))
