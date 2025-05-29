@@ -226,8 +226,11 @@ get_file_loc <- function(x) {
 #'
 #' @keywords internal
 get_package_name <- function(x) {
-  name <- environmentName(environment(x))
+  if (is.primitive(x)) {
+    return(" [in base]")
+  }
 
+  name <- environmentName(environment(x))
   if (nchar(name) == 0L || name %in% c("R_EmptyEnv", "R_GlobalEnv")) {
     return("")
   } else {
