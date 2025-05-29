@@ -56,3 +56,21 @@ test_that("Log file is returned via read_logs()", {
   expect_true(is.data.frame(log_df))
 })
 cleanup()
+
+test_that("loggit warns on use of reserved fields", {
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", timestamp = "2023-01-01", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", log_call = "some call", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+
+  expect_warning(
+    loggit(log_lvl = "INFO", log_msg = "foo", timestamp = "2023-01-01", log_call = "some call", echo = FALSE),
+    regexp = "^The 'timestamp' and 'log_call' fields are reserved and will be ignored.$"
+  )
+})
+cleanup()
