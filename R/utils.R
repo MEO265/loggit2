@@ -166,8 +166,8 @@ convert_lvl_input <- function(level) {
 #'
 #' @return Deparsed call as string.
 #'
-#' @details The full call stack can only be determined if the call is in the current context.
-#' The default cutoff is 4 because the only known case is an primitive error in `with_loggit()` which adds 4 calls to the stack.
+#' @details The full call stack can only be determined if the call is in the current context. The default cutoff is 4
+#' because the only known case is an primitive error in `with_loggit()` which adds 4 calls to the stack.
 #'
 #' @keywords internal
 call_2_string <- function(call, full_stack = FALSE, default_cutoff = 4L) {
