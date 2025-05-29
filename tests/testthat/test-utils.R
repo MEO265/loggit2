@@ -202,3 +202,10 @@ test_that("get_package_name handles various environments", {
   environment(dummy) <- e
   expect_equal(get_package_name(dummy), "")
 })
+
+test_that("call_2_string (full_stack=TRUE) handels call not in current context", {
+  ext_call <- quote(some_function(1, 2))
+  expect_true(
+    endsWith(call_2_string(ext_call, full_stack = TRUE), "Original Call:  some_function(1, 2)")
+  )
+})
