@@ -14,6 +14,9 @@ debuginfo(..., call. = TRUE, .loggit = NA, echo = get_echo())
 \item{call.}{logical, indicating if the call should become part of the
     warning message.}
 
+\item{.loggit}{Should the condition message be added to the log?
+If \code{NA} the log level set by \code{set_log_level()} is used to determine if the condition should be logged.}
+
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 }
 \value{

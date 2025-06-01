@@ -4,6 +4,7 @@
 #' but is silent, includes logging of the exception message via `loggit()` and does not allow conditions as input.
 #'
 #' @inherit base::warning params
+#' @inherit message params
 #' @inheritParams loggit
 #'
 #' @return No return value.
