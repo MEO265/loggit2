@@ -38,6 +38,7 @@ but it includes logging of the exception message via \code{loggit()}.
 }
 \seealso{
 Other handlers: 
+\code{\link{debuginfo}()},
 \code{\link{stop}()},
 \code{\link{stopifnot}()},
 \code{\link{warning}()}

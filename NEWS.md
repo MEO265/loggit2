@@ -2,6 +2,8 @@
 
 ## New Features
 * `set_call_options()` offers new option to log condition calls or even the full call stack. `get_call_options()` returns the current settings.
+*  All condition log handlers e.g. `warning()` and `with_loggit()` now support call logging.
+* Added `debuginfo()` as an additional log handler for debugging purposes.
 
 ## Minor Changes
 * `loggit()` now checks the `...` arguments for use of reserved names, currently `log_call` and `timestamp`.

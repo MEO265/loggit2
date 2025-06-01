@@ -209,3 +209,14 @@ test_that("call_2_string (full_stack=TRUE) handels call not in current context",
     endsWith(call_2_string(ext_call, full_stack = TRUE), "Original Call:  some_function(1L, 2L)")
   )
 })
+
+test_that("test call_2_string (cut off) via condition handler", {
+  old <- set_call_options(log_call = TRUE, full_stack = TRUE, confirm = FALSE)
+  # Function is needed to create a predictable call stack and a call to cut off
+  f <- function() warning("This is a warning", echo = FALSE)
+  expect_warning(f(), "This is a warning")
+  logdata <- read_logs()
+  expect_true(grepl(logdata[["log_call"]], pattern = "f()"))
+  set_call_options(.arg_list = old, confirm = FALSE)
+})
+cleanup()
