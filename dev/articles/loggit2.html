@@ -120,25 +120,25 @@ using <code><a href="https://github.com/MEO265/loggit2" class="external-link">li
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is a message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}</span></span>
 <span><span class="co">#&gt; This is a message</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is a warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is a warning</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error: This is another error</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is an error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
 <span><span class="co">#&gt; Error: This is an error</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error: This is another condition</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"This is another condition"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}</span></span>
 <span><span class="co">#&gt; Error: This is another condition</span></span></code></pre></div>
 <p>Besides the <code>echo</code> parameter, the functions have an
 additional parameter <code>.loggit</code>, which allows to deactivate
@@ -153,11 +153,11 @@ the logging such that the function behaves exactly like the base
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                       log_msg</span></span>
-<span><span class="co">#&gt; 1 2025-06-01T16:45:56+0000    INFO           This is a message\n</span></span>
-<span><span class="co">#&gt; 2 2025-06-01T16:45:56+0000    WARN             This is a warning</span></span>
-<span><span class="co">#&gt; 3 2025-06-01T16:45:56+0000   ERROR              This is an error</span></span>
-<span><span class="co">#&gt; 4 2025-06-01T16:45:56+0000   ERROR     This is another condition</span></span>
-<span><span class="co">#&gt; 5 2025-06-01T16:45:56+0000    WARN This is a alternative warning</span></span></code></pre>
+<span><span class="co">#&gt; 1 2025-06-01T18:17:25+0000    INFO           This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2025-06-01T18:17:25+0000    WARN             This is a warning</span></span>
+<span><span class="co">#&gt; 3 2025-06-01T18:17:25+0000   ERROR              This is an error</span></span>
+<span><span class="co">#&gt; 4 2025-06-01T18:17:25+0000   ERROR     This is another condition</span></span>
+<span><span class="co">#&gt; 5 2025-06-01T18:17:25+0000    WARN This is a alternative warning</span></span></code></pre>
 </details>
 </div>
 <div class="section level3">
@@ -170,7 +170,7 @@ directly during the call and creating arbitrary fields in the log.</p>
 log.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"INFO"</span>, <span class="st">"This is a message"</span>, ID <span class="op">=</span> <span class="fl">1L</span>, boole <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"WARN"</span>, <span class="st">"This is a alternative warning"</span>, echo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -184,14 +184,14 @@ log.</p>
 <span><span class="co">#&gt; If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'.</span></span>
 <span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/loggit.html">loggit</a></span><span class="op">(</span><span class="st">"CRITICAL"</span>, <span class="st">"Critical error 2"</span>, custom_log_lvl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:56+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}</span></span></code></pre></div>
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp  log_lvl                       log_msg   ID boole     Why</span></span>
-<span><span class="co">#&gt; 1 2025-06-01T16:45:56+0000     INFO             This is a message    1  TRUE    &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 2025-06-01T16:45:56+0000     WARN This is a alternative warning &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3 2025-06-01T16:45:56+0000    DEBUG             This is a message &lt;NA&gt;  &lt;NA&gt; Because</span></span>
-<span><span class="co">#&gt; 4 2025-06-01T16:45:56+0000 CRITICAL              Critical error 2 &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span></code></pre>
+<span><span class="co">#&gt; 1 2025-06-01T18:17:25+0000     INFO             This is a message    1  TRUE    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2 2025-06-01T18:17:25+0000     WARN This is a alternative warning &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 2025-06-01T18:17:25+0000    DEBUG             This is a message &lt;NA&gt;  &lt;NA&gt; Because</span></span>
+<span><span class="co">#&gt; 4 2025-06-01T18:17:25+0000 CRITICAL              Critical error 2 &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;</span></span></code></pre>
 </details>
 </div>
 <div class="section level3">
@@ -218,7 +218,7 @@ used as usual.&lt;/p&gt;"><sup>3</sup></a> or needing to modify the code.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/with_loggit.html">with_loggit</a></span><span class="op">(</span><span class="fu">fun_b</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-06-01T16:45:57+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2025-06-01T18:17:25+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}</span></span>
 <span><span class="co">#&gt; Warning in fun_b(): This is a second warning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 10</span></span></code></pre></div>
@@ -236,11 +236,11 @@ used as usual.&lt;/p&gt;"><sup>3</sup></a> or needing to modify the code.</p>
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
-<span><span class="co">#&gt; 1 2025-06-01T16:45:57+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 2 2025-06-01T16:45:57+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 3 2025-06-01T16:45:57+0000    WARN        This is a warning</span></span>
-<span><span class="co">#&gt; 4 2025-06-01T16:45:57+0000    INFO      This is a message\n</span></span>
-<span><span class="co">#&gt; 5 2025-06-01T16:45:57+0000   ERROR         This is not TRUE</span></span></code></pre>
+<span><span class="co">#&gt; 1 2025-06-01T18:17:25+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2025-06-01T18:17:25+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2025-06-01T18:17:25+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2025-06-01T18:17:25+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2025-06-01T18:17:25+0000   ERROR         This is not TRUE</span></span></code></pre>
 </details>
 </div>
 </div>
@@ -257,11 +257,11 @@ using <code><a href="../reference/read_logs.html">read_logs()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/read_logs.html">read_logs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  timestamp log_lvl                  log_msg</span></span>
-<span><span class="co">#&gt; 1 2025-06-01T16:45:57+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 2 2025-06-01T16:45:57+0000    WARN This is a second warning</span></span>
-<span><span class="co">#&gt; 3 2025-06-01T16:45:57+0000    WARN        This is a warning</span></span>
-<span><span class="co">#&gt; 4 2025-06-01T16:45:57+0000    INFO      This is a message\n</span></span>
-<span><span class="co">#&gt; 5 2025-06-01T16:45:57+0000   ERROR         This is not TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 2025-06-01T18:17:25+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 2 2025-06-01T18:17:25+0000    WARN This is a second warning</span></span>
+<span><span class="co">#&gt; 3 2025-06-01T18:17:25+0000    WARN        This is a warning</span></span>
+<span><span class="co">#&gt; 4 2025-06-01T18:17:25+0000    INFO      This is a message\n</span></span>
+<span><span class="co">#&gt; 5 2025-06-01T18:17:25+0000   ERROR         This is not TRUE</span></span></code></pre></div>
 <p>Alternatively, the log can also be saved as a CSV file using
 <code><a href="../reference/convert_to_csv.html">convert_to_csv()</a></code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -278,8 +278,8 @@ Shiny app hosted on a server), the log can be restricted to the last
 <details><summary>
 Click here to see the generated log
 </summary><pre><code><span><span class="co">#&gt;                  timestamp log_lvl             log_msg</span></span>
-<span><span class="co">#&gt; 1 2025-06-01T16:45:57+0000    INFO This is a message\n</span></span>
-<span><span class="co">#&gt; 2 2025-06-01T16:45:57+0000   ERROR    This is not TRUE</span></span></code></pre>
+<span><span class="co">#&gt; 1 2025-06-01T18:17:25+0000    INFO This is a message\n</span></span>
+<span><span class="co">#&gt; 2 2025-06-01T18:17:25+0000   ERROR    This is not TRUE</span></span></code></pre>
 </details><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_logs.html">rotate_logs</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span></span></code></pre></div>
 <details><summary>
