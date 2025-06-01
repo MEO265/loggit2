@@ -210,6 +210,13 @@ test_that("call_2_string (full_stack=TRUE) handels call not in current context",
   )
 })
 
+test_that("call_2_string (full_stack=FALSE) handels call not in current context", {
+  ext_call <- quote(some_function(1L, 2L))
+  expect_true(
+    endsWith(call_2_string(ext_call, full_stack = FALSE), "some_function(1L, 2L)")
+  )
+})
+
 test_that("test call_2_string (cut off) via condition handler", {
   old <- set_call_options(log_call = TRUE, full_stack = TRUE, confirm = FALSE)
   # Function is needed to create a predictable call stack and a call to cut off
