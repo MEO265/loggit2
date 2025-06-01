@@ -20,7 +20,7 @@ Deparsed call as string.
 Converts a call object to a string and optionally determines the full call stack.
 }
 \details{
-The full call stack can only be determined if the call is in the current context.
-The default cutoff is 4 because the only known case is an primitive error in \code{with_loggit()} which adds 4 calls to the stack.
+The full call stack can only be determined if the call is in the current context. The default cutoff is 4
+because the only known case is an primitive error in \code{with_loggit()} which adds 4 calls to the stack.
 }
 \keyword{internal}
