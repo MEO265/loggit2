@@ -212,7 +212,7 @@ test_that("test call option configuration (effect on call handlers) II", {
   try(stop("Test message with call", echo = FALSE), silent = TRUE)
   try(stopifnot(FALSE, "Test message with call", echo = FALSE), silent = TRUE)
   log_tmp <- read_logs()
-  expect_true(!"log_call" %in% names(log_tmp))
+  expect_false("log_call" %in% names(log_tmp))
 })
 cleanup()
 
@@ -240,7 +240,9 @@ test_that("test call option configuration (effect on call handlers) III", {
   suppressMessages(g())
   log_tmp <- read_logs()
   # Message uses an alternative call approach
-  expect_true(grepl(log_tmp[["log_call"]], pattern = "\ng\\(\\).*\nmessage\\(\"Test message with call\", echo = FALSE\\)"))
+  expect_true(grepl(
+    log_tmp[["log_call"]], pattern = "\ng\\(\\).*\nmessage\\(\"Test message with call\", echo = FALSE\\)"
+  ))
   cleanup()
   # Test warning
   f <- function() warning("Test message with call", echo = FALSE)
