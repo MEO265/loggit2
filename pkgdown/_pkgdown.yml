@@ -21,6 +21,9 @@ reference:
     - "warning"
     - "stop"
     - "stopifnot"
+  - title: Non-base log handlers
+  - contents:
+    - "debuginfo"
   - title: Log functions
   - contents:
     - "loggit"
