@@ -30,4 +30,3 @@ debuginfo <- function(..., call. = TRUE, .loggit = NA, echo = get_echo()) {
     loggit_internal(log_lvl = "DEBUG", log_msg = .makeMessage(..., domain = NULL), log_call = call, echo = echo)
   }
 }
-
