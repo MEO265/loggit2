@@ -1,4 +1,4 @@
-# loggit2 (development version)
+# loggit2 2.4.0
 
 ## New Features
 * `set_call_options()` offers new option to log condition calls or even the full call stack. `get_call_options()` returns the current settings.
