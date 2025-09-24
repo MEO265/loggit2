@@ -8,9 +8,12 @@ linters: list(
   brace_linter(allow_single_line = TRUE),
   class_equals_linter(),
   commas_linter(allow_trailing = TRUE),
-  commas_linter(),
+  commented_code_linter(),
+  comparison_negation_linter(),
   condition_message_linter(),
   conjunct_test_linter(),
+  # consecutive_assertion_linter(), # stopifnot vs. base::stopifnot
+  consecutive_mutate_linter(),
   duplicate_argument_linter(),
   empty_assignment_linter(),
   equals_na_linter(),
@@ -28,6 +31,7 @@ linters: list(
   function_left_parentheses_linter(),
   function_return_linter(),
   if_not_else_linter(),
+  if_switch_linter(),
   ifelse_censor_linter(),
   # implicit_assignment_linter(allow_scoped = TRUE), # Is bugged
   implicit_integer_linter(allow_colon = TRUE),
@@ -46,9 +50,12 @@ linters: list(
   missing_argument_linter(),
   nested_ifelse_linter(),
   # nonportable_path_linter(), # To discuss
+  nrow_subset_linter(),
   numeric_leading_zero_linter(),
+  nzchar_linter(),
   object_length_linter(),
   # object_name_linter() # Because of base R names
+  # object_overwrite_linter() # Because of base R names
   outer_negation_linter(),
   package_hooks_linter(),
   paren_body_linter(),
@@ -57,8 +64,11 @@ linters: list(
   redundant_equals_linter(),
   redundant_ifelse_linter(),
   regex_subset_linter(),
+  rep_len_linter(),
   repeat_linter(),
+  return_linter(return_style = "explicit", allow_implicit_else = FALSE),
   routine_registration_linter(),
+  sample_int_linter(),
   scalar_in_linter(),
   # semicolon_linter(), # Wanted in tests
   seq_linter(),
@@ -66,19 +76,23 @@ linters: list(
   spaces_inside_linter(),
   spaces_left_parentheses_linter(),
   sprintf_linter(),
+  stopifnot_all_linter(),
   string_boundary_linter(),
   strings_as_factors_linter(),
   system_file_linter(),
   T_and_F_symbol_linter(),
+  terminal_close_linter(),
   todo_comment_linter(),
   trailing_blank_lines_linter(),
   trailing_whitespace_linter(),
   # undesirable_function_linter, # To configure
+  undesirable_operator_linter(),
   unnecessary_concatenation_linter(),
   unnecessary_lambda_linter(),
   unnecessary_nesting_linter(),
   unreachable_code_linter(),
   vector_logic_linter(),
+  which_grepl_linter(),
   whitespace_linter()
   )
 encoding: "UTF-8"
