@@ -239,7 +239,7 @@ get_package_name <- function(x) {
   }
 
   name <- environmentName(environment(x))
-  if (nchar(name) == 0L || name %in% c("R_EmptyEnv", "R_GlobalEnv")) {
+  if (nzchar(name, keepNA = TRUE) || name %in% c("R_EmptyEnv", "R_GlobalEnv")) {
     return("")
   } else {
     return(paste0(" [in ", name, "]"))

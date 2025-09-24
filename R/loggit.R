@@ -107,7 +107,7 @@ loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo()
 loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
   dots <- list(...)
   # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-  if (is.null(names(dots)) || any(nchar(names(dots)) == 0L) || anyNA(names(dots))) {
+  if (is.null(names(dots)) || any(nzchar(names(dots), keepNA = TRUE)) || anyNA(names(dots))) {
     base::stop("All custom log fields should be named.")
   }
   if (any(c("timestamp", "log_call") %in% names(dots))) {

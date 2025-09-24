@@ -195,7 +195,7 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
     ".arg_list must be a list" = is.list(.arg_list),
     # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
     "All arguments must be named." =
-      length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
+      length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(nzchar(.arg_list, keepNA = TRUE))
   )
 
   # Warn if unexpected arguments are provided

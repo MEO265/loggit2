@@ -10,7 +10,7 @@
 setup_logfile <- function() {
   logfile <- Sys.getenv(x = "FILE_LOGGIT2", unset = "")
   call_arg <- list(confirm = FALSE, create = FALSE)
-  if (nchar(logfile) != 0L) call_arg <- c(logfile = logfile, call_arg)
+  if (nzchar(logfile, keepNA = TRUE)) call_arg <- c(logfile = logfile, call_arg)
   do.call(set_logfile, call_arg)
 }
 
@@ -26,7 +26,7 @@ setup_logfile <- function() {
 setup_timestamp_format <- function() {
   ts_format <- Sys.getenv(x = "TIMESTAMP_LOGGIT2", unset = "")
   call_arg <- list(confirm = FALSE)
-  if (nchar(ts_format) != 0L) call_arg <- c(ts_format = ts_format, call_arg)
+  if (nzchar(ts_format, keepNA = TRUE)) call_arg <- c(ts_format = ts_format, call_arg)
   do.call(set_timestamp_format, call_arg)
 }
 
@@ -44,7 +44,7 @@ setup_timestamp_format <- function() {
 setup_echo <- function() {
   echo <- Sys.getenv(x = "ECHO_LOGGIT2", unset = "")
   call_arg <- list(confirm = FALSE)
-  if (nchar(echo) != 0L) {
+  if (nzchar(echo, keepNA = TRUE)) {
     echo <- as.logical(echo)
     if (!is.na(echo)) call_arg <- c(echo = echo, call_arg)
   }
@@ -65,7 +65,7 @@ setup_echo <- function() {
 setup_log_level <- function() {
   log_level <- Sys.getenv(x = "LEVEL_LOGGIT2", unset = "")
   call_arg <- list(confirm = FALSE)
-  if (nchar(log_level) != 0L) {
+  if (nzchar(log_level, keepNA = TRUE)) {
     log_level <- tryCatch({
       convert_lvl_input(log_level)
     }, error = function(e) {
