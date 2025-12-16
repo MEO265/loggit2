@@ -46,12 +46,12 @@ configuration.
 
 ``` r
 old_log <- loggit2::set_logfile(logfile = "logfile.log")
-#> Log file set to /tmp/Rtmp5eArLr/logfile.log
+#> Log file set to /tmp/RtmpYkfop9/logfile.log
 loggit2::loggit(
   log_lvl = "DEBUG",
   log_msg = "This message will be logged to `logfile.log`."
 )
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `logfile.log`."}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `logfile.log`."}
 
 
 loggit2::loggit(
@@ -59,17 +59,17 @@ loggit2::loggit(
   log_msg = "This message will be logged to `otherlogfile.log`.",
   logfile = "otherlogfile.log"
 )
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `otherlogfile.log`."}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged to `otherlogfile.log`."}
 
 
 loggit2::with_loggit(logfile = "logfile2.log", {
   base::message("This message will be logged to `logfile2.log`.")
 })
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged to `logfile2.log`.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged to `logfile2.log`.\n"}
 #> This message will be logged to `logfile2.log`.
 
 loggit2::set_logfile(old_log)
-#> Log file set to /tmp/Rtmp5eArLr/loggit.log
+#> Log file set to /tmp/RtmpYkfop9/loggit.log
 ```
 
 ### Log level
@@ -89,7 +89,7 @@ setting a log level for the code block being executed.
 old_log_lvl <- loggit2::set_log_level("INFO")
 #> Log level set to 3 (INFO)
 loggit2::message("This message will be logged, since the log level is INFO.")
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since the log level is INFO.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since the log level is INFO.\n"}
 #> This message will be logged, since the log level is INFO.
 loggit2::loggit(
   log_lvl = "DEBUG",
@@ -99,7 +99,7 @@ loggit2::loggit(
   log_lvl = "DEBUG", "This message will be logged because the log level is ignored.",
   ignore_log_level = TRUE
 )
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged because the log level is ignored."}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "DEBUG", "log_msg": "This message will be logged because the log level is ignored."}
 loggit2::warning(
   "This warning message will not be logged, since .loggit = FALSE.",
   .loggit = FALSE
@@ -111,16 +111,16 @@ loggit2::set_log_level("ERROR")
 loggit2::warning("This warning will not be logged, since the log level is set to ERROR.")
 #> Warning: This warning will not be logged, since the log level is set to ERROR.
 loggit2::message("This message will be logged, since .loggit = TRUE.", .loggit = TRUE)
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since .loggit = TRUE.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged, since .loggit = TRUE.\n"}
 #> This message will be logged, since .loggit = TRUE.
 loggit2::stop("This error message will be logged because the log level is set to ERROR.")
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "ERROR", "log_msg": "This error message will be logged because the log level is set to ERROR."}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "ERROR", "log_msg": "This error message will be logged because the log level is set to ERROR."}
 #> Error: This error message will be logged because the log level is set to ERROR.
 
 loggit2::with_loggit(log_level = "DEBUG", {
   base::message("This message will be logged because the log level is set to DEBUG.")
 })
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged because the log level is set to DEBUG.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged because the log level is set to DEBUG.\n"}
 #> This message will be logged because the log level is set to DEBUG.
 
 loggit2::set_log_level(old_log_lvl)
@@ -141,12 +141,12 @@ old_echo <- loggit2::set_echo(FALSE)
 loggit2::message("This message will not be logged, but it will be output to the console.")
 #> This message will not be logged, but it will be output to the console.
 loggit2::message("This message will be logged and output to the console.", echo = TRUE)
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}
 #> This message will be logged and output to the console.
 
 loggit2::set_echo(TRUE, confirm = FALSE)
 loggit2::message("This message will be logged and output to the console.")
-#> {"timestamp": "2025-12-16T17:57:31+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}
+#> {"timestamp": "2025-12-16T18:13:15+0000", "log_lvl": "INFO", "log_msg": "This message will be logged and output to the console.\n"}
 #> This message will be logged and output to the console.
 loggit2::message("This message will be logged, but it will not be echoed.", echo = FALSE)
 #> This message will be logged, but it will not be echoed.
@@ -169,14 +169,14 @@ variable `TIMESTAMP_LOGGIT2` or the function
 ``` r
 old_ts <- loggit2::set_timestamp_format("%H:%M:%S")
 #> Timestamp format set to %H:%M:%S.
-#> Current time in this format: 17:57:31
+#> Current time in this format: 18:13:15
 loggit2::message("This message will be logged with a timestamp in the format HH:MM:SS.")
-#> {"timestamp": "17:57:31", "log_lvl": "INFO", "log_msg": "This message will be logged with a timestamp in the format HH:MM:SS.\n"}
+#> {"timestamp": "18:13:15", "log_lvl": "INFO", "log_msg": "This message will be logged with a timestamp in the format HH:MM:SS.\n"}
 #> This message will be logged with a timestamp in the format HH:MM:SS.
 
 loggit2::set_timestamp_format(old_ts)
 #> Timestamp format set to %Y-%m-%dT%H:%M:%S%z.
-#> Current time in this format: 2025-12-16T17:57:31+0000
+#> Current time in this format: 2025-12-16T18:13:15+0000
 ```
 
 ## Temporary Configuration
