@@ -43,19 +43,19 @@ shows the same call as its base equivalent.
 base::message("This is another message")
 #> This is another message
 loggit2::message("This is another message")
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}
 #> This is another message
 
 base::warning("This is another warning")
 #> Warning: This is another warning
 loggit2::warning("This is another warning")
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}
 #> Warning: This is another warning
 
 base::stop("This is another error")
 #> Error: This is another error
 loggit2::stop("This is another error")
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}
 #> Error: This is another error
 ```
 
@@ -76,7 +76,7 @@ In `loggit2`, this has been added:
 base::stopifnot("TRUE is not true" = TRUE, "This is an error" = 3L < 1L, "This is another error" = FALSE)
 #> Error: This is an error
 loggit2::stopifnot("TRUE is not true" = TRUE, "This is an error" = 3L < 1L, "This is another error" = FALSE)
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error: This is an error
 ```
 
@@ -154,10 +154,10 @@ f <- function() {
 }
 
 f()
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}
 #> This is another message
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}
 #> Warning in f(): This is another warning
-#> {"timestamp": "2025-11-24T02:49:04+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}
+#> {"timestamp": "2025-12-16T17:57:28+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}
 #> Error in f(): This is another error
 ```

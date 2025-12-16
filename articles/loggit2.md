@@ -45,25 +45,25 @@ prefixing `loggit2::` at the desired locations.
 base::message("This is another message")
 #> This is another message
 loggit2::message("This is a message")
-#> {"timestamp": "2025-11-24T02:49:09+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}
 #> This is a message
 
 base::warning("This is another warning")
 #> Warning: This is another warning
 loggit2::warning("This is a warning")
-#> {"timestamp": "2025-11-24T02:49:09+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning: This is a warning
 
 base::stop("This is another error")
 #> Error: This is another error
 loggit2::stop("This is an error")
-#> {"timestamp": "2025-11-24T02:49:09+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
 #> Error: This is an error
 
 base::stopifnot("This is another condition" = FALSE)
 #> Error: This is another condition
 loggit2::stopifnot("This is another condition" = FALSE)
-#> {"timestamp": "2025-11-24T02:49:09+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}
 #> Error: This is another condition
 ```
 
@@ -82,11 +82,11 @@ loggit2::warning("This is not part of the log", .loggit = FALSE)
 Click here to see the generated log
 
     #>                  timestamp log_lvl                       log_msg
-    #> 1 2025-11-24T02:49:09+0000    INFO           This is a message\n
-    #> 2 2025-11-24T02:49:09+0000    WARN             This is a warning
-    #> 3 2025-11-24T02:49:09+0000   ERROR              This is an error
-    #> 4 2025-11-24T02:49:09+0000   ERROR     This is another condition
-    #> 5 2025-11-24T02:49:09+0000    WARN This is a alternative warning
+    #> 1 2025-12-16T17:57:33+0000    INFO           This is a message\n
+    #> 2 2025-12-16T17:57:33+0000    WARN             This is a warning
+    #> 3 2025-12-16T17:57:33+0000   ERROR              This is an error
+    #> 4 2025-12-16T17:57:33+0000   ERROR     This is another condition
+    #> 5 2025-12-16T17:57:33+0000    WARN This is a alternative warning
 
 ### Explicit Log Function
 
@@ -100,7 +100,7 @@ log.
 
 ``` r
 loggit2::loggit("INFO", "This is a message", ID = 1L, boole = TRUE)
-#> {"timestamp": "2025-11-24T02:49:10+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}
 
 loggit2::loggit("WARN", "This is a alternative warning", echo = FALSE)
 
@@ -117,16 +117,16 @@ loggit2::loggit("CRITICAL", "Critical error")
 #> If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'.
 
 loggit2::loggit("CRITICAL", "Critical error 2", custom_log_lvl = TRUE)
-#> {"timestamp": "2025-11-24T02:49:10+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}
 ```
 
 Click here to see the generated log
 
     #>                  timestamp  log_lvl                       log_msg   ID boole     Why
-    #> 1 2025-11-24T02:49:10+0000     INFO             This is a message    1  TRUE    <NA>
-    #> 2 2025-11-24T02:49:10+0000     WARN This is a alternative warning <NA>  <NA>    <NA>
-    #> 3 2025-11-24T02:49:10+0000    DEBUG             This is a message <NA>  <NA> Because
-    #> 4 2025-11-24T02:49:10+0000 CRITICAL              Critical error 2 <NA>  <NA>    <NA>
+    #> 1 2025-12-16T17:57:33+0000     INFO             This is a message    1  TRUE    <NA>
+    #> 2 2025-12-16T17:57:33+0000     WARN This is a alternative warning <NA>  <NA>    <NA>
+    #> 3 2025-12-16T17:57:33+0000    DEBUG             This is a message <NA>  <NA> Because
+    #> 4 2025-12-16T17:57:33+0000 CRITICAL              Critical error 2 <NA>  <NA>    <NA>
 
 ### Log Expressions
 
@@ -153,7 +153,7 @@ fun_b <- function(x) {
 
 ``` r
 x <- loggit2::with_loggit(fun_b())
-#> {"timestamp": "2025-11-24T02:49:10+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}
+#> {"timestamp": "2025-12-16T17:57:33+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}
 #> Warning in fun_b(): This is a second warning
 print(x)
 #> [1] 10
@@ -178,11 +178,11 @@ section of code.
 Click here to see the generated log
 
     #>                  timestamp log_lvl                  log_msg
-    #> 1 2025-11-24T02:49:10+0000    WARN This is a second warning
-    #> 2 2025-11-24T02:49:10+0000    WARN This is a second warning
-    #> 3 2025-11-24T02:49:10+0000    WARN        This is a warning
-    #> 4 2025-11-24T02:49:10+0000    INFO      This is a message\n
-    #> 5 2025-11-24T02:49:10+0000   ERROR         This is not TRUE
+    #> 1 2025-12-16T17:57:33+0000    WARN This is a second warning
+    #> 2 2025-12-16T17:57:34+0000    WARN This is a second warning
+    #> 3 2025-12-16T17:57:34+0000    WARN        This is a warning
+    #> 4 2025-12-16T17:57:34+0000    INFO      This is a message\n
+    #> 5 2025-12-16T17:57:34+0000   ERROR         This is not TRUE
 
 ## Post-Processing
 
@@ -197,11 +197,11 @@ As seen above, the log can be queried as a `data.frame` using
 ``` r
 loggit2::read_logs()
 #>                  timestamp log_lvl                  log_msg
-#> 1 2025-11-24T02:49:10+0000    WARN This is a second warning
-#> 2 2025-11-24T02:49:10+0000    WARN This is a second warning
-#> 3 2025-11-24T02:49:10+0000    WARN        This is a warning
-#> 4 2025-11-24T02:49:10+0000    INFO      This is a message\n
-#> 5 2025-11-24T02:49:10+0000   ERROR         This is not TRUE
+#> 1 2025-12-16T17:57:33+0000    WARN This is a second warning
+#> 2 2025-12-16T17:57:34+0000    WARN This is a second warning
+#> 3 2025-12-16T17:57:34+0000    WARN        This is a warning
+#> 4 2025-12-16T17:57:34+0000    INFO      This is a message\n
+#> 5 2025-12-16T17:57:34+0000   ERROR         This is not TRUE
 ```
 
 Alternatively, the log can also be saved as a CSV file using
@@ -224,8 +224,8 @@ loggit2::rotate_logs(2L)
 Click here to see the generated log
 
     #>                  timestamp log_lvl             log_msg
-    #> 1 2025-11-24T02:49:10+0000    INFO This is a message\n
-    #> 2 2025-11-24T02:49:10+0000   ERROR    This is not TRUE
+    #> 1 2025-12-16T17:57:34+0000    INFO This is a message\n
+    #> 2 2025-12-16T17:57:34+0000   ERROR    This is not TRUE
 
 ``` r
 loggit2::rotate_logs(0L)

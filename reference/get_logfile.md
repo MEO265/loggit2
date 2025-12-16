@@ -18,5 +18,5 @@ The log file path.
 
 ``` r
 get_logfile()
-#> [1] "/tmp/RtmpOZ6Yxj/loggit.log"
+#> [1] "/tmp/RtmpbsRGwt/loggit.log"
 ```
