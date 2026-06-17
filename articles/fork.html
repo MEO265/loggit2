@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Why the Fork?">
 <meta name="description" content="What does `loggit2` offer that `loggit` doesn't? And why was a fork necessary?">
@@ -74,7 +74,7 @@
     
     
 <p>Ideally, I would have preferred to further develop
-<a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, as I consider the concept highly commendable and
+<code>{loggit}</code>, as I consider the concept highly commendable and
 worthy of recognition. Unfortunately, this was not possible because the
 maintainer was unresponsive to messages or pull requests at the time of
 the fork (the last release was over three years ago). Additionally,
@@ -87,10 +87,10 @@ most pressing points.</p>
 <div class="section level2">
 <h2 id="call-of-conditions">Call of conditions<a class="anchor" aria-label="anchor" href="#call-of-conditions"></a>
 </h2>
-<p>In <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, all “condition log handlers”
+<p>In <code>{loggit}</code>, all “condition log handlers”
 (<code>loggit::message()</code>, <code>loggit::warning()</code>,
 <code>loggit::stop()</code>) presented themselves as the call of the
-condition. This, combined with the fact that <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a> does
+condition. This, combined with the fact that <code>{loggit}</code> does
 not allow passing a condition to the “condition log handlers” (e.g., in
 <code><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch()</a></code>), made it significantly more difficult to trace
 the origin of a condition.</p>
@@ -110,41 +110,45 @@ as its base equivalent.</p>
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/warning.html">warning</a></span><span class="op">(</span><span class="st">"This is another warning"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning: This is another warning</span></span>
 <span></span>
 <span><span class="fu">base</span><span class="fu">::</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error: This is another error</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is another error</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="kw"><a href="../reference/stop.html">stop</a></span><span class="op">(</span><span class="st">"This is another error"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
-<span><span class="co">#&gt; Error: This is another error</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is another error</span></span></code></pre></div>
 <p>For further information and comparisons look <a href="#further-comparisons">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="missing-stopifnot">Missing <code>stopifnot()</code><a class="anchor" aria-label="anchor" href="#missing-stopifnot"></a>
 </h2>
-<p>In <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, there are no “condition log handlers”
+<p>In <code>{loggit}</code>, there are no “condition log handlers”
 (i.e., functions that work like their base equivalents but also write to
 the log) for <code><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">base::stopifnot()</a></code>. This makes the migration of
 existing code (without logs) unnecessarily complicated.</p>
 <p>In <code>loggit2</code>, this has been added:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"TRUE is not true"</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"This is an error"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">&lt;</span> <span class="fl">1L</span>, <span class="st">"This is another error"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error: This is an error</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is an error</span></span>
 <span><span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="st">"TRUE is not true"</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"This is an error"</span> <span class="op">=</span> <span class="fl">3L</span> <span class="op">&lt;</span> <span class="fl">1L</span>, <span class="st">"This is another error"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
-<span><span class="co">#&gt; Error: This is an error</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is an error</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="log-entries-containing">Log entries containing <code>:</code><a class="anchor" aria-label="anchor" href="#log-entries-containing"></a>
 </h2>
-<p>In <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, log entries containing <code>:</code> are
+<p>In <code>{loggit}</code>, log entries containing <code>:</code> are
 not correctly parsed by <code>loggit::read_logs()</code>. In the best
 case, the log messages are truncated after the <code>:</code>. See also
 <a href="https://github.com/ryapric/loggit/issues/26" class="external-link">here</a>. This bug
@@ -153,7 +157,7 @@ is fixed in <code>loggit2</code>.</p>
 <div class="section level2">
 <h2 id="clearing-the-log">Clearing the log<a class="anchor" aria-label="anchor" href="#clearing-the-log"></a>
 </h2>
-<p>In <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, clearing the log with
+<p>In <code>{loggit}</code>, clearing the log with
 <code>loggit::rotate_logs(0L)</code> results in the log being unreadable
 by <code>loggit::read_logs()</code>, even with new entries. See also <a href="https://github.com/ryapric/loggit/issues/30" class="external-link">here</a>. This bug is
 fixed in <code>loggit2</code>.</p>
@@ -166,7 +170,7 @@ the most pressing and can all be easily fixed.</p>
 <p>Apart from the aforementioned bugs and missing features, there is
 significant untapped potential in the control settings (e.g., global
 settings regarding log levels) that can be implemented without
-complicating <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>.</p>
+complicating <code>{loggit}</code>.</p>
 <p>All of these aspects will be addressed in <a href="https://github.com/MEO265/loggit2" class="external-link">loggit2</a>. I
 welcome any suggestions for new features, bug reports, or even a direct
 pull request on either topic.</p>
@@ -174,7 +178,7 @@ pull request on either topic.</p>
 <div class="section level2">
 <h2 id="further-comparisons">Further comparisons<a class="anchor" aria-label="anchor" href="#further-comparisons"></a>
 </h2>
-<p>In <a href="https://github.com/ryapric/loggit" class="external-link">loggit</a>, each condition handler shows itself as the
+<p>In <code>{loggit}</code>, each condition handler shows itself as the
 call of the condition.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
@@ -202,7 +206,8 @@ as its <code>{base}</code> equivalent.</p>
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
 <span><span class="co">#&gt; Warning in f(): This is another warning</span></span>
-<span><span class="co">#&gt; Error in f(): This is another error</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `f()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is another error</span></span>
 <span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">loggit2</span><span class="fu">::</span><span class="fu"><a href="../reference/message.html">message</a></span><span class="op">(</span><span class="st">"This is another message"</span><span class="op">)</span></span>
@@ -211,12 +216,13 @@ as its <code>{base}</code> equivalent.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "INFO", "log_msg": "This is another message\n"}</span></span>
 <span><span class="co">#&gt; This is another message</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "WARN", "log_msg": "This is another warning"}</span></span>
 <span><span class="co">#&gt; Warning in f(): This is another warning</span></span>
-<span><span class="co">#&gt; {"timestamp": "2025-12-16T18:13:12+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
-<span><span class="co">#&gt; Error in f(): This is another error</span></span></code></pre></div>
+<span><span class="co">#&gt; {"timestamp": "2026-06-17T14:07:01+0000", "log_lvl": "ERROR", "log_msg": "This is another error"}</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `f()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> This is another error</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

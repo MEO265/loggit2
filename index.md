@@ -35,6 +35,7 @@ using [`library("loggit2")`](https://github.com/MEO265/loggit2), or by
 prefixing `loggit2::` at the desired locations.
 
 ``` r
+
 base::message("This is another message")
 #> This is another message
 loggit2::message("This is a message")
@@ -70,6 +71,7 @@ more custom logs, e.g. to include custom fields or to prevent throwing
 actual conditions.
 
 ``` r
+
 loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
 #> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
 

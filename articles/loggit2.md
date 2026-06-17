@@ -10,7 +10,7 @@ you want to make it.
 No preparations are needed to use `loggit2`. However, it is recommended
 to explicitly set a log file using
 `loggit2::set_logfile("path/to/your/file")`, as `loggit2` defaults to
-creating a file in your temporary directory.[¹](#fn1)
+creating a file in your temporary directory.[^1]
 
 In order to use the full potential of `loggit2`, it is advisable to take
 a look at the [further
@@ -35,36 +35,41 @@ determines whether the log entries should also be echoed to `stdout`.
 [`warning()`](https://r-loggit.org/reference/warning.md),
 [`stop()`](https://r-loggit.org/reference/stop.md) and
 [`stopifnot()`](https://r-loggit.org/reference/stopifnot.md) functions
-that maintain identical functionality[²](#fn2), except the additional
+that maintain identical functionality[^2], except the additional
 logging. Thus, it is sufficient to import the `loggit2` namespace, for
 example by using
 [`library("loggit2")`](https://github.com/MEO265/loggit2), or by
 prefixing `loggit2::` at the desired locations.
 
 ``` r
+
 base::message("This is another message")
 #> This is another message
 loggit2::message("This is a message")
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "INFO", "log_msg": "This is a message\n"}
 #> This is a message
 
 base::warning("This is another warning")
 #> Warning: This is another warning
 loggit2::warning("This is a warning")
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "WARN", "log_msg": "This is a warning"}
 #> Warning: This is a warning
 
 base::stop("This is another error")
-#> Error: This is another error
+#> Error:
+#> ! This is another error
 loggit2::stop("This is an error")
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
-#> Error: This is an error
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "ERROR", "log_msg": "This is an error"}
+#> Error:
+#> ! This is an error
 
 base::stopifnot("This is another condition" = FALSE)
-#> Error: This is another condition
+#> Error:
+#> ! This is another condition
 loggit2::stopifnot("This is another condition" = FALSE)
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}
-#> Error: This is another condition
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "ERROR", "log_msg": "This is another condition"}
+#> Error:
+#> ! This is another condition
 ```
 
 Besides the `echo` parameter, the functions have an additional parameter
@@ -72,6 +77,7 @@ Besides the `echo` parameter, the functions have an additional parameter
 behaves exactly like the base `R` equivalents.
 
 ``` r
+
 loggit2::warning("This is a alternative warning", echo = FALSE)
 #> Warning: This is a alternative warning
 
@@ -82,11 +88,11 @@ loggit2::warning("This is not part of the log", .loggit = FALSE)
 Click here to see the generated log
 
     #>                  timestamp log_lvl                       log_msg
-    #> 1 2025-12-16T18:13:17+0000    INFO           This is a message\n
-    #> 2 2025-12-16T18:13:17+0000    WARN             This is a warning
-    #> 3 2025-12-16T18:13:17+0000   ERROR              This is an error
-    #> 4 2025-12-16T18:13:17+0000   ERROR     This is another condition
-    #> 5 2025-12-16T18:13:17+0000    WARN This is a alternative warning
+    #> 1 2026-06-17T14:07:07+0000    INFO           This is a message\n
+    #> 2 2026-06-17T14:07:07+0000    WARN             This is a warning
+    #> 3 2026-06-17T14:07:07+0000   ERROR              This is an error
+    #> 4 2026-06-17T14:07:07+0000   ERROR     This is another condition
+    #> 5 2026-06-17T14:07:07+0000    WARN This is a alternative warning
 
 ### Explicit Log Function
 
@@ -99,8 +105,9 @@ This function does not trigger any conditions; it only populates the
 log.
 
 ``` r
+
 loggit2::loggit("INFO", "This is a message", ID = 1L, boole = TRUE)
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "INFO", "log_msg": "This is a message", "ID": "1", "boole": "TRUE"}
 
 loggit2::loggit("WARN", "This is a alternative warning", echo = FALSE)
 
@@ -111,22 +118,24 @@ To allow log levels other than “DEBUG”, “INFO”, “WARN” or “ERROR�
 `custom_log_lvl` parameter must be set.
 
 ``` r
+
 loggit2::loggit("CRITICAL", "Critical error")
-#> Error in loggit2::loggit("CRITICAL", "Critical error"): Nonstandard log_lvl ('CRITICAL').
+#> Error in `loggit2::loggit()`:
+#> ! Nonstandard log_lvl ('CRITICAL').
 #> Should be one of DEBUG, INFO, WARN, or ERROR. Please check if you made a typo.
 #> If you insist on passing a custom level, please set 'custom_log_lvl = TRUE' in the call to 'loggit()'.
 
 loggit2::loggit("CRITICAL", "Critical error 2", custom_log_lvl = TRUE)
-#> {"timestamp": "2025-12-16T18:13:17+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "CRITICAL", "log_msg": "Critical error 2"}
 ```
 
 Click here to see the generated log
 
     #>                  timestamp  log_lvl                       log_msg   ID boole     Why
-    #> 1 2025-12-16T18:13:17+0000     INFO             This is a message    1  TRUE    <NA>
-    #> 2 2025-12-16T18:13:17+0000     WARN This is a alternative warning <NA>  <NA>    <NA>
-    #> 3 2025-12-16T18:13:17+0000    DEBUG             This is a message <NA>  <NA> Because
-    #> 4 2025-12-16T18:13:17+0000 CRITICAL              Critical error 2 <NA>  <NA>    <NA>
+    #> 1 2026-06-17T14:07:07+0000     INFO             This is a message    1  TRUE    <NA>
+    #> 2 2026-06-17T14:07:07+0000     WARN This is a alternative warning <NA>  <NA>    <NA>
+    #> 3 2026-06-17T14:07:07+0000    DEBUG             This is a message <NA>  <NA> Because
+    #> 4 2026-06-17T14:07:07+0000 CRITICAL              Critical error 2 <NA>  <NA>    <NA>
 
 ### Log Expressions
 
@@ -135,10 +144,11 @@ logged from code without wanting to or being able to modify it (e.g.,
 when dealing with functions from external packages). In this case,
 [`with_loggit()`](https://r-loggit.org/reference/with_loggit.md) comes
 into play. This function allows logging conditions from arbitrary
-expressions without restricting functionality[³](#fn3) or needing to
-modify the code.
+expressions without restricting functionality[^3] or needing to modify
+the code.
 
 ``` r
+
 fun_a <- function(x) {
   base::warning("This is a warning")
   base::message("This is a message")
@@ -152,14 +162,16 @@ fun_b <- function(x) {
 ```
 
 ``` r
+
 x <- loggit2::with_loggit(fun_b())
-#> {"timestamp": "2025-12-16T18:13:18+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}
+#> {"timestamp": "2026-06-17T14:07:07+0000", "log_lvl": "WARN", "log_msg": "This is a second warning"}
 #> Warning in fun_b(): This is a second warning
 print(x)
 #> [1] 10
 ```
 
 ``` r
+
 loggit2::with_loggit({
   x <- fun_b()
   fun_a()
@@ -167,7 +179,8 @@ loggit2::with_loggit({
 #> Warning in fun_b(): This is a second warning
 #> Warning in fun_a(): This is a warning
 #> This is a message
-#> Error in fun_a(): This is not TRUE
+#> Error in `fun_a()`:
+#> ! This is not TRUE
 ```
 
 Additionally,
@@ -178,11 +191,11 @@ section of code.
 Click here to see the generated log
 
     #>                  timestamp log_lvl                  log_msg
-    #> 1 2025-12-16T18:13:18+0000    WARN This is a second warning
-    #> 2 2025-12-16T18:13:18+0000    WARN This is a second warning
-    #> 3 2025-12-16T18:13:18+0000    WARN        This is a warning
-    #> 4 2025-12-16T18:13:18+0000    INFO      This is a message\n
-    #> 5 2025-12-16T18:13:18+0000   ERROR         This is not TRUE
+    #> 1 2026-06-17T14:07:07+0000    WARN This is a second warning
+    #> 2 2026-06-17T14:07:07+0000    WARN This is a second warning
+    #> 3 2026-06-17T14:07:07+0000    WARN        This is a warning
+    #> 4 2026-06-17T14:07:07+0000    INFO      This is a message\n
+    #> 5 2026-06-17T14:07:07+0000   ERROR         This is not TRUE
 
 ## Post-Processing
 
@@ -195,19 +208,21 @@ As seen above, the log can be queried as a `data.frame` using
 [`read_logs()`](https://r-loggit.org/reference/read_logs.md).
 
 ``` r
+
 loggit2::read_logs()
 #>                  timestamp log_lvl                  log_msg
-#> 1 2025-12-16T18:13:18+0000    WARN This is a second warning
-#> 2 2025-12-16T18:13:18+0000    WARN This is a second warning
-#> 3 2025-12-16T18:13:18+0000    WARN        This is a warning
-#> 4 2025-12-16T18:13:18+0000    INFO      This is a message\n
-#> 5 2025-12-16T18:13:18+0000   ERROR         This is not TRUE
+#> 1 2026-06-17T14:07:07+0000    WARN This is a second warning
+#> 2 2026-06-17T14:07:07+0000    WARN This is a second warning
+#> 3 2026-06-17T14:07:07+0000    WARN        This is a warning
+#> 4 2026-06-17T14:07:07+0000    INFO      This is a message\n
+#> 5 2026-06-17T14:07:07+0000   ERROR         This is not TRUE
 ```
 
 Alternatively, the log can also be saved as a CSV file using
 [`convert_to_csv()`](https://r-loggit.org/reference/convert_to_csv.md).
 
 ``` r
+
 loggit2::convert_to_csv("path/to/your/file.csv")
 ```
 
@@ -218,16 +233,18 @@ app hosted on a server), the log can be restricted to the last `n`
 entries using `rotate_logs(n)`.
 
 ``` r
+
 loggit2::rotate_logs(2L)
 ```
 
 Click here to see the generated log
 
     #>                  timestamp log_lvl             log_msg
-    #> 1 2025-12-16T18:13:18+0000    INFO This is a message\n
-    #> 2 2025-12-16T18:13:18+0000   ERROR    This is not TRUE
+    #> 1 2026-06-17T14:07:07+0000    INFO This is a message\n
+    #> 2 2026-06-17T14:07:07+0000   ERROR    This is not TRUE
 
 ``` r
+
 loggit2::rotate_logs(0L)
 ```
 
@@ -236,17 +253,15 @@ Click here to see the generated log
     #> [1] timestamp log_lvl   log_msg  
     #> <0 rows> (or 0-length row.names)
 
-------------------------------------------------------------------------
-
-1.  This is done to [CRAN Repository
+[^1]: This is done to [CRAN Repository
     Policy](https://cran.r-project.org/web/packages/policies.html):
 
     > Packages should not write in the user’s home filespace (including
     > clipboards), nor anywhere else on the file system apart from the R
     > session’s temporary directory `[...]`.
 
-2.  This means in particular that `tryCatch` and similar functions can
+[^2]: This means in particular that `tryCatch` and similar functions can
     be used as usual.
 
-3.  Just like with the direct use of the wrappers for condition
+[^3]: Just like with the direct use of the wrappers for condition
     handlers, `tryCatch` and similar mechanisms can be used as usual.
