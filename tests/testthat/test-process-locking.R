@@ -182,7 +182,7 @@ test_that("readers wait for the shared lock even during first initialization", {
           if (Sys.time() > deadline) base::stop("Holder timed out")
           Sys.sleep(0.01)
         }
-        loggit2:::write_log_bytes(path, charToRaw("{\"log_msg\": \"seed\"}\n"))
+        writeLines("{\"log_msg\": \"seed\"}", path, useBytes = TRUE)
       })
     }, path, ready, release)
     wait_for_log_marker(ready)
@@ -344,9 +344,7 @@ test_that("I/O failures include the path and never leave a lock held", {
 test_that("rotation copies large suffixes and preserves exact retention rules", {
   path <- tempfile()
   payload <- vapply(1:20, function(i) paste0(i, strrep("x", 10000L)), character(1L))
-  bytes <- ndjson_bytes(payload)
-  path <- normalize_logfile(path)
-  with_log_lock(path, write_log_bytes(path, bytes))
+  writeLines(payload, path, useBytes = TRUE)
   rotate_logs(12L, path)
   expect_identical(readLines(path), tail(payload, 12L))
   rotate_logs(100L, path)
@@ -423,9 +421,16 @@ test_that("a real write or flush error closes the stream and releases the lock",
   full_device <- "/dev/full" # nolint: absolute_path_linter. Use the OS full device to force an I/O error.
   skip_if_not(file.exists(full_device))
   path <- normalize_logfile(tempfile())
-  bytes <- charToRaw("entry\n")
-  expect_error(with_log_lock(path, write_log_bytes(full_device, bytes)),
-               "Log I/O.*(/dev/full)")
+  lock_scope <- with_log_lock
+  # Use an owned sidecar instead of trying to create one in /dev.
+  local_mocked_bindings(with_log_lock = function(logfile, code) {
+    lock_scope(path, withCallingHandlers(force(code), warning = function(w) {
+      # Ignore only the device-type warning to reach the failing write/close.
+      if (grepl("not a regular file", conditionMessage(w), fixed = TRUE)) invokeRestart("muffleWarning")
+    }))
+  })
+  expect_error(loggit("INFO", "entry", logfile = full_device, echo = FALSE),
+               "Log I/O.*(No space left|close/flush|problem writing)")
   with_log_workers(1L, function(cl, pids) {
     expect_true(parallel::clusterCall(cl, function(path) {
       loggit2::loggit("INFO", "after flush error", logfile = path, echo = FALSE)

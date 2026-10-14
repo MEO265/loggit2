@@ -34,7 +34,9 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   logfile <- with_log_io(normalize_logfile(logfile))
   if (create) {
     with_log_lock(logfile, {
-      if (!file.exists(logfile)) write_log_bytes(logfile, raw())
+      if (!file.exists(logfile)) {
+        base::stopifnot("Could not create log file" = file.create(logfile))
+      }
     })
   }
   .config[["logfile"]] <- logfile

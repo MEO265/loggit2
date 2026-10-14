@@ -52,9 +52,7 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' }
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
-  base::stopifnot(length(rotate_lines) == 1L, is.numeric(rotate_lines),
-                  !is.na(rotate_lines), rotate_lines >= 0L)
-  rotate_lines <- ceiling(as.double(rotate_lines))
+  base::stopifnot(rotate_lines >= 0L)
   logfile <- with_log_io(normalize_logfile(logfile))
   with_log_lock(logfile, rotate_logs_unlocked(rotate_lines, logfile))
   invisible(NULL)
@@ -64,7 +62,7 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
 rotate_logs_unlocked <- function(rotate_lines, logfile) {
   base::stopifnot("Log file does not exist" = file.exists(logfile))
   if (rotate_lines == 0L) {
-    write_log_bytes(logfile, raw(), append = FALSE)
+    cat(NULL, file = logfile)
     return(invisible(NULL))
   }
   log_df <- readLines(logfile, encoding = "UTF-8", warn = FALSE)
@@ -72,7 +70,7 @@ rotate_logs_unlocked <- function(rotate_lines, logfile) {
     return(invisible(NULL))
   }
   log_df <- log_df[seq.int(from = length(log_df) - rotate_lines + 1L, length.out = rotate_lines)]
-  write_log_bytes(logfile, ndjson_bytes(log_df), append = FALSE)
+  writeLines(log_df, logfile, useBytes = TRUE)
   invisible(NULL)
 }
 

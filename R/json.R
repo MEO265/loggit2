@@ -95,10 +95,15 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
-  bytes <- ndjson_bytes(logdata)
+  logdata <- enc2utf8(logdata)
   logfile <- with_log_io(normalize_logfile(logfile))
-  append <- !overwrite
-  with_log_lock(logfile, write_log_bytes(logfile, bytes, append))
+  with_log_lock(logfile, local({
+    con <- file(logfile)
+    on.exit(suppressWarnings(try(close(con), silent = TRUE)), add = TRUE)
+    open(con, if (overwrite) "wb" else "ab")
+    writeLines(logdata, con, useBytes = TRUE)
+    if (close(con) != 0L) base::stop("Log I/O failed for '", logfile, "': close/flush failed")
+  }))
   invisible(NULL)
 }
 

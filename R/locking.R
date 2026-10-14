@@ -38,33 +38,12 @@ with_log_lock <- function(logfile, code) {
       tryCatch(.Call(c_unlock_log, lock), error = function(e) NULL)
     }
   }, add = TRUE)
-  with_log_io({
+  with_log_io(withCallingHandlers({
     .Call(c_lock_log, lock)
     result <- force(code)
     completed <- TRUE
     result
-  })
-}
-
-# Appends prepare their complete UTF-8 buffer, including the final newline,
-# before locking. Rotation calls this only after reading the retained lines.
-ndjson_bytes <- function(lines) {
-  if (!length(lines)) return(raw())
-  charToRaw(enc2utf8(paste0(paste(lines, collapse = "\n"), "\n")))
-}
-
-write_log_bytes <- function(logfile, bytes, append = TRUE) {
-  con <- file(logfile)
-  closed <- FALSE
-  on.exit(if (!closed) suppressWarnings(try(close(con), silent = TRUE)), add = TRUE)
-  withCallingHandlers({
-    open(con, if (append) "ab" else "wb")
-    writeBin(bytes, con)
-    flush(con)
-    close(con)
-    closed <- TRUE
   }, warning = function(w) {
     base::stop("Log I/O failed for '", logfile, "': ", conditionMessage(w))
-  })
-  invisible(NULL)
+  }))
 }
