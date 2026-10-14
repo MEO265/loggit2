@@ -46,7 +46,7 @@ make_log_cluster <- function(n, worker_root) {
   old <- Sys.getenv(variables, unset = NA_character_)
   on.exit({
     Sys.unsetenv(variables[is.na(old)])
-    do.call(Sys.setenv, as.list(old[!is.na(old)]))
+    if (any(!is.na(old))) do.call(Sys.setenv, as.list(old[!is.na(old)]))
   }, add = TRUE)
   Sys.setenv(TMPDIR = worker_root, TMP = worker_root, TEMP = worker_root)
   parallel::makePSOCKcluster(n, timeout = 20L, setup_timeout = 20L,
