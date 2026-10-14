@@ -42,6 +42,8 @@ Cooperating processes on local filesystems serialize appends and
 replace or rotate that sidecar while any process may use the log. Its presence
 does not mean the log is locked. Entries are prepared as UTF-8 before locking;
 the file is opened, written, flushed and closed inside the lock.
+Symlinks with missing targets are rejected before locking; create the target
+through its own path before using such an alias.
 This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not
 provide transactional crash or power-loss safety: a crash can leave a partial
 entry or an incomplete rotation. Readers do not acquire the writer lock.

@@ -1,5 +1,6 @@
 # Resolve the parent even before the target exists. Resolving an existing target
-# also supports stable symlinks; replacing symlinks during logging is unsupported.
+# also supports stable symlinks. Reject unresolved aliases before creating a
+# sidecar; replacing symlinks during logging is unsupported.
 normalize_logfile <- function(logfile) {
   base::stopifnot("logfile must be a non-empty path" =
                     is.character(logfile) && length(logfile) == 1L &&
@@ -7,7 +8,11 @@ normalize_logfile <- function(logfile) {
   logfile <- path.expand(logfile)
   parent <- normalizePath(dirname(logfile), winslash = "/", mustWork = TRUE)
   target <- file.path(parent, basename(logfile))
-  if (file.exists(target)) target <- normalizePath(target, winslash = "/", mustWork = TRUE)
+  if (file.exists(target)) {
+    target <- normalizePath(target, winslash = "/", mustWork = TRUE)
+  } else {
+    .Call(c_check_new_logfile, enc2utf8(target))
+  }
   enc2utf8(target)
 }
 

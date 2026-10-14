@@ -31,7 +31,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  logfile <- normalize_logfile(logfile)
+  logfile <- with_log_io(normalize_logfile(logfile))
   if (create) {
     # Append an empty buffer under the lock: never truncate a concurrent writer.
     bytes <- raw()

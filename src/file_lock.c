@@ -13,6 +13,7 @@ typedef __int64 log_offset;
 #define log_tell _ftelli64
 #else
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <unistd.h>
 typedef off_t log_offset;
 #define log_seek fseeko
@@ -60,6 +61,36 @@ static WCHAR *wide_path(const char *path) {
     return wide;
 }
 #endif
+
+/* Called only for targets which R could not resolve. Stable dangling links
+   must not select an alias sidecar which changes after target creation. No
+   descriptor is opened, so this check cannot disturb a POSIX record lock. */
+SEXP check_new_logfile(SEXP path) {
+    const char *target = path_string(path);
+#ifdef _WIN32
+    DWORD attributes = GetFileAttributesW(wide_path(target));
+    if (attributes == INVALID_FILE_ATTRIBUTES) {
+        DWORD code = GetLastError();
+        if (code != ERROR_FILE_NOT_FOUND && code != ERROR_PATH_NOT_FOUND)
+            windows_error("Inspect new log", target, code);
+    } else if (attributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+        windows_error("Resolve log alias (create its target directly first)",
+                      target, ERROR_FILE_NOT_FOUND);
+    }
+#else
+    struct stat info;
+    while (lstat(target, &info) < 0) {
+        int code = errno;
+        if (code == ENOENT) return R_NilValue;
+        if (code != EINTR) io_error("Inspect new log", target, code);
+        R_CheckUserInterrupt();
+    }
+    if (S_ISLNK(info.st_mode)) {
+        io_error("Resolve log alias (create its target directly first)", target, ENOENT);
+    }
+#endif
+    return R_NilValue;
+}
 
 typedef struct {
     const char *path;
@@ -306,8 +337,11 @@ static SEXP rotate_body(void *data) {
         finish_file(d);
         return R_NilValue;
     }
+    R_CheckUserInterrupt();
     /* Copy forward in bounded chunks; each chunk is read before overwriting
-       its destination. No log connection survives the enclosing lock scope. */
+       its destination. Defer interrupts from the first write through truncation
+       and close: unwinding midway would leave copied and original bytes mixed.
+       No log connection survives the enclosing lock scope. */
     pos = start;
     while (pos < end) {
         size_t n = end - pos > (log_offset) sizeof(buffer) ? sizeof(buffer) : (size_t) (end - pos);
@@ -317,7 +351,6 @@ static SEXP rotate_body(void *data) {
         write_bytes(d, buffer, n);
         written += n;
         pos += n;
-        R_CheckUserInterrupt();
     }
     if (written && !final_newline) {
         write_bytes(d, (const unsigned char *) "\n", 1);
@@ -332,10 +365,10 @@ static SEXP rotate_body(void *data) {
 #else
     while (ftruncate(fileno(d->file), written) < 0) {
         if (errno != EINTR) io_error("Truncate log", d->path, errno);
-        R_CheckUserInterrupt();
     }
 #endif
     finish_file(d);
+    R_CheckUserInterrupt();
     return R_NilValue;
 }
 

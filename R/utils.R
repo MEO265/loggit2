@@ -40,6 +40,9 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' inspected and truncated under the same process lock used by appends. A native
 #' backwards scan locates the retained suffix without parsing JSON or reading
 #' the discarded prefix. The persistent `<logfile>.lock` sidecar is never rotated.
+#' The backwards scan is interruptible. Once rewriting starts, R interrupts are
+#' deferred until copying, truncation and closing finish, so rotation may complete
+#' before reporting an interrupt.
 #' See [loggit()] for the scope and limits of process safety.
 #'
 #' @return Invisible `NULL`.
@@ -57,7 +60,7 @@ rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(length(rotate_lines) == 1L, is.numeric(rotate_lines),
                   !is.na(rotate_lines), rotate_lines >= 0L)
   rotate_lines <- ceiling(as.double(rotate_lines))
-  logfile <- normalize_logfile(logfile)
+  logfile <- with_log_io(normalize_logfile(logfile))
   with_log_lock(logfile, .Call(c_rotate_log, logfile, rotate_lines))
   invisible(NULL)
 }

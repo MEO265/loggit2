@@ -101,10 +101,12 @@ for more details and features.
 Cooperating loggit2 processes on local Windows, Linux and macOS filesystems
 share an exclusive OS lock on byte zero of `<logfile>.lock`. The persistent
 sidecar is not a stale-lock marker: never delete, replace or rotate it while
-the log may be in use. Relative paths and existing symlink aliases are resolved
-before locking, including when the log file does not yet exist. Use the same
-target path; hard-link aliases and changing symlinks during logging are not
-supported. The parent directory must exist.
+the log may be in use. Relative paths and symlink aliases to existing targets
+are resolved before locking. New logfiles use their normalized parent directory
+to choose the sidecar. Use the same target path; hard-link aliases and changing
+symlinks during logging are not
+supported. The parent directory must exist. Symlinks with missing targets are
+rejected before opening a sidecar; create the target through its own path first.
 
 Entries are serialized to UTF-8, including their final newline, before locking.
 Append, initialization and `rotate_logs()` open and close their files inside the
@@ -113,6 +115,9 @@ same lock. Contending processes wait without polling or dropping records.
 Rotation still keeps the last N lines (zero clears the file); there are no
 automatic thresholds or archives. It scans from the end and copies only the
 retained suffix. Console echo and readers are not synchronized.
+The backwards scan is interruptible. Once rewriting starts, interrupts are
+deferred until copying, truncation and closing finish. Rotation can therefore
+complete before reporting an interrupt.
 
 This guarantee requires all writers and rotators to cooperate and does not
 extend generally to NFS/SMB. It is not transactional crash or power-loss safety:
