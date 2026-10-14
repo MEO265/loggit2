@@ -33,9 +33,9 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   }
   logfile <- with_log_io(normalize_logfile(logfile))
   if (create) {
-    # Append an empty buffer under the lock: never truncate a concurrent writer.
-    bytes <- raw()
-    with_log_lock(logfile, write_log_bytes(logfile, bytes))
+    with_log_lock(logfile, {
+      if (!file.exists(logfile)) write_log_bytes(logfile, raw())
+    })
   }
   .config[["logfile"]] <- logfile
   if (confirm) base::message("Log file set to ", .config[["logfile"]])

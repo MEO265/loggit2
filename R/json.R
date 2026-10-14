@@ -114,7 +114,11 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
-  logdata <- readLines(logfile, encoding = "UTF-8")
+  logfile <- with_log_io(normalize_logfile(logfile))
+  logdata <- with_log_lock(logfile, {
+    base::stopifnot("Log file does not exist" = file.exists(logfile))
+    readLines(logfile, encoding = "UTF-8")
+  })
 
   log_kvs <- split_ndjson(logdata)
 

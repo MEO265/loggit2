@@ -3,8 +3,8 @@
 
 extern "C"  SEXP split_ndjson(SEXP strVecSEXP);
 extern "C" SEXP check_log_alias(SEXP path);
-extern "C" SEXP with_log_lock(SEXP path, SEXP callback);
-extern "C" SEXP write_log(SEXP path, SEXP bytes, SEXP append);
-extern "C" SEXP rotate_log(SEXP path, SEXP lines);
+extern "C" SEXP new_log_lock(SEXP path);
+extern "C" SEXP lock_log(SEXP token);
+extern "C" SEXP unlock_log(SEXP token);
 
 #endif

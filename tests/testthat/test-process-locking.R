@@ -92,7 +92,7 @@ test_that("repeated destructive rotation accounts for every appended ID", {
           # unlocked rotation primitive. These are test records, not archives.
           dropped <- loggit2:::with_log_lock(path, {
             before <- readLines(path, encoding = "UTF-8")
-            .Call(loggit2:::c_rotate_log, path, 2L)
+            loggit2:::rotate_logs_unlocked(2L, path)
             head(before, max(0L, length(before) - 2L))
           })
           removed <- c(removed, dropped)
@@ -154,18 +154,98 @@ test_that("native unwind and R on.exit release errors and interrupts", {
     expect_error(with_log_lock(path, fail("injected failure")), "injected failure")
     expect_error(with_log_lock(path, with_log_lock(path, NULL)), "Recursive")
     # Also exercise the native guard directly, bypassing the R wrapper.
-    expect_error(with_log_lock(path, .Call(c_with_log_lock, paste0(path, ".lock"), function() NULL)),
-                 "Recursive")
+    token <- .Call(c_new_log_lock, paste0(path, ".lock"))
+    on.exit(.Call(c_unlock_log, token), add = TRUE)
+    expect_error(with_log_lock(path, .Call(c_lock_log, token)), "Recursive")
     condition <- structure(list(message = "injected interrupt", call = NULL),
                            class = c("interrupt", "condition"))
     interrupted <- tryCatch(with_log_lock(path, fail(condition)), interrupt = function(e) TRUE)
     expect_true(interrupted)
-    expect_false(.log_lock_state$busy)
     expect_true(parallel::clusterCall(cl, function(path) {
       loggit2::loggit("INFO", "recovered", logfile = path, echo = FALSE)
       TRUE
     }, path)[[1L]])
   })
+})
+
+test_that("readers wait for the shared lock even during first initialization", {
+  path <- normalize_logfile(tempfile())
+  ready <- tempfile()
+  started <- tempfile()
+  release <- tempfile()
+  with_log_workers(2L, function(cl, pids) {
+    send_log_job(cl[[1L]], function(path, ready, release) {
+      loggit2:::with_log_lock(path, {
+        file.create(ready)
+        deadline <- Sys.time() + 10L
+        while (!file.exists(release)) {
+          if (Sys.time() > deadline) base::stop("Holder timed out")
+          Sys.sleep(0.01)
+        }
+        loggit2:::write_log_bytes(path, charToRaw("{\"log_msg\": \"seed\"}\n"))
+      })
+    }, path, ready, release)
+    wait_for_log_marker(ready)
+    send_log_job(cl[[2L]], function(path, started) {
+      file.create(started)
+      loggit2::read_logs(path)$log_msg
+    }, path, started)
+    wait_for_log_marker(started)
+    expect_false(socketSelect(list(cl[[2L]]$con), timeout = 0.2))
+    expect_false(file.exists(path))
+    file.create(release)
+    receive_log_job(cl[[1L]])
+    expect_identical(receive_log_job(cl[[2L]]), "seed")
+  })
+})
+
+test_that("concurrent reads see complete records during appends and rotation", {
+  path <- normalize_logfile(tempfile())
+  payload <- paste0(strrep("payload", 10000L), "\n\u65e5\u672c")
+  loggit("INFO", payload, id = 0L, logfile = path, echo = FALSE)
+  result <- with_log_workers(2L, function(cl, pids) {
+    start <- as.numeric(Sys.time()) + 0.2
+    parallel::clusterApply(cl, 1:2, function(worker, path, payload, start) {
+      Sys.sleep(max(0L, start - as.numeric(Sys.time())))
+      for (i in 1:60) {
+        if (worker == 1L) {
+          loggit2::loggit("INFO", payload, id = i, logfile = path, echo = FALSE)
+          loggit2::rotate_logs(5L, path)
+        } else {
+          snapshot <- loggit2::read_logs(path)
+          base::stopifnot(nrow(snapshot) >= 1L, nrow(snapshot) <= 6L,
+                          all(snapshot$log_msg == payload), !anyNA(snapshot$id),
+                          anyDuplicated(snapshot$id) == 0L)
+        }
+      }
+      TRUE
+    }, path, payload, start)
+  })
+  expect_true(all(unlist(result)))
+  expect_length(expect_valid_log_json(path), 5L)
+  expect_identical(read_logs(path)$id, as.character(56:60))
+})
+
+test_that("JSON parsing runs after releasing the read lock", {
+  path <- normalize_logfile(tempfile())
+  loggit("INFO", "seed", logfile = path, echo = FALSE)
+  parse <- split_ndjson
+  local_mocked_bindings(split_ndjson = function(lines) {
+    with_log_lock(path, NULL)
+    parse(lines)
+  })
+  expect_identical(read_logs(path)$log_msg, "seed")
+})
+
+test_that("unlocking is idempotent and acquisition errors release the token", {
+  path <- normalize_logfile(tempfile())
+  token <- .Call(c_new_log_lock, paste0(path, ".lock"))
+  on.exit(.Call(c_unlock_log, token), add = TRUE)
+  .Call(c_lock_log, token)
+  expect_null(.Call(c_unlock_log, token))
+  expect_null(.Call(c_unlock_log, token))
+  expect_error(.Call(c_lock_log, token), "already been released")
+  expect_silent(with_log_lock(path, NULL))
 })
 
 test_that("terminating a holder releases its OS lock", {
@@ -230,7 +310,6 @@ test_that("a real POSIX interrupt during acquisition cleans the waiting descript
       FALSE
     }, interrupt = function(e) TRUE)
     expect_true(interrupted)
-    expect_false(.log_lock_state$busy)
     expect_true(receive_log_job(cl[[1L]]))
     expect_true(receive_log_job(cl[[2L]]))
     loggit("INFO", "resumed after interrupt", logfile = path, echo = FALSE)
@@ -249,10 +328,10 @@ test_that("I/O failures include the path and never leave a lock held", {
   expect_false(file.exists(path))
   unlink(paste0(path, ".lock"), recursive = TRUE)
   dir.create(path)
-  expect_error(loggit("INFO", "cannot write directory", logfile = path, echo = FALSE), "Open log.*OS error")
-  expect_error(rotate_logs(0L, path), "(Open|Read|Seek).*OS error")
+  expect_error(loggit("INFO", "cannot write directory", logfile = path, echo = FALSE), "Log I/O.*")
+  expect_error(rotate_logs(0L, path), "Log I/O.*")
   unlink(path, recursive = TRUE)
-  expect_error(rotate_logs(0L, path), "Open log.*OS error")
+  expect_error(rotate_logs(0L, path), "Log file does not exist")
   with_log_workers(1L, function(cl, pids) {
     expect_true(parallel::clusterCall(cl, function(path) {
       loggit2::loggit("INFO", "after I/O errors", logfile = path, echo = FALSE)
@@ -322,7 +401,6 @@ test_that("with_loggit does not hold a stale connection across rotation", {
     base::message("cannot log")
   }, logfile = bad, echo = FALSE), logfile = bad, echo = FALSE), "Open lock.*OS error")
   expect_false(file.exists(bad))
-  expect_false(.log_lock_state$busy)
 })
 
 test_that("existing symlink aliases share a canonical target", {
@@ -347,7 +425,7 @@ test_that("a real write or flush error closes the stream and releases the lock",
   path <- normalize_logfile(tempfile())
   bytes <- charToRaw("entry\n")
   expect_error(with_log_lock(path, write_log_bytes(full_device, bytes)),
-               "(Write|Flush) log.*(/dev/full).*OS error")
+               "Log I/O.*(/dev/full)")
   with_log_workers(1L, function(cl, pids) {
     expect_true(parallel::clusterCall(cl, function(path) {
       loggit2::loggit("INFO", "after flush error", logfile = path, echo = FALSE)

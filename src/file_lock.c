@@ -1,4 +1,3 @@
-#define _FILE_OFFSET_BITS 64
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Utils.h>
@@ -7,27 +6,22 @@
 #include <string.h>
 #ifdef _WIN32
 #include <windows.h>
-#include <io.h>
-typedef __int64 log_offset;
-#define log_seek _fseeki64
-#define log_tell _ftelli64
 #else
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
-typedef off_t log_offset;
-#define log_seek fseeko
-#define log_tell ftello
 #endif
 
 /* No nested lock scopes, even through aliases. In particular, never open and
    close a second POSIX descriptor for a lock inode owned by this process. */
 static int lock_scope_active = 0;
 
+#ifndef _WIN32
 static void io_error(const char *operation, const char *path, int code) {
     Rf_error("%s failed for '%s': %s (OS error %d)",
              operation, path, strerror(code), code);
 }
+#endif
 
 static const char *path_string(SEXP path) {
     if (TYPEOF(path) != STRSXP || XLENGTH(path) != 1 ||
@@ -64,7 +58,6 @@ static WCHAR *wide_path(const char *path) {
 
 typedef struct {
     const char *path;
-    SEXP call;
     int entered;
     int locked;
     unsigned long cleanup_error;
@@ -124,7 +117,7 @@ static void release_lock(void *data, Rboolean jump) {
     }
 }
 
-static SEXP acquire_and_call(void *data) {
+static SEXP acquire_lock(void *data) {
     lock_data *d = (lock_data *) data;
     lock_scope_active = d->entered = 1;
     R_CheckUserInterrupt();
@@ -156,33 +149,79 @@ static SEXP acquire_and_call(void *data) {
 #endif
     d->locked = 1;
     R_CheckUserInterrupt();
-    return Rf_eval(d->call, R_GlobalEnv);
+    return R_NilValue;
 }
 
-SEXP with_log_lock(SEXP path, SEXP callback) {
-    lock_data d;
-    SEXP result;
-    memset(&d, 0, sizeof(d));
-    d.path = path_string(path);
-    if (lock_scope_active) Rf_error("Recursive log locking is not allowed: %s", d.path);
-    if (!Rf_isFunction(callback)) Rf_error("Expected a lock callback");
+static void finalize_lock(SEXP token) {
+    lock_data *d = (lock_data *) R_ExternalPtrAddr(token);
+    if (!d) return;
+    release_lock(d, FALSE);
+    R_Free(d);
+    R_ClearExternalPtr(token);
+}
+
+/* Allocate only a resource-free token. R registers on.exit before acquisition;
+   the finalizer is a fallback, never the normal unlocking mechanism. */
+SEXP new_log_lock(SEXP path) {
+    SEXP token;
+    lock_data *d;
+    path_string(path);
+    token = PROTECT(R_MakeExternalPtr(NULL, Rf_install("loggit2_lock"), path));
+    d = R_Calloc(1, lock_data);
 #ifdef _WIN32
-    d.handle = INVALID_HANDLE_VALUE;
-    d.wide = wide_path(d.path);
+    d->handle = INVALID_HANDLE_VALUE;
 #else
-    d.fd = -1;
+    d->fd = -1;
 #endif
-    d.call = PROTECT(Rf_lang1(callback));
-    result = R_UnwindProtect(acquire_and_call, &d, release_lock, &d, NULL);
-    if (d.cleanup_error) {
+    R_SetExternalPtrAddr(token, d);
+    R_RegisterCFinalizerEx(token, finalize_lock, TRUE);
+    UNPROTECT(1);
+    return token;
+}
+
+static lock_data *lock_pointer(SEXP token) {
+    if (TYPEOF(token) != EXTPTRSXP ||
+        R_ExternalPtrTag(token) != Rf_install("loggit2_lock"))
+        Rf_error("Expected a log lock token");
+    return (lock_data *) R_ExternalPtrAddr(token);
+}
+
+static void failed_acquisition(void *data, Rboolean jump) {
+    if (jump) release_lock(data, jump);
+}
+
+SEXP lock_log(SEXP token) {
+    lock_data *d = lock_pointer(token);
+    if (!d) Rf_error("Log lock token has already been released");
+    if (lock_scope_active)
+        Rf_error("Recursive log locking is not allowed: %s",
+                 path_string(R_ExternalPtrProtected(token)));
+    d->path = path_string(R_ExternalPtrProtected(token));
 #ifdef _WIN32
-        windows_error(d.cleanup_operation, d.path, (DWORD) d.cleanup_error);
+    d->wide = wide_path(d->path);
+#endif
+    return R_UnwindProtect(acquire_lock, d, failed_acquisition, d, NULL);
+}
+
+SEXP unlock_log(SEXP token) {
+    lock_data *d = lock_pointer(token);
+    unsigned long code;
+    const char *operation;
+    if (!d) return R_NilValue;
+    release_lock(d, FALSE);
+    code = d->cleanup_error;
+    operation = d->cleanup_operation;
+    R_Free(d);
+    R_ClearExternalPtr(token);
+    if (code) {
+        const char *path = path_string(R_ExternalPtrProtected(token));
+#ifdef _WIN32
+        windows_error(operation, path, (DWORD) code);
 #else
-        io_error(d.cleanup_operation, d.path, (int) d.cleanup_error);
+        io_error(operation, path, (int) code);
 #endif
     }
-    UNPROTECT(1);
-    return result;
+    return R_NilValue;
 }
 
 #ifdef _WIN32
@@ -238,169 +277,4 @@ SEXP check_log_alias(SEXP path) {
     }
 #endif
     return R_NilValue;
-}
-
-typedef struct {
-    const char *path;
-#ifdef _WIN32
-    const WCHAR *wide;
-#endif
-    FILE *file;
-    const unsigned char *bytes;
-    size_t size;
-    int append;
-    double keep;
-} file_data;
-
-static void close_file(void *data, Rboolean jump) {
-    file_data *d = (file_data *) data;
-    (void) jump;
-    if (d->file) {
-        fclose(d->file);
-        d->file = NULL;
-    }
-}
-
-static void prepare_file(file_data *d, SEXP path) {
-    memset(d, 0, sizeof(*d));
-    d->path = path_string(path);
-    if (!lock_scope_active) Rf_error("Log I/O requires a lock: %s", d->path);
-#ifdef _WIN32
-    d->wide = wide_path(d->path);
-#endif
-}
-
-static void open_file(file_data *d, const char *mode) {
-#ifdef _WIN32
-    const WCHAR *wide_mode = strcmp(mode, "ab") == 0 ? L"ab" :
-                             strcmp(mode, "wb") == 0 ? L"wb" : L"r+b";
-    d->file = _wfopen(d->wide, wide_mode);
-#else
-    d->file = fopen(d->path, mode);
-#endif
-    if (!d->file) io_error("Open log", d->path, errno);
-}
-
-static void finish_file(file_data *d) {
-    int error = 0;
-    const char *operation = "Flush log";
-    if (fflush(d->file)) error = errno ? errno : EIO;
-    if (fclose(d->file) && !error) {
-        error = errno ? errno : EIO;
-        operation = "Close log";
-    }
-    d->file = NULL;
-    if (error) io_error(operation, d->path, error);
-}
-
-static void write_bytes(file_data *d, const unsigned char *bytes, size_t size) {
-    if (size && fwrite(bytes, 1, size, d->file) != size)
-        io_error("Write log", d->path, errno ? errno : EIO);
-}
-
-static SEXP write_body(void *data) {
-    file_data *d = (file_data *) data;
-    open_file(d, d->append ? "ab" : "wb");
-    write_bytes(d, d->bytes, d->size);
-    finish_file(d);
-    return R_NilValue;
-}
-
-SEXP write_log(SEXP path, SEXP bytes, SEXP append) {
-    file_data d;
-    if (TYPEOF(bytes) != RAWSXP) Rf_error("Expected serialized log bytes");
-    prepare_file(&d, path);
-    d.bytes = RAW(bytes);
-    d.size = (size_t) XLENGTH(bytes);
-    d.append = Rf_asLogical(append);
-    return R_UnwindProtect(write_body, &d, close_file, &d, NULL);
-}
-
-static void seek_file(file_data *d, log_offset offset, int origin) {
-    if (log_seek(d->file, offset, origin)) io_error("Seek log", d->path, errno);
-}
-
-static void read_bytes(file_data *d, unsigned char *bytes, size_t size) {
-    if (fread(bytes, 1, size, d->file) != size)
-        io_error("Read log", d->path, errno ? errno : EIO);
-}
-
-static SEXP rotate_body(void *data) {
-    file_data *d = (file_data *) data;
-    unsigned char buffer[65536];
-    log_offset end, pos, start = 0, written = 0;
-    double lines = 0;
-    int final_newline = 1;
-    open_file(d, "r+b");
-    seek_file(d, 0, SEEK_END);
-    end = log_tell(d->file);
-    if (end < 0) io_error("Tell log", d->path, errno);
-    pos = end;
-    if (d->keep == 0) start = end;
-    /* Search only the retained suffix, not the full file, when possible. */
-    while (d->keep > 0 && pos > 0) {
-        size_t n = pos > (log_offset) sizeof(buffer) ? sizeof(buffer) : (size_t) pos;
-        size_t i = n;
-        pos -= n;
-        seek_file(d, pos, SEEK_SET);
-        read_bytes(d, buffer, n);
-        while (i > 0) {
-            --i;
-            if (pos + (log_offset) i == end - 1) {
-                final_newline = buffer[i] == '\n';
-                if (final_newline) continue;
-            }
-            if (buffer[i] == '\n' && ++lines >= d->keep) {
-                start = pos + (log_offset) i + 1;
-                break;
-            }
-        }
-        if (start) break;
-        R_CheckUserInterrupt();
-    }
-    if (start == 0) {
-        finish_file(d);
-        return R_NilValue;
-    }
-    R_CheckUserInterrupt();
-    /* Copy forward in bounded chunks; each chunk is read before overwriting
-       its destination. Defer interrupts from the first write through truncation
-       and close: unwinding midway would leave copied and original bytes mixed.
-       No log connection survives the enclosing lock scope. */
-    pos = start;
-    while (pos < end) {
-        size_t n = end - pos > (log_offset) sizeof(buffer) ? sizeof(buffer) : (size_t) (end - pos);
-        seek_file(d, pos, SEEK_SET);
-        read_bytes(d, buffer, n);
-        seek_file(d, written, SEEK_SET);
-        write_bytes(d, buffer, n);
-        written += n;
-        pos += n;
-    }
-    if (written && !final_newline) {
-        write_bytes(d, (const unsigned char *) "\n", 1);
-        ++written;
-    }
-    if (fflush(d->file)) io_error("Flush rotation", d->path, errno ? errno : EIO);
-#ifdef _WIN32
-    {
-        int code = _chsize_s(_fileno(d->file), written);
-        if (code) io_error("Truncate log", d->path, code);
-    }
-#else
-    while (ftruncate(fileno(d->file), written) < 0) {
-        if (errno != EINTR) io_error("Truncate log", d->path, errno);
-    }
-#endif
-    finish_file(d);
-    R_CheckUserInterrupt();
-    return R_NilValue;
-}
-
-SEXP rotate_log(SEXP path, SEXP lines) {
-    file_data d;
-    prepare_file(&d, path);
-    d.keep = Rf_asReal(lines);
-    if (ISNAN(d.keep) || d.keep < 0) Rf_error("Invalid retained line count");
-    return R_UnwindProtect(rotate_body, &d, close_file, &d, NULL);
 }

@@ -109,15 +109,14 @@ supported. The parent directory must exist. Symlinks with missing targets are
 rejected before opening a sidecar; create the target through its own path first.
 
 Entries are serialized to UTF-8, including their final newline, before locking.
-Append, initialization and `rotate_logs()` open and close their files inside the
+Reads, appends, initialization and `rotate_logs()` open and close their files inside the
 same lock. Contending processes wait without polling or dropping records.
 `with_loggit()` holds no connection or lock while evaluating user code.
 Rotation still keeps the last N lines (zero clears the file); there are no
-automatic thresholds or archives. It scans from the end and copies only the
-retained suffix. Console echo and readers are not synchronized.
-The backwards scan is interruptible. Once rewriting starts, interrupts are
-deferred until copying, truncation and closing finish. Rotation can therefore
-complete before reporting an interrupt.
+automatic thresholds or archives. It uses the existing R line-based read and
+rewrite under one continuous lock. An error or interrupt while rewriting can
+leave an incomplete file, as before. Readers release the lock before parsing
+JSON. Console echo is not synchronized.
 
 This guarantee requires all writers and rotators to cooperate and does not
 extend generally to NFS/SMB. It is not transactional crash or power-loss safety:

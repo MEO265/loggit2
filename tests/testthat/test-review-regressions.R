@@ -8,15 +8,11 @@ test_that("dangling aliases are rejected before concurrent first use creates sid
   # Windows needs an existing target to choose the file-symlink type correctly.
   expect_true(file.create(path))
   linked <- suppressWarnings(file.symlink(path, alias))
-  if (!linked && .Platform$OS.type == "windows") {
-    linked <- with_log_native_fixture(function(native) .Call(native$symlink, path, alias))
-  }
-  skip_if_not(isTRUE(linked), paste("File symlinks are unavailable; OS error", attr(linked, "win32_error")))
+  skip_if_not(isTRUE(linked), "File symlinks are unavailable")
   expect_identical(unlink(path), 0L)
   expect_false(file.exists(path))
   expect_error(loggit("INFO", "must be rejected", logfile = alias, echo = FALSE), "Resolve log alias.*OS error")
   expect_error(rotate_logs(0L, alias), "Resolve log alias.*OS error")
-  expect_false(.log_lock_state$busy)
   with_log_workers(2L, function(cl, pids) {
     start <- as.numeric(Sys.time()) + 0.2
     errors <- parallel::clusterCall(cl, function(alias, start) {
@@ -49,38 +45,4 @@ test_that("dangling aliases are rejected before concurrent first use creates sid
   expected <- c("seed", paste(1L, 1:20, sep = ":"), paste(2L, 1:20, sep = ":"))
   expect_identical(sort(read_logs(path)$id), sort(expected))
   expect_false(file.exists(paste0(alias, ".lock")))
-})
-
-test_that("rotation finishes writes and EINTR truncation before delivering an interrupt", {
-  with_log_native_fixture(function(native) {
-    path <- normalize_logfile(tempfile())
-    on.exit(unlink(c(path, paste0(path, ".lock"))), add = TRUE)
-    original <- paste0("{\"id\": \"", 1:4, "\", \"payload\": \"", strrep("x", 100000L), "\"}")
-    signal_interrupt <- function() {
-      base::stop(structure(list(message = "injected interrupt", call = NULL),
-                           class = c("interrupt", "condition")))
-    }
-    # Windows truncation does not use the POSIX EINTR retry path.
-    phases <- if (.Platform$OS.type == "windows") c(1L, 3L) else 1:3
-    for (phase in phases) {
-      writeLines(original, path, useBytes = TRUE)
-      .Call(native$arm, phase, signal_interrupt)
-      interrupted <- tryCatch({
-        .Call(native$lock, paste0(path, ".lock"), function() .Call(native$rotate, path, 2L))
-        FALSE
-      }, interrupt = function(e) TRUE)
-      .Call(native$arm, 0L, NULL)
-      expect_true(interrupted)
-      expected <- if (phase == 3L) original else tail(original, 2L)
-      expect_identical(readLines(path), expected)
-      expect_length(expect_valid_log_json(path), length(expected))
-      with_log_workers(1L, function(cl, pids) {
-        expect_true(parallel::clusterCall(cl, function(path) {
-          loggit2::loggit("INFO", "after rotation interrupt", logfile = path, echo = FALSE)
-          TRUE
-        }, path)[[1L]])
-      })
-      expect_identical(tail(read_logs(path)$log_msg, 1L), "after rotation interrupt")
-    }
-  })
 })

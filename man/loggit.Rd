@@ -37,7 +37,7 @@ Invisible \code{NULL}.
 Log messages and R objects to a \href{https://github.com/ndjson}{ndjson} log file.
 }
 \details{
-Cooperating processes on local filesystems serialize appends and
+Cooperating processes on local filesystems serialize reads, appends and
 \code{rotate_logs()} using a persistent \verb{<logfile>.lock} sidecar. Do not remove,
 replace or rotate that sidecar while any process may use the log. Its presence
 does not mean the log is locked. Entries are prepared as UTF-8 before locking;
@@ -46,7 +46,8 @@ Symlinks with missing targets are rejected before locking; create the target
 through its own path before using such an alias.
 This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not
 provide transactional crash or power-loss safety: a crash can leave a partial
-entry or an incomplete rotation. Readers do not acquire the writer lock.
+entry or an incomplete rotation. Errors or interrupts during rotation can
+also leave an incomplete file. Readers release the lock before parsing JSON.
 }
 \examples{
 \dontrun{
