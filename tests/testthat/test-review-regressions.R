@@ -4,9 +4,14 @@ test_that("dangling aliases are rejected before concurrent first use creates sid
   on.exit(unlink(root, recursive = TRUE), add = TRUE)
   path <- file.path(root, "target-\u65e5\u672c.log")
   alias <- file.path(root, "alias.log")
+  expected_alias <- file.path(normalizePath(root, winslash = "/", mustWork = TRUE), basename(alias))
   # Windows needs an existing target to choose the file-symlink type correctly.
   expect_true(file.create(path))
-  skip_if_not(suppressWarnings(file.symlink(path, alias)), "File symlinks are unavailable")
+  linked <- suppressWarnings(file.symlink(path, alias))
+  if (!linked && .Platform$OS.type == "windows") {
+    linked <- with_log_native_fixture(function(native) .Call(native$symlink, path, alias))
+  }
+  skip_if_not(isTRUE(linked), paste("File symlinks are unavailable; OS error", attr(linked, "win32_error")))
   expect_identical(unlink(path), 0L)
   expect_false(file.exists(path))
   expect_error(loggit("INFO", "must be rejected", logfile = alias, echo = FALSE), "Resolve log alias.*OS error")
@@ -23,7 +28,7 @@ test_that("dangling aliases are rejected before concurrent first use creates sid
       }, error = conditionMessage)
     }, alias, start)
     expect_true(all(grepl("Resolve log alias.*OS error", unlist(errors))))
-    expect_true(all(grepl(alias, unlist(errors), fixed = TRUE)))
+    expect_true(all(grepl(expected_alias, unlist(errors), fixed = TRUE)))
     expect_false(file.exists(path))
     expect_false(file.exists(paste0(alias, ".lock")))
     expect_false(file.exists(paste0(path, ".lock")))
@@ -47,7 +52,7 @@ test_that("dangling aliases are rejected before concurrent first use creates sid
 })
 
 test_that("rotation finishes writes and EINTR truncation before delivering an interrupt", {
-  with_rotation_fixture(function(native) {
+  with_log_native_fixture(function(native) {
     path <- normalize_logfile(tempfile())
     on.exit(unlink(c(path, paste0(path, ".lock"))), add = TRUE)
     original <- paste0("{\"id\": \"", 1:4, "\", \"payload\": \"", strrep("x", 100000L), "\"}")

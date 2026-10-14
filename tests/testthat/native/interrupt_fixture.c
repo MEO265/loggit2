@@ -60,9 +60,35 @@ SEXP fixture_arm(SEXP mode, SEXP callback) {
     return R_NilValue;
 }
 
+SEXP fixture_symlink(SEXP target, SEXP alias) {
+#ifdef _WIN32
+    /* R's file.symlink does not request Windows developer-mode creation. */
+    WCHAR *from = wide_path(path_string(target));
+    WCHAR *to = wide_path(path_string(alias));
+    WCHAR *p;
+    BOOLEAN linked;
+    DWORD code;
+    SEXP result;
+    for (p = from; *p; ++p) if (*p == L'/') *p = L'\\';
+    for (p = to; *p; ++p) if (*p == L'/') *p = L'\\';
+    linked = CreateSymbolicLinkW(to, from, 2);
+    code = linked ? 0 : GetLastError();
+    result = PROTECT(Rf_allocVector(LGLSXP, 1));
+    LOGICAL(result)[0] = linked;
+    Rf_setAttrib(result, Rf_install("win32_error"), Rf_ScalarReal((double) code));
+    UNPROTECT(1);
+    return result;
+#else
+    (void) target;
+    (void) alias;
+    return Rf_ScalarLogical(0);
+#endif
+}
+
 void R_init_interrupt_fixture(DllInfo *dll) {
     static const R_CallMethodDef entries[] = {
         {"fixture_arm", (DL_FUNC) &fixture_arm, 2},
+        {"fixture_symlink", (DL_FUNC) &fixture_symlink, 2},
         {"with_log_lock", (DL_FUNC) &with_log_lock, 2},
         {"rotate_log", (DL_FUNC) &rotate_log, 2},
         {NULL, NULL, 0}

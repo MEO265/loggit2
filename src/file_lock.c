@@ -62,36 +62,6 @@ static WCHAR *wide_path(const char *path) {
 }
 #endif
 
-/* Called only for targets which R could not resolve. Stable dangling links
-   must not select an alias sidecar which changes after target creation. No
-   descriptor is opened, so this check cannot disturb a POSIX record lock. */
-SEXP check_new_logfile(SEXP path) {
-    const char *target = path_string(path);
-#ifdef _WIN32
-    DWORD attributes = GetFileAttributesW(wide_path(target));
-    if (attributes == INVALID_FILE_ATTRIBUTES) {
-        DWORD code = GetLastError();
-        if (code != ERROR_FILE_NOT_FOUND && code != ERROR_PATH_NOT_FOUND)
-            windows_error("Inspect new log", target, code);
-    } else if (attributes & FILE_ATTRIBUTE_REPARSE_POINT) {
-        windows_error("Resolve log alias (create its target directly first)",
-                      target, ERROR_FILE_NOT_FOUND);
-    }
-#else
-    struct stat info;
-    while (lstat(target, &info) < 0) {
-        int code = errno;
-        if (code == ENOENT) return R_NilValue;
-        if (code != EINTR) io_error("Inspect new log", target, code);
-        R_CheckUserInterrupt();
-    }
-    if (S_ISLNK(info.st_mode)) {
-        io_error("Resolve log alias (create its target directly first)", target, ENOENT);
-    }
-#endif
-    return R_NilValue;
-}
-
 typedef struct {
     const char *path;
     SEXP call;
@@ -213,6 +183,61 @@ SEXP with_log_lock(SEXP path, SEXP callback) {
     }
     UNPROTECT(1);
     return result;
+}
+
+#ifdef _WIN32
+static SEXP follow_log_alias(void *data) {
+    lock_data *d = (lock_data *) data;
+    /* Follow the reparse point: attributes and R's file.exists() can describe
+       the link itself even when its target is missing. A zero-access handle
+       permits concurrent log writers and also supports directory aliases. */
+    d->handle = CreateFileW(d->wide, 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                           NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+    if (d->handle == INVALID_HANDLE_VALUE)
+        windows_error("Resolve log alias (create its target directly first)", d->path, GetLastError());
+    return R_NilValue;
+}
+#endif
+
+/* Stable dangling aliases must not select a sidecar whose identity changes
+   after target creation. POSIX stat calls open no descriptor and thus cannot
+   disturb a record lock. Any Windows handle is covered by unwind cleanup. */
+SEXP check_log_alias(SEXP path) {
+    const char *target = path_string(path);
+#ifdef _WIN32
+    lock_data d;
+    DWORD attributes;
+    memset(&d, 0, sizeof(d));
+    d.path = target;
+    d.wide = wide_path(target);
+    d.handle = INVALID_HANDLE_VALUE;
+    attributes = GetFileAttributesW(d.wide);
+    if (attributes == INVALID_FILE_ATTRIBUTES) {
+        DWORD code = GetLastError();
+        if (code != ERROR_FILE_NOT_FOUND && code != ERROR_PATH_NOT_FOUND)
+            windows_error("Inspect log alias", target, code);
+    } else if (attributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+        R_UnwindProtect(follow_log_alias, &d, release_lock, &d, NULL);
+        if (d.cleanup_error) windows_error("Close log alias", target, (DWORD) d.cleanup_error);
+    }
+#else
+    struct stat info;
+    while (lstat(target, &info) < 0) {
+        int code = errno;
+        if (code == ENOENT) return R_NilValue;
+        if (code != EINTR) io_error("Inspect log alias", target, code);
+        R_CheckUserInterrupt();
+    }
+    if (S_ISLNK(info.st_mode)) {
+        while (stat(target, &info) < 0) {
+            int code = errno;
+            if (code != EINTR)
+                io_error("Resolve log alias (create its target directly first)", target, code);
+            R_CheckUserInterrupt();
+        }
+    }
+#endif
+    return R_NilValue;
 }
 
 typedef struct {

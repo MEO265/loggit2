@@ -1,7 +1,7 @@
 # Compile the current C implementation with deterministic interrupt injection.
 # R CMD check retains source in 00_pkg_src; installed binary-only tests cannot
 # build this fixture and skip it explicitly. No production test hooks are used.
-with_rotation_fixture <- function(code) {
+with_log_native_fixture <- function(code) {
   candidates <- c(test_path("..", "..", "src", "file_lock.c"),
                   test_path("..", "..", "00_pkg_src", "loggit2", "src", "file_lock.c"))
   source <- candidates[file.exists(candidates)]
@@ -29,6 +29,7 @@ with_rotation_fixture <- function(code) {
   dll <- dyn.load(file.path(root, paste0("interrupt_fixture", .Platform$dynlib.ext)))
   native <- list(arm = getNativeSymbolInfo("fixture_arm", dll)$address,
                  lock = getNativeSymbolInfo("with_log_lock", dll)$address,
-                 rotate = getNativeSymbolInfo("rotate_log", dll)$address)
+                 rotate = getNativeSymbolInfo("rotate_log", dll)$address,
+                 symlink = getNativeSymbolInfo("fixture_symlink", dll)$address)
   code(native)
 }

@@ -8,10 +8,10 @@ normalize_logfile <- function(logfile) {
   logfile <- path.expand(logfile)
   parent <- normalizePath(dirname(logfile), winslash = "/", mustWork = TRUE)
   target <- file.path(parent, basename(logfile))
+  # Windows file.exists() can report a dangling link as existing.
+  .Call(c_check_log_alias, enc2utf8(target))
   if (file.exists(target)) {
     target <- normalizePath(target, winslash = "/", mustWork = TRUE)
-  } else {
-    .Call(c_check_new_logfile, enc2utf8(target))
   }
   enc2utf8(target)
 }
