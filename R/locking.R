@@ -16,34 +16,18 @@ normalize_logfile <- function(logfile) {
   enc2utf8(target)
 }
 
-# Exiting handlers run before an enclosing with_loggit handler can log this
-# failure again. Preserve its message and call, and mark it for outer handlers.
-with_log_io <- function(code) {
-  tryCatch(force(code), error = function(e) {
-    class(e) <- unique(c("loggit_io_error", class(e)))
-    base::stop(e)
-  })
-}
-
 # Register cleanup before acquisition. The token initially owns no OS resource;
 # native unwind cleanup also protects the blocking acquisition itself.
 with_log_lock <- function(logfile, code) {
   lock <- .Call(c_new_log_lock, paste0(logfile, ".lock"))
-  completed <- FALSE
-  on.exit({
-    if (completed) {
-      with_log_io(.Call(c_unlock_log, lock))
-    } else {
-      # Cleanup must not replace the original error or interrupt.
-      tryCatch(.Call(c_unlock_log, lock), error = function(e) NULL)
-    }
-  }, add = TRUE)
-  with_log_io(withCallingHandlers({
+  # Fallback cleanup must not replace the original error or interrupt.
+  on.exit(tryCatch(.Call(c_unlock_log, lock), error = function(e) NULL), add = TRUE)
+  withCallingHandlers({
     .Call(c_lock_log, lock)
     result <- force(code)
-    completed <- TRUE
+    .Call(c_unlock_log, lock)
     result
   }, warning = function(w) {
     base::stop("Log I/O failed for '", logfile, "': ", conditionMessage(w))
-  }))
+  })
 }

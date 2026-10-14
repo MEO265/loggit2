@@ -96,7 +96,7 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
   logdata <- enc2utf8(logdata)
-  logfile <- with_log_io(normalize_logfile(logfile))
+  logfile <- normalize_logfile(logfile)
   with_log_lock(logfile, local({
     con <- file(logfile)
     on.exit(suppressWarnings(try(close(con), silent = TRUE)), add = TRUE)
@@ -119,7 +119,7 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
-  logfile <- with_log_io(normalize_logfile(logfile))
+  logfile <- normalize_logfile(logfile)
   logdata <- with_log_lock(logfile, {
     base::stopifnot("Log file does not exist" = file.exists(logfile))
     readLines(logfile, encoding = "UTF-8")

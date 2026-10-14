@@ -31,7 +31,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  logfile <- with_log_io(normalize_logfile(logfile))
+  logfile <- normalize_logfile(logfile)
   if (create) {
     with_log_lock(logfile, {
       if (!file.exists(logfile)) {

@@ -53,7 +53,7 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(rotate_lines >= 0L)
-  logfile <- with_log_io(normalize_logfile(logfile))
+  logfile <- normalize_logfile(logfile)
   with_log_lock(logfile, rotate_logs_unlocked(rotate_lines, logfile))
   invisible(NULL)
 }

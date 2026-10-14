@@ -392,13 +392,21 @@ test_that("with_loggit does not hold a stale connection across rotation", {
     base::message("second")
   }, logfile = path, echo = FALSE))
   expect_identical(read_logs(path)$log_msg, "second\n")
-  # Logging failures must pass through nested condition handlers just once.
-  bad <- tempfile()
-  dir.create(paste0(bad, ".lock"))
-  expect_error(with_loggit(with_loggit({
-    base::message("cannot log")
-  }, logfile = bad, echo = FALSE), logfile = bad, echo = FALSE), "Open lock.*OS error")
-  expect_false(file.exists(bad))
+})
+
+test_that("condition-handler failures release an acquired lock", {
+  path <- normalize_logfile(tempfile())
+  # read_logs acquires the lock before rejecting the missing file. Its enclosing
+  # handler can fail while trying to log that error, but must release the lock.
+  expect_error(with_loggit(read_logs(path), logfile = path, echo = FALSE))
+  expect_false(file.exists(path))
+  with_log_workers(1L, function(cl, pids) {
+    expect_true(parallel::clusterCall(cl, function(path) {
+      loggit2::loggit("INFO", "after handler failure", logfile = path, echo = FALSE)
+      TRUE
+    }, path)[[1L]])
+  })
+  expect_identical(read_logs(path)$log_msg, "after handler failure")
 })
 
 test_that("existing symlink aliases share a canonical target", {

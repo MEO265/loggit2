@@ -11,8 +11,7 @@
 #' twice (in the same or different files).
 #' Each logged condition opens and closes its file under the shared process
 #' lock. No connection or lock is held while evaluating `exp`. If no condition
-#' is logged, a missing log file is not created. Logging I/O failures propagate
-#' without being logged again by enclosing `with_loggit()` handlers.
+#' is logged, a missing log file is not created.
 #'
 #' @return The result of the expression.
 #'
@@ -40,12 +39,12 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_info <- log_level >= 3L
 
   # Capture the path, but open the file only for each locked append.
-  logfile <- with_log_io(normalize_logfile(logfile))
+  logfile <- normalize_logfile(logfile)
 
   withCallingHandlers(
     exp,
     error = function(e) {
-      if (log_error && !inherits(e, "loggit_io_error")) {
+      if (log_error) {
         loggit_internal(
           log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = logfile
         )

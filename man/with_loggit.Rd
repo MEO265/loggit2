@@ -32,8 +32,7 @@ If \code{loggit2} handlers are already used in the expression, this can lead to 
 twice (in the same or different files).
 Each logged condition opens and closes its file under the shared process
 lock. No connection or lock is held while evaluating \code{exp}. If no condition
-is logged, a missing log file is not created. Logging I/O failures propagate
-without being logged again by enclosing \code{with_loggit()} handlers.
+is logged, a missing log file is not created.
 }
 \examples{
 \dontrun{

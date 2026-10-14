@@ -12,8 +12,7 @@
 * Symlinks with missing targets are rejected before opening a sidecar. Create
   the target through its own path first, then use its stable symlink aliases.
 * `with_loggit()` no longer retains an open log connection across conditions.
-  Logging I/O failures propagate without recursive logging. UTF-8 payloads also
-  round-trip through the reader in non-UTF-8 Windows locales.
+  UTF-8 payloads also round-trip through the reader in non-UTF-8 Windows locales.
 * Added bounded PSOCK regressions and cross-platform CI coverage for contention,
   rotation, first use, errors, interrupts and terminated lock holders.
 
