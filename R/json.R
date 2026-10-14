@@ -95,15 +95,7 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
-  logdata <- enc2utf8(logdata)
-  logfile <- normalize_logfile(logfile)
-  with_log_lock(logfile, local({
-    con <- file(logfile)
-    on.exit(suppressWarnings(try(close(con), silent = TRUE)), add = TRUE)
-    open(con, if (overwrite) "wb" else "ab")
-    writeLines(logdata, con, useBytes = TRUE)
-    if (close(con) != 0L) base::stop("Log I/O failed for '", logfile, "': close/flush failed")
-  }))
+  with_log_lock(logfile, write(logdata, file = logfile, append = !overwrite))
   invisible(NULL)
 }
 
@@ -119,10 +111,9 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
-  logfile <- normalize_logfile(logfile)
   logdata <- with_log_lock(logfile, {
     base::stopifnot("Log file does not exist" = file.exists(logfile))
-    readLines(logfile, encoding = "UTF-8")
+    readLines(logfile)
   })
 
   log_kvs <- split_ndjson(logdata)

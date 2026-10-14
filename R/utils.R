@@ -53,7 +53,6 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
   base::stopifnot(rotate_lines >= 0L)
-  logfile <- normalize_logfile(logfile)
   with_log_lock(logfile, rotate_logs_unlocked(rotate_lines, logfile))
   invisible(NULL)
 }
@@ -65,13 +64,12 @@ rotate_logs_unlocked <- function(rotate_lines, logfile) {
     cat(NULL, file = logfile)
     return(invisible(NULL))
   }
-  log_df <- readLines(logfile, encoding = "UTF-8", warn = FALSE)
+  log_df <- readLines(logfile)
   if (length(log_df) <= rotate_lines) {
     return(invisible(NULL))
   }
   log_df <- log_df[seq.int(from = length(log_df) - rotate_lines + 1L, length.out = rotate_lines)]
-  writeLines(log_df, logfile, useBytes = TRUE)
-  invisible(NULL)
+  write(log_df, logfile, append = FALSE)
 }
 
 #' Find the Call of a Parent Function in the Call Hierarchy

@@ -2,8 +2,8 @@
 
 * Reads, appends, initialization and explicit line rotation now share a persistent
   sidecar lock implemented with native Windows/POSIX byte-range locks. No new
-  package dependencies are required. JSON and UTF-8 serialization precede the
-  lock; writes are flushed and closed before release.
+  package dependencies are required. Existing serialization, encoding, parsing
+  and R file I/O are retained; log files are closed before lock release.
 * Rotation retains the existing R line-based algorithm and keeps the last N
   lines without creating archives. One lock covers the complete read and rewrite;
   `on.exit` releases locks on success, errors and interrupts. Errors or interrupts
@@ -12,7 +12,6 @@
 * Symlinks with missing targets are rejected before opening a sidecar. Create
   the target through its own path first, then use its stable symlink aliases.
 * `with_loggit()` no longer retains an open log connection across conditions.
-  UTF-8 payloads also round-trip through the reader in non-UTF-8 Windows locales.
 * Added bounded PSOCK regressions and cross-platform CI coverage for contention,
   rotation, first use, errors, interrupts and terminated lock holders.
 

@@ -19,8 +19,8 @@ NULL
 #' @details Cooperating processes on local filesystems serialize reads, appends and
 #' `rotate_logs()` using a persistent `<logfile>.lock` sidecar. Do not remove,
 #' replace or rotate that sidecar while any process may use the log. Its presence
-#' does not mean the log is locked. Entries are prepared as UTF-8 before locking;
-#' the file is opened, written, flushed and closed inside the lock.
+#' does not mean the log is locked. Entries are prepared before locking; the
+#' existing R write operation opens, writes and closes the file inside the lock.
 #' Symlinks with missing targets are rejected before locking; create the target
 #' through its own path before using such an alias.
 #' This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not

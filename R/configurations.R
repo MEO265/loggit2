@@ -31,15 +31,8 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  logfile <- normalize_logfile(logfile)
-  if (create) {
-    with_log_lock(logfile, {
-      if (!file.exists(logfile)) {
-        base::stopifnot("Could not create log file" = file.create(logfile))
-      }
-    })
-  }
-  .config[["logfile"]] <- logfile
+  if (create) with_log_lock(logfile, if (!file.exists(logfile)) file.create(logfile))
+  .config[["logfile"]] <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
   if (confirm) base::message("Log file set to ", .config[["logfile"]])
   return(invisible(old))
 }

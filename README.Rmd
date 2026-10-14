@@ -95,7 +95,8 @@ symlinks during logging are not
 supported. The parent directory must exist. Symlinks with missing targets are
 rejected before opening a sidecar; create the target through its own path first.
 
-JSON entries are serialized to UTF-8 before locking and written with a newline.
+JSON entries are serialized before locking. Encoding and file I/O use the
+existing R operations.
 Reads, appends, initialization and `rotate_logs()` open and close their files inside the
 same lock. Contending processes wait without polling or dropping records.
 `with_loggit()` holds no connection or lock while evaluating user code.

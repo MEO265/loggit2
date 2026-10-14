@@ -9,25 +9,22 @@ normalize_logfile <- function(logfile) {
   parent <- normalizePath(dirname(logfile), winslash = "/", mustWork = TRUE)
   target <- file.path(parent, basename(logfile))
   # Windows file.exists() can report a dangling link as existing.
-  .Call(c_check_log_alias, enc2utf8(target))
+  .Call(c_check_log_alias, target)
   if (file.exists(target)) {
     target <- normalizePath(target, winslash = "/", mustWork = TRUE)
   }
-  enc2utf8(target)
+  target
 }
 
 # Register cleanup before acquisition. The token initially owns no OS resource;
 # native unwind cleanup also protects the blocking acquisition itself.
 with_log_lock <- function(logfile, code) {
+  logfile <- normalize_logfile(logfile)
   lock <- .Call(c_new_log_lock, paste0(logfile, ".lock"))
   # Fallback cleanup must not replace the original error or interrupt.
   on.exit(tryCatch(.Call(c_unlock_log, lock), error = function(e) NULL), add = TRUE)
-  withCallingHandlers({
-    .Call(c_lock_log, lock)
-    result <- force(code)
-    .Call(c_unlock_log, lock)
-    result
-  }, warning = function(w) {
-    base::stop("Log I/O failed for '", logfile, "': ", conditionMessage(w))
-  })
+  .Call(c_lock_log, lock)
+  result <- force(code)
+  .Call(c_unlock_log, lock)
+  result
 }
