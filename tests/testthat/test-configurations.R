@@ -1,12 +1,14 @@
 test_that("test logfile configuration", {
   old <- get_logfile()
-  tmp_log <- normalizePath(tempfile("log_test_", fileext = ".loggit"), winslash = "/", mustWork = FALSE)
+  tmp_log <- tempfile("log_test_", fileext = ".loggit")
+  expected_path <- file.path(normalizePath(dirname(tmp_log), winslash = "/", mustWork = TRUE), basename(tmp_log))
   expect_silent(set_logfile(tmp_log, confirm = FALSE, create = FALSE))
   expect_false(file.exists(tmp_log))
-  expect_identical(get_logfile(), expected = tmp_log)
+  expect_identical(get_logfile(), expected_path)
   set_logfile(old, confirm = FALSE, create = FALSE)
   expect_silent(set_logfile(tmp_log, confirm = FALSE, create = TRUE))
   expect_true(file.exists(tmp_log))
+  expect_identical(get_logfile(), expected_path)
   expect_message(
     set_logfile(old, confirm = TRUE),
     regexp = "^Log file set to .*\n$"

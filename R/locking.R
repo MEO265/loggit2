@@ -2,8 +2,8 @@
 # also supports stable symlinks; replacing symlinks during logging is unsupported.
 normalize_logfile <- function(logfile) {
   base::stopifnot("logfile must be a non-empty path" =
-                   is.character(logfile) && length(logfile) == 1L &&
-                   !is.na(logfile) && nzchar(logfile))
+                    is.character(logfile) && length(logfile) == 1L &&
+                    !is.na(logfile) && nzchar(logfile))
   logfile <- path.expand(logfile)
   parent <- normalizePath(dirname(logfile), winslash = "/", mustWork = TRUE)
   target <- file.path(parent, basename(logfile))
