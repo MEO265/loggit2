@@ -7,6 +7,9 @@
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"c_split_ndjson", (DL_FUNC) &split_ndjson, 1},
+    {"c_with_log_lock", (DL_FUNC) &with_log_lock, 2},
+    {"c_write_log", (DL_FUNC) &write_log, 3},
+    {"c_rotate_log", (DL_FUNC) &rotate_log, 2},
     {NULL, NULL, 0}
 };
 }

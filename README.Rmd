@@ -82,6 +82,33 @@ just throw nearly whatever you want at it, and it'll become a structured log.
 
 Check out the [vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/) for more details and features.
 
+Multiple processes
+------------------
+
+Cooperating loggit2 processes on local Windows, Linux and macOS filesystems
+share an exclusive OS lock on byte zero of `<logfile>.lock`. The persistent
+sidecar is not a stale-lock marker: never delete, replace or rotate it while
+the log may be in use. Relative paths and existing symlink aliases are resolved
+before locking, including when the log file does not yet exist. Use the same
+target path; hard-link aliases and changing symlinks during logging are not
+supported. The parent directory must exist.
+
+Entries are serialized to UTF-8, including their final newline, before locking.
+Append, initialization and `rotate_logs()` open and close their files inside the
+same lock. Contending processes wait without polling or dropping records.
+`with_loggit()` holds no connection or lock while evaluating user code.
+Rotation still keeps the last N lines (zero clears the file); there are no
+automatic thresholds or archives. It scans from the end and copies only the
+retained suffix. Console echo and readers are not synchronized.
+
+This guarantee requires all writers and rotators to cooperate and does not
+extend generally to NFS/SMB. It is not transactional crash or power-loss safety:
+a crash can leave a partial entry or incomplete rotation. Flushing is not
+`fsync`. OS locks are released when their process exits. On Windows, an
+interrupt pending during synchronous lock acquisition is checked once the OS
+call returns; on Unix, interrupted lock waits check for R interrupts before
+retrying. Nested lock scopes are rejected before opening another descriptor.
+
 Installation
 ------------
 

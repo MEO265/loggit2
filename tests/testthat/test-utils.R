@@ -67,7 +67,7 @@ test_that("rotate_logs preserves sanitization", {
 
   rotate_lines <- 3L
   rotate_logs(rotate_lines = rotate_lines, logfile = tmp_log)
-  expect_snapshot_file(tmp_log)
+  expect_snapshot_file(tmp_log, compare = compare_file_text)
 
 })
 
@@ -89,9 +89,9 @@ test_that("convert_to_csv", {
     file = file.path(tmp_dir, "test_with_lf.csv"), unsanitize = TRUE, logfile = "testdata/test.loggit"
   )
 
-  expect_snapshot_file(file.path(tmp_dir, "test.csv"))
-  expect_snapshot_file(file.path(tmp_dir, "test_reverse.csv"))
-  expect_snapshot_file(file.path(tmp_dir, "test_with_lf.csv"))
+  expect_snapshot_file(file.path(tmp_dir, "test.csv"), compare = compare_file_text)
+  expect_snapshot_file(file.path(tmp_dir, "test_reverse.csv"), compare = compare_file_text)
+  expect_snapshot_file(file.path(tmp_dir, "test_with_lf.csv"), compare = compare_file_text)
 })
 
 library(testthat)

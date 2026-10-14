@@ -1,3 +1,17 @@
+# loggit2 (development version)
+
+* Appends, initialization and explicit line rotation now share a persistent
+  sidecar lock implemented with native Windows/POSIX byte-range locks. No new
+  package dependencies are required. JSON and UTF-8 serialization precede the
+  lock; writes are flushed and closed before release.
+* Rotation still retains the last N lines and creates no archives. It scans
+  backwards and copies only the retained suffix in bounded chunks.
+* `with_loggit()` no longer retains an open log connection across conditions.
+  Logging I/O failures propagate without recursive logging. UTF-8 payloads also
+  round-trip through the reader in non-UTF-8 Windows locales.
+* Added bounded PSOCK regressions and cross-platform CI coverage for contention,
+  rotation, first use, errors, interrupts and terminated lock holders.
+
 # loggit2 2.4.0
 
 ## New Features

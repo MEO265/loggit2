@@ -35,6 +35,13 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' @param rotate_lines The number of log entries to keep in the logfile.
 #' @param logfile Log file to truncate.
 #'
+#' @details Rotation keeps the last `rotate_lines` entries, with zero clearing
+#' the file. There are no automatic thresholds or archives. The current file is
+#' inspected and truncated under the same process lock used by appends. A native
+#' backwards scan locates the retained suffix without parsing JSON or reading
+#' the discarded prefix. The persistent `<logfile>.lock` sidecar is never rotated.
+#' See [loggit()] for the scope and limits of process safety.
+#'
 #' @return Invisible `NULL`.
 #'
 #' @examples
@@ -47,17 +54,12 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' }
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
-  base::stopifnot(rotate_lines >= 0L, "Log file does not exist" = file.exists(logfile))
-  if (rotate_lines == 0L) {
-    cat(NULL, file = logfile)
-    return(invisible(NULL))
-  }
-  log_df <- readLines(logfile)
-  if (length(log_df) <= rotate_lines) {
-    return(invisible(NULL))
-  }
-  log_df <- log_df[seq.int(from = length(log_df) - rotate_lines + 1L, length.out = rotate_lines)]
-  write(log_df, logfile, append = FALSE)
+  base::stopifnot(length(rotate_lines) == 1L, is.numeric(rotate_lines),
+                 !is.na(rotate_lines), rotate_lines >= 0L)
+  rotate_lines <- ceiling(as.double(rotate_lines))
+  logfile <- normalize_logfile(logfile)
+  with_log_lock(logfile, .Call(c_rotate_log, logfile, rotate_lines))
+  invisible(NULL)
 }
 
 #' Find the Call of a Parent Function in the Call Hierarchy

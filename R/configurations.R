@@ -14,6 +14,10 @@
 #'
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
+#' The parent directory must exist. It is normalized even when the log does not
+#' yet exist, so relative paths and directory aliases share the same lock.
+#' With `create = TRUE`, initialization uses the append lock and never truncates
+#' a file created by another process. See [loggit()] for locking guarantees.
 #'
 #' @return Invisible the previous log file path.
 #'
@@ -27,8 +31,13 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  if (create && !file.exists(logfile)) file.create(logfile)
-  .config[["logfile"]] <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
+  logfile <- normalize_logfile(logfile)
+  if (create) {
+    # Append an empty buffer under the lock: never truncate a concurrent writer.
+    bytes <- raw()
+    with_log_lock(logfile, write_log_bytes(logfile, bytes))
+  }
+  .config[["logfile"]] <- logfile
   if (confirm) base::message("Log file set to ", .config[["logfile"]])
   return(invisible(old))
 }

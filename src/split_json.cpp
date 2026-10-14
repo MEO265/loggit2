@@ -14,7 +14,7 @@
 //'
 //' @keywords internal
 extern "C" SEXP split_json(SEXP strSEXP) {
-    const char* str = CHAR(STRING_ELT(strSEXP, 0));
+    const char* str = Rf_translateCharUTF8(STRING_ELT(strSEXP, 0));
     std::vector<std::string> keys;
     std::vector<std::string> values;
     std::vector<bool> keysNA;
@@ -85,10 +85,10 @@ extern "C" SEXP split_json(SEXP strSEXP) {
     SEXP valuesR = PROTECT(Rf_allocVector(STRSXP, values.size()));
 
     for (size_t j = 0; j < keys.size(); ++j) {
-        SET_STRING_ELT(keysR, j, keysNA[j] ? NA_STRING : Rf_mkChar(keys[j].c_str()));
+        SET_STRING_ELT(keysR, j, keysNA[j] ? NA_STRING : Rf_mkCharCE(keys[j].c_str(), CE_UTF8));
     }
     for (size_t j = 0; j < values.size(); ++j) {
-        SET_STRING_ELT(valuesR, j, valuesNA[j] ? NA_STRING : Rf_mkChar(values[j].c_str()));
+        SET_STRING_ELT(valuesR, j, valuesNA[j] ? NA_STRING : Rf_mkCharCE(values[j].c_str(), CE_UTF8));
     }
 
     SET_VECTOR_ELT(ans, 0, keysR);
@@ -122,7 +122,7 @@ extern "C" SEXP split_ndjson(SEXP strVecSEXP) {
     SEXP result = PROTECT(Rf_allocVector(VECSXP, n));
 
     for (int i = 0; i < n; i++) {
-        SEXP strSEXP = PROTECT(Rf_mkString(CHAR(STRING_ELT(strVecSEXP, i))));
+        SEXP strSEXP = PROTECT(Rf_ScalarString(STRING_ELT(strVecSEXP, i)));
         SET_VECTOR_ELT(result, i, split_json(strSEXP));
         UNPROTECT(1); // Remove protection for strSEXP after using it
     }

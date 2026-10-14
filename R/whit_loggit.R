@@ -9,6 +9,10 @@
 #'
 #' @details If `loggit2` handlers are already used in the expression, this can lead to conditions being logged
 #' twice (in the same or different files).
+#' Each logged condition opens and closes its file under the shared process
+#' lock. No connection or lock is held while evaluating `exp`. If no condition
+#' is logged, a missing log file is not created. Logging I/O failures propagate
+#' without being logged again by enclosing `with_loggit()` handlers.
 #'
 #' @return The result of the expression.
 #'
@@ -35,34 +39,29 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_warn <- log_level >= 2L
   log_info <- log_level >= 3L
 
-  exists_on_start <- file.exists(logfile)
-  log_con <- file(description = logfile, open = "a")
-  on.exit({
-    close(con = log_con)
-    if (!exists_on_start && file.size(logfile) == 0L) file.remove(logfile) # nocov
-  }, add = TRUE, after = FALSE)
-
+  # Capture the path, but open the file only for each locked append.
+  logfile <- with_log_io(normalize_logfile(logfile))
 
   withCallingHandlers(
     exp,
     error = function(e) {
-      if (log_error) {
+      if (log_error && !inherits(e, "loggit_io_error")) {
         loggit_internal(
-          log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = log_con
+          log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = logfile
         )
       }
     },
     warning = function(w) {
       if (log_warn) {
         loggit_internal(
-          log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w), echo = echo, logfile = log_con
+          log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w), echo = echo, logfile = logfile
         )
       }
     },
     message = function(m) {
       if (log_info) {
         loggit_internal(
-          log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m), echo = echo, logfile = log_con
+          log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m), echo = echo, logfile = logfile
         )
       }
     }
