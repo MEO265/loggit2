@@ -64,11 +64,12 @@ default_ndjson_unsanitizer <- function(string) {
 #'   connections in append mode using an absolute path.
 #' @param echo Should the log entry (json) be echoed to `stdout` as well?
 #' @param overwrite Overwrite previous log file?
+#' @param lockfile Internal, precomputed sidecar path. If `NULL`, derive it from `logfile`.
 #'
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), overwrite = FALSE) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), overwrite = FALSE, lockfile = NULL) {
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
@@ -96,16 +97,10 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
-  flush_connection <- inherits(logfile, "file") && isOpen(logfile, "write")
-  with_log_lock(logfile, {
-    tryCatch({
-      write(logdata, file = logfile, append = !overwrite)
-      if (flush_connection) flush(logfile)
-    }, finally = {
-      # Flush before unlocking on errors too, without replacing the condition.
-      if (flush_connection) tryCatch(flush(logfile), error = function(e) NULL)
-    })
-  })
+  # Open a lazy connection before taking its write lock.
+  force(logfile)
+  # write()/cat() flushes open connections, including during error cleanup.
+  with_log_lock(logfile, write(logdata, file = logfile, append = !overwrite), lockfile = lockfile)
   invisible(NULL)
 }
 

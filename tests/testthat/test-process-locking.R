@@ -469,6 +469,47 @@ test_that("condition-handler failures release an acquired lock", {
   expect_identical(read_logs(path)$log_msg, "after handler failure")
 })
 
+test_that("with_loggit uses the shared lock for concurrent persistent writers", {
+  path <- normalize_logfile(tempfile())
+  with_log_workers(2L, function(cl, pids) {
+    start <- as.numeric(Sys.time()) + 0.2
+    parallel::clusterApply(cl, 1:2, function(worker, path, start) {
+      payload <- paste0(strrep("long entry ", 6000L), "\nquoted \"text\"")
+      suppressMessages(loggit2::with_loggit({
+        Sys.sleep(max(0L, start - as.numeric(Sys.time())))
+        for (i in 1:20) {
+          base::message(sprintf("%d:%02d", worker, i), " ", payload)
+          loggit2::rotate_logs(10000L, path)
+        }
+      }, logfile = path, echo = FALSE))
+    }, path, start)
+  })
+  expect_length(expect_valid_log_json(path), 40L)
+  expected <- sprintf("%d:%02d", rep(1:2, each = 20L), rep(1:20, 2L))
+  expect_identical(sort(substr(read_logs(path)$log_msg, 1L, 4L)), sort(expected))
+})
+
+test_that("connection cleanup preserves an original error and reports normal failures", {
+  path <- normalize_logfile(tempfile())
+  lock_scope <- with_log_lock
+  local_mocked_bindings(with_log_lock = function(logfile, code, lockfile = NULL) {
+    closing <- is.call(substitute(code)) && identical(substitute(code)[[1L]], as.name("close"))
+    result <- lock_scope(logfile, code, lockfile = lockfile)
+    if (closing) base::stop("injected close failure")
+    result
+  })
+  condition <- simpleError("original failure")
+  result <- tryCatch(suppressMessages(with_loggit({
+    base::message("before failure")
+    base::stop(condition)
+  }, logfile = path, echo = FALSE)), error = identity)
+  expect_identical(result, condition)
+  expect_false(path %in% showConnections()[, "description"])
+  expect_error(suppressMessages(with_loggit(base::message("normal"), logfile = path, echo = FALSE)),
+               "injected close failure")
+  expect_false(path %in% showConnections()[, "description"])
+})
+
 test_that("existing symlink aliases share a canonical target", {
   skip_on_os("windows")
   dir <- tempfile()

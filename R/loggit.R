@@ -98,7 +98,7 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #'
 #' @keywords internal
 loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo(), logfile = get_logfile(),
-                            call_options = get_call_options()) {
+                            call_options = get_call_options(), lockfile = NULL) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
   if (call_options[["log_call"]]) {
@@ -106,7 +106,7 @@ loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo()
   }
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
-  write_ndjson(log_df, echo = echo, logfile = logfile)
+  write_ndjson(log_df, echo = echo, logfile = logfile, lockfile = lockfile)
 }
 
 #' Internal logging function for custom log fields

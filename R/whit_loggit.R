@@ -41,15 +41,16 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_info <- log_level >= 3L
 
   logfile <- normalize_logfile(logfile)
+  lockfile <- paste0(logfile, ".lock")
   log_con <- NULL
   on.exit({
     if (!is.null(log_con)) {
-      tryCatch(with_log_lock(logfile, close(log_con)), error = function(e) NULL)
+      tryCatch(with_log_lock(logfile, close(log_con), lockfile = lockfile), error = function(e) NULL)
     }
   }, add = TRUE)
   # Open lazily so an empty scope need not create or delete a shared file.
   get_log_con <- function() {
-    if (is.null(log_con)) with_log_lock(logfile, log_con <<- file(logfile, open = "a"))
+    if (is.null(log_con)) with_log_lock(logfile, log_con <<- file(logfile, open = "a"), lockfile = lockfile)
     log_con
   }
 
@@ -59,7 +60,7 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
       if (log_error) {
         loggit_internal(
           log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e),
-          echo = echo, logfile = get_log_con()
+          echo = echo, logfile = get_log_con(), lockfile = lockfile
         )
       }
     },
@@ -67,7 +68,7 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
       if (log_warn) {
         loggit_internal(
           log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w),
-          echo = echo, logfile = get_log_con()
+          echo = echo, logfile = get_log_con(), lockfile = lockfile
         )
       }
     },
@@ -75,13 +76,13 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
       if (log_info) {
         loggit_internal(
           log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m),
-          echo = echo, logfile = get_log_con()
+          echo = echo, logfile = get_log_con(), lockfile = lockfile
         )
       }
     }
   ))
   if (!is.null(log_con)) {
-    with_log_lock(logfile, close(log_con))
+    with_log_lock(logfile, close(log_con), lockfile = lockfile)
     log_con <- NULL
   }
   if (result$visible) result$value else invisible(result$value)

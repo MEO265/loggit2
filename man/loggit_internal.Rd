@@ -10,7 +10,8 @@ loggit_internal(
   log_call = NULL,
   echo = get_echo(),
   logfile = get_logfile(),
-  call_options = get_call_options()
+  call_options = get_call_options(),
+  lockfile = NULL
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ loggit_internal(
 connections in append mode using an absolute path.}
 
 \item{call_options}{List of options regarding logging of call objects. As set by \code{set_call_options()}.}
+
+\item{lockfile}{Internal, precomputed sidecar path. If \code{NULL}, derive it from \code{logfile}.}
 }
 \value{
 Invisible \code{NULL}.
