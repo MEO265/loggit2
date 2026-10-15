@@ -30,9 +30,10 @@ This is particularly useful for code that cannot be customized, e.g. from third-
 \details{
 If \code{loggit2} handlers are already used in the expression, this can lead to conditions being logged
 twice (in the same or different files).
-Each logged condition opens and closes its file under the shared process
-lock. No connection or lock is held while evaluating \code{exp}. If no condition
-is logged, a missing log file is not created.
+The first logged condition opens an append connection, reused until \code{exp}
+finishes. Each entry is written and flushed under the shared process lock.
+Opening and closing also use that lock; evaluating \code{exp} does not hold it.
+If no condition is logged, a missing log file is not created.
 }
 \examples{
 \dontrun{

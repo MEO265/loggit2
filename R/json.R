@@ -60,7 +60,8 @@ default_ndjson_unsanitizer <- function(string) {
 #' Write ndJSON-formatted log file
 #'
 #' @param log_df A `data.frame`. Entries are converted to `ndjson`, with the columns as the fields.
-#' @param logfile A character string naming the file to write to.
+#' @param logfile A file path or a file connection. For shared logging, open
+#'   connections in append mode using an absolute path.
 #' @param echo Should the log entry (json) be echoed to `stdout` as well?
 #' @param overwrite Overwrite previous log file?
 #'
@@ -95,7 +96,16 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
-  with_log_lock(logfile, write(logdata, file = logfile, append = !overwrite))
+  flush_connection <- inherits(logfile, "file") && isOpen(logfile, "write")
+  with_log_lock(logfile, {
+    tryCatch({
+      write(logdata, file = logfile, append = !overwrite)
+      if (flush_connection) flush(logfile)
+    }, finally = {
+      # Flush before unlocking on errors too, without replacing the condition.
+      if (flush_connection) tryCatch(flush(logfile), error = function(e) NULL)
+    })
+  })
   invisible(NULL)
 }
 

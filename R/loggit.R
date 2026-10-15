@@ -7,7 +7,8 @@ NULL
 #'
 #' @param log_lvl Log level. A atomic vector of length one (usually `character`). Will be coerced to `character`.
 #' @param log_msg Log message. A atomic vector of length one (usually `character`). Will be coerced to `character`.
-#' @param logfile Path of log file to write to.
+#' @param logfile Path of log file to write to, or a file connection. For shared
+#'   logging, open connections in append mode using an absolute path.
 #' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?
@@ -20,7 +21,8 @@ NULL
 #' `rotate_logs()` using a persistent `<logfile>.lock` sidecar. Do not remove,
 #' replace or rotate that sidecar while any process may use the log. Its presence
 #' does not mean the log is locked. Entries are prepared before locking; the
-#' existing R write operation opens, writes and closes the file inside the lock.
+#' existing R write operation opens, writes and closes file paths inside the lock.
+#' Supplied file connections remain open and are flushed before unlocking.
 #' Symlinks with missing targets are rejected before locking; create the target
 #' through its own path before using such an alias.
 #' This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not

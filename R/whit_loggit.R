@@ -5,13 +5,15 @@
 #'
 #' @param exp An `expression` to evaluate.
 #' @param log_level The log level to use.
+#' @param logfile Path of log file to write to.
 #' @inheritParams loggit
 #'
 #' @details If `loggit2` handlers are already used in the expression, this can lead to conditions being logged
 #' twice (in the same or different files).
-#' Each logged condition opens and closes its file under the shared process
-#' lock. No connection or lock is held while evaluating `exp`. If no condition
-#' is logged, a missing log file is not created.
+#' The first logged condition opens an append connection, reused until `exp`
+#' finishes. Each entry is written and flushed under the shared process lock.
+#' Opening and closing also use that lock; evaluating `exp` does not hold it.
+#' If no condition is logged, a missing log file is not created.
 #'
 #' @return The result of the expression.
 #'
@@ -38,31 +40,49 @@ with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_lev
   log_warn <- log_level >= 2L
   log_info <- log_level >= 3L
 
-  # Capture the path, but open the file only for each locked append.
   logfile <- normalize_logfile(logfile)
+  log_con <- NULL
+  on.exit({
+    if (!is.null(log_con)) {
+      tryCatch(with_log_lock(logfile, close(log_con)), error = function(e) NULL)
+    }
+  }, add = TRUE)
+  # Open lazily so an empty scope need not create or delete a shared file.
+  get_log_con <- function() {
+    if (is.null(log_con)) with_log_lock(logfile, log_con <<- file(logfile, open = "a"))
+    log_con
+  }
 
-  withCallingHandlers(
+  result <- withVisible(withCallingHandlers(
     exp,
     error = function(e) {
       if (log_error) {
         loggit_internal(
-          log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e), echo = echo, logfile = logfile
+          log_lvl = "ERROR", log_msg = conditionMessage(e), log_call = conditionCall(e),
+          echo = echo, logfile = get_log_con()
         )
       }
     },
     warning = function(w) {
       if (log_warn) {
         loggit_internal(
-          log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w), echo = echo, logfile = logfile
+          log_lvl = "WARN", log_msg = conditionMessage(w), log_call = conditionCall(w),
+          echo = echo, logfile = get_log_con()
         )
       }
     },
     message = function(m) {
       if (log_info) {
         loggit_internal(
-          log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m), echo = echo, logfile = logfile
+          log_lvl = "INFO", log_msg = conditionMessage(m), log_call = conditionCall(m),
+          echo = echo, logfile = get_log_con()
         )
       }
     }
-  )
+  ))
+  if (!is.null(log_con)) {
+    with_log_lock(logfile, close(log_con))
+    log_con <- NULL
+  }
+  if (result$visible) result$value else invisible(result$value)
 }

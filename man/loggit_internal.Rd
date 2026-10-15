@@ -22,7 +22,8 @@ loggit_internal(
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
-\item{logfile}{A character string naming the file to write to.}
+\item{logfile}{A file path or a file connection. For shared logging, open
+connections in append mode using an absolute path.}
 
 \item{call_options}{List of options regarding logging of call objects. As set by \code{set_call_options()}.}
 }

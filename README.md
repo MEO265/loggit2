@@ -110,9 +110,12 @@ rejected before opening a sidecar; create the target through its own path first.
 
 JSON entries are serialized before locking. Encoding and file I/O use the
 existing R operations.
-Reads, appends, initialization and `rotate_logs()` open and close their files inside the
-same lock. Contending processes wait without polling or dropping records.
-`with_loggit()` holds no connection or lock while evaluating user code.
+Reads, appends, initialization and `rotate_logs()` use the same lock. File
+connections can stay open between entries; each write is flushed before
+unlocking. Use append connections with absolute paths for shared logging.
+`with_loggit()` opens its connection on the first condition, reuses it, and
+closes it on exit. Opening and closing use the lock, but user code does not
+hold it. Contending processes wait without polling or dropping records.
 Rotation still keeps the last N lines (zero clears the file); there are no
 automatic thresholds or archives. It uses the existing R line-based read and
 rewrite under one continuous lock. An error or interrupt while rewriting can

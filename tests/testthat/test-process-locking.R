@@ -369,16 +369,89 @@ test_that("overwrites also take the shared lock and retain the sidecar", {
   expect_identical(file.info(lock)$mtime, before)
 })
 
-test_that("with_loggit does not hold a stale connection across rotation", {
+test_that("with_loggit keeps one flushed connection across external rotation", {
   path <- tempfile()
   expect_identical(with_loggit(42L, logfile = path), 42L)
   expect_false(file.exists(path))
-  suppressMessages(with_loggit({
-    base::message("first")
-    rotate_logs(0L, path)
-    base::message("second")
-  }, logfile = path, echo = FALSE))
-  expect_identical(read_logs(path)$log_msg, "second\n")
+  with_log_workers(1L, function(cl, pids) {
+    suppressMessages(with_loggit({
+      base::message("first")
+      connections <- showConnections()
+      connection_id <- rownames(connections)[connections[, "description"] == normalize_logfile(path)]
+      expect_length(connection_id, 1L)
+      expect_identical(parallel::clusterCall(cl, function(path) {
+        before <- loggit2::read_logs(path)$log_msg
+        loggit2::rotate_logs(0L, path)
+        loggit2::loggit("INFO", "external", logfile = path, echo = FALSE)
+        before
+      }, path)[[1L]], "first\n")
+      base::message("second")
+      expect_true(connection_id %in% rownames(showConnections()))
+      expect_identical(parallel::clusterCall(cl, function(path) {
+        loggit2::read_logs(path)$log_msg
+      }, path)[[1L]], c("external", "second\n"))
+    }, logfile = path, echo = FALSE))
+    expect_false(connection_id %in% rownames(showConnections()))
+  })
+  expect_identical(read_logs(path)$log_msg, c("external", "second\n"))
+  expect_identical(withVisible(with_loggit(invisible(42L), logfile = path)),
+                   list(value = 42L, visible = FALSE))
+})
+
+test_that("file connections use the same lock and remain owned by the caller", {
+  path <- normalize_logfile(tempfile())
+  con <- with_log_lock(path, file(path, open = "a"))
+  on.exit(with_log_lock(path, close(con)), add = TRUE)
+  with_log_workers(1L, function(cl, pids) {
+    loggit("INFO", "connection", logfile = con, echo = FALSE)
+    expect_identical(parallel::clusterCall(cl, function(path) {
+      before <- loggit2::read_logs(path)$log_msg
+      loggit2::rotate_logs(0L, path)
+      before
+    }, path)[[1L]], "connection")
+    loggit("INFO", "after rotation", logfile = con, echo = FALSE)
+    expect_identical(read_logs(path)$log_msg, "after rotation")
+  })
+  expect_true(isOpen(con, "write"))
+})
+
+test_that("with_loggit closes its connection on errors and interrupts", {
+  path <- normalize_logfile(tempfile())
+  for (condition in list(simpleError("injected error"),
+                         structure(list(message = "injected interrupt"), class = c("interrupt", "condition")))) {
+    result <- tryCatch(suppressMessages(with_loggit({
+      base::message("before failure")
+      base::stop(condition)
+    }, logfile = path, echo = FALSE)), error = identity, interrupt = identity)
+    expect_identical(result, condition)
+    expect_false(path %in% showConnections()[, "description"])
+    with_log_workers(1L, function(cl, pids) {
+      expect_true(parallel::clusterCall(cl, function(path) {
+        loggit2::loggit("INFO", "after failure", logfile = path, echo = FALSE)
+        TRUE
+      }, path)[[1L]])
+    })
+  }
+})
+
+test_that("persistent connections serialize long appends and rotation", {
+  path <- normalize_logfile(tempfile())
+  with_log_workers(2L, function(cl, pids) {
+    start <- as.numeric(Sys.time()) + 0.2
+    parallel::clusterApply(cl, 1:2, function(worker, path, start) {
+      con <- loggit2:::with_log_lock(path, file(path, open = "a"))
+      on.exit(loggit2:::with_log_lock(path, close(con)), add = TRUE)
+      payload <- paste0(strrep("long entry ", 6000L), "\nquoted \"text\"")
+      Sys.sleep(max(0L, start - as.numeric(Sys.time())))
+      for (i in 1:20) {
+        loggit2::loggit("INFO", payload, id = paste(worker, i, sep = ":"), logfile = con, echo = FALSE)
+        loggit2::rotate_logs(10000L, path)
+      }
+    }, path, start)
+  })
+  expect_length(expect_valid_log_json(path), 40L)
+  expected <- c(paste(1L, 1:20, sep = ":"), paste(2L, 1:20, sep = ":"))
+  expect_identical(sort(read_logs(path)$id), sort(expected))
 })
 
 test_that("condition-handler failures release an acquired lock", {

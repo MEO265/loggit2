@@ -19,6 +19,7 @@ normalize_logfile <- function(logfile) {
 # Register cleanup before acquisition. The token initially owns no OS resource;
 # native unwind cleanup also protects the blocking acquisition itself.
 with_log_lock <- function(logfile, code) {
+  if (inherits(logfile, "file")) logfile <- summary(logfile)$description
   logfile <- normalize_logfile(logfile)
   lock <- .Call(c_new_log_lock, paste0(logfile, ".lock"))
   # Fallback cleanup must not replace the original error or interrupt.
