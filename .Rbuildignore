@@ -17,4 +17,3 @@ Makefile
 ^docs$
 ^pkgdown$
 ^\.lintr$
-^\.validation$
