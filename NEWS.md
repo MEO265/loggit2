@@ -1,7 +1,8 @@
 # loggit2 (development version)
 
-* Log reads, writes and rotation now use native process locks on Windows, Linux
-  and macOS, without new dependencies.
+* Multiple processes can now safely share a local log file on Windows, Linux and
+  macOS. Concurrent logging and rotation no longer mix entries or accidentally
+  overwrite new entries.
 
 # loggit2 2.4.0
 
