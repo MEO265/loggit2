@@ -14,6 +14,10 @@
 #'
 #' @details No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 #' Therefore, the default behavior is to create a file named `loggit.log` in your system's temporary directory.
+#' The parent directory must exist. It is normalized even when the log does not
+#' yet exist, so relative paths and directory aliases share the same lock.
+#' With `create = TRUE`, initialization uses the append lock and never truncates
+#' a file created by another process. See [loggit()] for locking guarantees.
 #'
 #' @return Invisible the previous log file path.
 #'
@@ -27,7 +31,7 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
   if (is.null(logfile)) {
     logfile <- file.path(tempdir(), "loggit.log")
   }
-  if (create && !file.exists(logfile)) file.create(logfile)
+  if (create) with_log_lock(logfile, if (!file.exists(logfile)) file.create(logfile))
   .config[["logfile"]] <- normalizePath(logfile, winslash = "/", mustWork = FALSE)
   if (confirm) base::message("Log file set to ", .config[["logfile"]])
   return(invisible(old))
@@ -45,6 +49,41 @@ set_logfile <- function(logfile = NULL, confirm = TRUE, create = TRUE) {
 #' @export
 get_logfile <- function() {
   .config[["logfile"]]
+}
+
+
+#' Control Multi-Process Safety
+#'
+#' Enable or disable file locking for this R process. Locking is enabled by default.
+#'
+#' @param safe_multi_process Use file locks for log reads, writes and rotation?
+#'   A single non-missing logical value.
+#' @param confirm Print confirmation of the setting?
+#'
+#' @details All processes sharing a log must keep this enabled for the
+#' multi-process guarantee. Disable it only when concurrent access is excluded.
+#' Existing lock sidecars are retained when locking is disabled.
+#'
+#' @return The setter invisibly returns the previous setting. The getter
+#' returns the current logical setting.
+#'
+#' @examples get_safe_multi_process()
+#' @rdname safe_multi_process
+#' @export
+set_safe_multi_process <- function(safe_multi_process = TRUE, confirm = TRUE) {
+  base::stopifnot("safe_multi_process must be TRUE or FALSE" =
+                    is.logical(safe_multi_process) && length(safe_multi_process) == 1L &&
+                    !is.na(safe_multi_process))
+  old <- get_safe_multi_process()
+  .config[["safe_multi_process"]] <- safe_multi_process
+  if (confirm) base::message("Multi-process safety set to ", safe_multi_process)
+  invisible(old)
+}
+
+#' @rdname safe_multi_process
+#' @export
+get_safe_multi_process <- function() {
+  .config[["safe_multi_process"]]
 }
 
 

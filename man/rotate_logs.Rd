@@ -17,6 +17,14 @@ Invisible \code{NULL}.
 \description{
 Truncates the log file to the line count provided as \code{rotate_lines}.
 }
+\details{
+Rotation keeps the last \code{rotate_lines} entries, with zero clearing
+the file. There are no automatic thresholds or archives. The current file is
+read and rewritten under one process lock, using the existing line-based
+rotation. The persistent \verb{<logfile>.lock} sidecar is never rotated.
+An error or interrupt while rewriting can leave an incomplete file.
+See \code{\link[=loggit]{loggit()}} for the scope and limits of process safety.
+}
 \examples{
 \dontrun{
   rotate_logs()

@@ -7,7 +7,8 @@ NULL
 #'
 #' @param log_lvl Log level. A atomic vector of length one (usually `character`). Will be coerced to `character`.
 #' @param log_msg Log message. A atomic vector of length one (usually `character`). Will be coerced to `character`.
-#' @param logfile Path of log file to write to.
+#' @param logfile Path of log file to write to, or a file connection. For shared
+#'   logging, open connections in append mode using an absolute path.
 #' @param ... Named arguments, each a atomic vector of length one, you wish to log. Will be coerced to `character`.
 #'   The names of the arguments are treated as column names in the log.
 #' @param custom_log_lvl Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?
@@ -15,6 +16,21 @@ NULL
 #' @inheritParams write_ndjson
 #'
 #' @return Invisible `NULL`.
+#'
+#' @details Cooperating processes on local filesystems serialize reads, appends and
+#' `rotate_logs()` using a persistent `<logfile>.lock` sidecar while
+#' [get_safe_multi_process()] is `TRUE` (the default). Disabling this with
+#' [set_safe_multi_process()] removes the multi-process guarantee. Do not remove,
+#' replace or rotate that sidecar while any process may use the log. Its presence
+#' does not mean the log is locked. Entries are prepared before locking; the
+#' existing R write operation opens, writes and closes file paths inside the lock.
+#' Supplied file connections remain open and are flushed before unlocking.
+#' Symlinks with missing targets are rejected before locking; create the target
+#' through its own path before using such an alias.
+#' This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not
+#' provide transactional crash or power-loss safety: a crash can leave a partial
+#' entry or an incomplete rotation. Errors or interrupts during rotation can
+#' also leave an incomplete file. Readers release the lock before parsing JSON.
 #'
 #' @examples
 #' \dontrun{
@@ -82,7 +98,7 @@ loggit <- function(log_lvl, log_msg, ..., echo = get_echo(), custom_log_lvl = FA
 #'
 #' @keywords internal
 loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo(), logfile = get_logfile(),
-                            call_options = get_call_options()) {
+                            call_options = get_call_options(), lockfile = NULL) {
   timestamp <- format(Sys.time(), format = .config[["ts_format"]])
   log_df <- list(timestamp = timestamp, log_lvl = as.character(log_lvl), log_msg = as.character(log_msg))
   if (call_options[["log_call"]]) {
@@ -90,7 +106,7 @@ loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo()
   }
   log_df <- as.data.frame.list(log_df, stringsAsFactors = FALSE, check.names = FALSE, fix.empty.names = FALSE)
 
-  write_ndjson(log_df, echo = echo, logfile = logfile)
+  write_ndjson(log_df, echo = echo, logfile = logfile, lockfile = lockfile)
 }
 
 #' Internal logging function for custom log fields

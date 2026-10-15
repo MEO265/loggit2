@@ -8,17 +8,21 @@ write_ndjson(
   log_df,
   logfile = get_logfile(),
   echo = get_echo(),
-  overwrite = FALSE
+  overwrite = FALSE,
+  lockfile = NULL
 )
 }
 \arguments{
 \item{log_df}{A \code{data.frame}. Entries are converted to \code{ndjson}, with the columns as the fields.}
 
-\item{logfile}{A \code{connection}, or a character string naming the file to write to.}
+\item{logfile}{A file path or a file connection. For shared logging, open
+connections in append mode using an absolute path.}
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
 \item{overwrite}{Overwrite previous log file?}
+
+\item{lockfile}{Internal, precomputed sidecar path. If \code{NULL}, derive it from \code{logfile}.}
 }
 \value{
 Invisible \code{NULL}.

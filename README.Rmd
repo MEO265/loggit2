@@ -82,6 +82,46 @@ just throw nearly whatever you want at it, and it'll become a structured log.
 
 Check out the [vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/) for more details and features.
 
+Multiple processes
+------------------
+
+Locking is enabled by default. `get_safe_multi_process()` returns the current
+setting; `set_safe_multi_process(FALSE)` disables locking in this R process.
+Only disable it when concurrent access is excluded. Every process sharing a log
+must keep locking enabled for the guarantee below. Existing sidecars are retained.
+
+Cooperating loggit2 processes on local Windows, Linux and macOS filesystems
+share an exclusive OS lock on byte zero of `<logfile>.lock`. The persistent
+sidecar is not a stale-lock marker: never delete, replace or rotate it while
+the log may be in use. Relative paths and symlink aliases to existing targets
+are resolved before locking. New logfiles use their normalized parent directory
+to choose the sidecar. Use the same target path; hard-link aliases and changing
+symlinks during logging are not
+supported. The parent directory must exist. Symlinks with missing targets are
+rejected before opening a sidecar; create the target through its own path first.
+
+JSON entries are serialized before locking. Encoding and file I/O use the
+existing R operations.
+Reads, appends, initialization and `rotate_logs()` use the same lock. File
+connections can stay open between entries; each write is flushed before
+unlocking. Use append connections with absolute paths for shared logging.
+`with_loggit()` opens its connection on the first condition, reuses it, and
+closes it on exit. Opening and closing use the lock, but user code does not
+hold it. Contending processes wait without polling or dropping records.
+Rotation still keeps the last N lines (zero clears the file); there are no
+automatic thresholds or archives. It uses the existing R line-based read and
+rewrite under one continuous lock. An error or interrupt while rewriting can
+leave an incomplete file, as before. Readers release the lock before parsing
+JSON. Console echo is not synchronized.
+
+This guarantee requires all writers and rotators to cooperate and does not
+extend generally to NFS/SMB. It is not transactional crash or power-loss safety:
+a crash can leave a partial entry or incomplete rotation. Flushing is not
+`fsync`. OS locks are released when their process exits. On Windows, an
+interrupt pending during synchronous lock acquisition is checked once the OS
+call returns; on Unix, interrupted lock waits check for R interrupts before
+retrying. Nested lock scopes are rejected before opening another descriptor.
+
 Installation
 ------------
 
