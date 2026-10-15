@@ -1,19 +1,7 @@
 # loggit2 (development version)
 
-* Reads, appends, initialization and explicit line rotation now share a persistent
-  sidecar lock implemented with native Windows/POSIX byte-range locks. No new
-  package dependencies are required. Existing serialization, encoding, parsing
-  and R file I/O are retained; log files are closed before lock release.
-* Rotation retains the existing R line-based algorithm and keeps the last N
-  lines without creating archives. One lock covers the complete read and rewrite;
-  `on.exit` releases locks on success, errors and interrupts. Errors or interrupts
-  while rewriting can still leave an incomplete file. JSON parsing runs outside
-  the read lock.
-* Symlinks with missing targets are rejected before opening a sidecar. Create
-  the target through its own path first, then use its stable symlink aliases.
-* `with_loggit()` no longer retains an open log connection across conditions.
-* Added bounded PSOCK regressions and cross-platform CI coverage for contention,
-  rotation, first use, errors, interrupts and terminated lock holders.
+* Log reads, writes and rotation now use native process locks on Windows, Linux
+  and macOS, without new dependencies.
 
 # loggit2 2.4.0
 
