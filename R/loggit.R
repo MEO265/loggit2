@@ -18,7 +18,9 @@ NULL
 #' @return Invisible `NULL`.
 #'
 #' @details Cooperating processes on local filesystems serialize reads, appends and
-#' `rotate_logs()` using a persistent `<logfile>.lock` sidecar. Do not remove,
+#' `rotate_logs()` using a persistent `<logfile>.lock` sidecar while
+#' [get_safe_multi_process()] is `TRUE` (the default). Disabling this with
+#' [set_safe_multi_process()] removes the multi-process guarantee. Do not remove,
 #' replace or rotate that sidecar while any process may use the log. Its presence
 #' does not mean the log is locked. Entries are prepared before locking; the
 #' existing R write operation opens, writes and closes file paths inside the lock.

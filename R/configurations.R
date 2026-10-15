@@ -52,6 +52,41 @@ get_logfile <- function() {
 }
 
 
+#' Control Multi-Process Safety
+#'
+#' Enable or disable file locking for this R process. Locking is enabled by default.
+#'
+#' @param safe_multi_process Use file locks for log reads, writes and rotation?
+#'   A single non-missing logical value.
+#' @param confirm Print confirmation of the setting?
+#'
+#' @details All processes sharing a log must keep this enabled for the
+#' multi-process guarantee. Disable it only when concurrent access is excluded.
+#' Existing lock sidecars are retained when locking is disabled.
+#'
+#' @return The setter invisibly returns the previous setting. The getter
+#' returns the current logical setting.
+#'
+#' @examples get_safe_multi_process()
+#' @rdname safe_multi_process
+#' @export
+set_safe_multi_process <- function(safe_multi_process = TRUE, confirm = TRUE) {
+  base::stopifnot("safe_multi_process must be TRUE or FALSE" =
+                    is.logical(safe_multi_process) && length(safe_multi_process) == 1L &&
+                    !is.na(safe_multi_process))
+  old <- get_safe_multi_process()
+  .config[["safe_multi_process"]] <- safe_multi_process
+  if (confirm) base::message("Multi-process safety set to ", safe_multi_process)
+  invisible(old)
+}
+
+#' @rdname safe_multi_process
+#' @export
+get_safe_multi_process <- function() {
+  .config[["safe_multi_process"]]
+}
+
+
 #' Set Timestamp Format
 #'
 #' Set timestamp format for use in output logs.

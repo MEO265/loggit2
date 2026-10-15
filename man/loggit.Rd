@@ -39,7 +39,9 @@ Log messages and R objects to a \href{https://github.com/ndjson}{ndjson} log fil
 }
 \details{
 Cooperating processes on local filesystems serialize reads, appends and
-\code{rotate_logs()} using a persistent \verb{<logfile>.lock} sidecar. Do not remove,
+\code{rotate_logs()} using a persistent \verb{<logfile>.lock} sidecar while
+\code{\link[=get_safe_multi_process]{get_safe_multi_process()}} is \code{TRUE} (the default). Disabling this with
+\code{\link[=set_safe_multi_process]{set_safe_multi_process()}} removes the multi-process guarantee. Do not remove,
 replace or rotate that sidecar while any process may use the log. Its presence
 does not mean the log is locked. Entries are prepared before locking; the
 existing R write operation opens, writes and closes file paths inside the lock.

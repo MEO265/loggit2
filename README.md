@@ -98,6 +98,11 @@ for more details and features.
 
 ## Multiple processes
 
+Locking is enabled by default. `get_safe_multi_process()` returns the current
+setting; `set_safe_multi_process(FALSE)` disables locking in this R process.
+Only disable it when concurrent access is excluded. Every process sharing a log
+must keep locking enabled for the guarantee below. Existing sidecars are retained.
+
 Cooperating loggit2 processes on local Windows, Linux and macOS filesystems
 share an exclusive OS lock on byte zero of `<logfile>.lock`. The persistent
 sidecar is not a stale-lock marker: never delete, replace or rotate it while
