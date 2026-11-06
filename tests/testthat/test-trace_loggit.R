@@ -12,7 +12,7 @@ configure_trace_test <- function() {
 test_that("entry templates log explicit arguments and preserve results", {
   restore <- configure_trace_test()
   on.exit(restore(), add = TRUE)
-  target <- function(x, append = FALSE, unused) invisible(x * 2)
+  target <- function(x, unused, append = FALSE) invisible(x * 2L)
   original <- target
   registration <- withVisible(trace_loggit(
     target, "x={ x }; append={append}; literal={{x}}", where = environment()
@@ -20,14 +20,14 @@ test_that("entry templates log explicit arguments and preserve results", {
   stop_trace <- registration$value
   on.exit(stop_trace(), add = TRUE)
   expect_false(registration$visible)
-  expect_output(result <- withVisible(target(21, unused = base::stop("must stay lazy"))), NA)
-  expect_identical(result, list(value = 42, visible = FALSE))
+  expect_output(result <- withVisible(target(21L, unused = base::stop("must stay lazy"))), NA)
+  expect_identical(result, list(value = 42L, visible = FALSE))
   expect_identical(read_logs()$log_msg, "x=21; append=FALSE; literal={x}")
   expect_identical(read_logs()$log_lvl, "DEBUG")
 
   stop_trace()
   expect_identical(target, original)
-  target(1)
+  target(1L)
   expect_identical(nrow(read_logs()), 1L)
 })
 
@@ -41,7 +41,7 @@ test_that("templates are validated before changing the function", {
   for (template in c("{x", "x}", "{{x}")) {
     expect_error(trace_loggit(target, template, where = environment()), "Unmatched brace")
   }
-  for (template in list(NA_character_, character(), c("a", "b"), 1, list("a"))) {
+  for (template in list(NA_character_, character(), c("a", "b"), 1L, list("a"))) {
     expect_error(trace_loggit(target, template, where = environment()), "single, non-missing character")
   }
   expect_error(trace_loggit(target, "ok", exit = "{x}", where = environment()), "Invalid placeholders in 'exit'")
@@ -85,8 +85,8 @@ test_that("exit templates preserve values and visibility on every normal return"
   }
   stop_trace <- trace_loggit(target, "start {x}", exit = "end {returnValue}", where = environment())
   on.exit(stop_trace(), add = TRUE)
-  expect_identical(withVisible(target(2)), list(value = 2, visible = TRUE))
-  expect_identical(withVisible(target(c(3, 4), hidden = TRUE)), list(value = c(3, 4), visible = FALSE))
+  expect_identical(withVisible(target(2L)), list(value = 2L, visible = TRUE))
+  expect_identical(withVisible(target(c(3L, 4L), hidden = TRUE)), list(value = c(3L, 4L), visible = FALSE))
   expect_identical(withVisible(target(NULL)), list(value = NULL, visible = TRUE))
   expect_identical(read_logs()$log_msg, c("start 2", "end 2", "start 3, 4", "end 3, 4", "start NULL", "end NULL"))
 })
@@ -107,21 +107,21 @@ test_that("exit hooks respect the target's on.exit handlers", {
   cleaned <- FALSE
   target <- function() {
     on.exit(cleaned <<- TRUE, add = TRUE)
-    invisible(7)
+    invisible(7L)
   }
   stop_trace <- trace_loggit(target, exit = "end {returnValue}", where = environment())
   on.exit(stop_trace(), add = TRUE)
-  expect_identical(withVisible(target()), list(value = 7, visible = FALSE))
+  expect_identical(withVisible(target()), list(value = 7L, visible = FALSE))
   expect_true(cleaned)
   expect_identical(read_logs()$log_msg, "end 7")
   stop_trace()
 
   target <- function() {
     on.exit(invisible(NULL), add = FALSE)
-    8
+    8L
   }
   stop_trace <- trace_loggit(target, exit = "replaced", where = environment())
-  expect_identical(target(), 8)
+  expect_identical(target(), 8L)
   expect_identical(read_logs()$log_msg, "end 7")
 })
 
@@ -147,7 +147,7 @@ test_that("qualified references and cleanup use trace's package resolution", {
   on.exit(stop_trace(), add = TRUE)
   destination <- tempfile(fileext = ".csv")
   on.exit(unlink(destination), add = TRUE)
-  utils::write.csv(data.frame(x = 1), destination, row.names = FALSE)
+  utils::write.csv(data.frame(x = 1L), destination, row.names = FALSE)
   expect_true(file.exists(destination))
   expect_identical(read_logs()$log_msg, paste0("file=", destination, "; append=FALSE"))
   stop_trace()
@@ -162,7 +162,7 @@ test_that("triple-colon references resolve and clean up as in trace", {
   on.exit(stop_trace(), add = TRUE)
   destination <- tempfile()
   on.exit(unlink(destination), add = TRUE)
-  utils::write.table(1, destination)
+  utils::write.table(1L, destination)
   expect_identical(read_logs()$log_msg, "write")
   stop_trace()
   expect_identical(utils::write.table, original)
@@ -177,7 +177,7 @@ test_that("where and bare aliases behave as in trace", {
   original <- scope$target
   stop_trace <- evalq(trace_loggit(target, "{x}", where = environment()), envir = scope)
   on.exit(stop_trace(), add = TRUE)
-  expect_identical(scope$target(5), 5)
+  expect_identical(scope$target(5L), 5L)
   expect_identical(read_logs()$log_msg, "5")
   stop_trace()
   expect_identical(scope$target, original)

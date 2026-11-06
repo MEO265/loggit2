@@ -122,7 +122,7 @@ compile_log_message <- function(template, allowed, argument) {
   fields <- trimws(substring(parts[slots], 2L, nchar(parts[slots]) - 1L))
   unknown <- setdiff(fields, allowed)
   if (length(unknown) > 0L) {
-    base::stop("Invalid placeholders in '", argument, "': ", paste(unknown, collapse = ", "), call. = FALSE)
+    base::stop("Invalid placeholders in '", argument, "': ", toString(unknown), call. = FALSE)
   }
 
   parts[parts == "{{"] <- "{"
@@ -132,8 +132,8 @@ compile_log_message <- function(template, allowed, argument) {
     result <- parts
     result[slots] <- vapply(fields, function(name) {
       value <- if (is.environment(values)) get(name, envir = values, inherits = FALSE) else values[[name]]
-      if (is.null(value)) "NULL" else paste(as.character(value), collapse = ", ")
+      if (is.null(value)) "NULL" else toString(as.character(value))
     }, character(1L))
-    paste0(result, collapse = "")
+    paste(result, collapse = "")
   }
 }
