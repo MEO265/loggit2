@@ -1,3 +1,8 @@
+# loggit2 (development version)
+
+## New Features
+* Added `trace_loggit()` to log function entry and exit at DEBUG level, with validated argument placeholders and `{returnValue}` exit templates.
+
 # loggit2 2.4.0
 
 ## New Features
