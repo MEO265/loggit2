@@ -28,6 +28,7 @@ reference:
   - contents:
     - "loggit"
     - "with_loggit"
+    - "watch_loggit"
   - title: Utility functions
   - contents:
     - "read_logs"

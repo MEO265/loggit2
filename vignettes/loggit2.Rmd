@@ -144,6 +144,43 @@ loggit2::read_logs()
 </details>
 
 
+### Watching Variable Changes
+
+Use `watch_loggit()` to register DEBUG entries whenever an existing variable is
+assigned a different value. Reads and assignments of an identical value do not
+add entries. The returned function stops watching and keeps the latest value.
+
+```{r, eval = FALSE}
+loggit2::set_log_level("DEBUG")
+counter <- 0L
+stop_watch <- loggit2::watch_loggit(counter)
+counter <- counter + 1L # counter: 0 -> 1
+counter <- 1L          # No change
+stop_watch()           # counter remains 1L
+
+state <- new.env()
+state$status <- "waiting"
+stop_watch <- loggit2::watch_loggit(
+  status, "{name}: {oldValue} => {newValue}", where = state
+)
+state$status <- "ready"
+stop_watch()
+```
+
+The placeholders `{name}`, `{oldValue}`, and `{newValue}` are validated during
+registration; double braces escape literal braces. Entries use the session-wide
+log configuration without console echo. Disabling DEBUG suppresses formatting
+and logging while the variable continues to update.
+
+The variable must exist directly in `where` (the calling environment by default).
+Ordinary assignments, `assign()`, `<<-`, and replacement operations such as
+`counter[1] <- 2` are observed through an active binding. Changes within reference
+objects, such as modifying an environment's contents without reassigning the
+watched variable, cannot be observed. Local variables shadowing the watched
+binding are independent. Stop watching before removing or locking the binding or
+environment. Formatting or logging errors propagate after storing the new value.
+Inside a function, `on.exit(stop_watch(), add = TRUE)` can ensure cleanup on exit.
+
 ## Post-Processing
 
 A log is of little use without the ability to access and modify it. Here are a few possibilities.

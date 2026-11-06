@@ -1,3 +1,11 @@
+# loggit2 (development version)
+
+## New Features
+* Added `watch_loggit()` to log changes to variable bindings at DEBUG level, with old/new value templates and cleanup that preserves the latest value.
+
+## Other Changes
+* The minimum R version is now 4.0.1, which provides `activeBindingFunction()` for safe watch cleanup.
+
 # loggit2 2.4.0
 
 ## New Features
