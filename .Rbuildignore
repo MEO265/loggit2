@@ -17,3 +17,5 @@ Makefile
 ^docs$
 ^pkgdown$
 ^\.lintr$
+^\.git$
+^planning$

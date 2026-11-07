@@ -1,206 +1,122 @@
 ---
-title: "Getting Started"
-description: "An introduction to the basic functionality of `loggit2`."
+title: "Getting Started: Your First Log"
+description: "Add logging to existing R code in one call, write structured events, and read the result."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started}
+  %\VignetteIndexEntry{Getting Started: Your First Log}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set( #nolint
-  collapse = TRUE,
-  comment = "#>"
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", error = FALSE)
+old_options <- options(width = 90L)
+old_logfile <- loggit2::get_logfile()
+old_level <- loggit2::set_log_level("DEBUG", confirm = FALSE)
+old_calls <- loggit2::set_call_options(confirm = FALSE)
+```
+
+`loggit2` adds structured logging to R without additional R runtime dependencies.
+You can start with a single call; there is no logger object or configuration file
+to create.
+
+## Pick your starting point
+
+| Your use case | Smallest change |
+| --- | --- |
+| Log messages, warnings and errors from existing code | Wrap its call in `loggit2::with_loggit()` |
+| Record an event with a run ID or other context | Call `loggit2::loggit()` |
+| Add logging where your own code signals a condition | Use `loggit2::message()`, `warning()`, `stop()` or `stopifnot()` |
+
+No setup is required. By default, `get_logfile()` identifies a file in R's
+temporary directory, and each entry is also echoed as JSON to stdout. For the
+examples below, we choose a separate temporary file and disable that extra output.
+
+```{r choose-file}
+logfile <- tempfile(fileext = ".ndjson")
+```
+
+For a persistent log, use a path in an existing directory instead.
+
+## Log a function you already have
+
+Suppose this function belongs to an existing script or another package:
+
+```{r existing-function}
+import_data <- function() {
+  base::message("Reading input")
+  120L
+}
+```
+
+Wrap its call. Nothing inside the function needs to change:
+
+```{r capture-function}
+rows <- loggit2::with_loggit(import_data(), logfile = logfile, echo = FALSE)
+rows
+```
+
+The message is still displayed, the return value is still `120L`, and the
+message has also been logged. Warnings and errors retain their normal behavior
+too; logging does not turn an error into a successful result.
+
+## Add context to an event
+
+Use `loggit()` when you want to record an event without signaling a condition:
+
+```{r record-event}
+loggit2::loggit(
+  "INFO", "Import completed",
+  run_id = "demo-001", rows = rows,
+  logfile = logfile, echo = FALSE
 )
-old <- options(width = 200L)
 ```
 
-`loggit2` is an easy-to-use, yet powerful, [`ndjson`](https://github.com/ndjson)
-logger. It is very fast, has zero external dependencies, and can be as
-straightforward or as integral as you want to make it.
+Named scalar fields such as `run_id` and `rows` become columns when you read the
+log. Non-missing values are stored as strings, and `NA` becomes JSON `null`.
 
-## Preparation
-No preparations are needed to use `loggit2`. However, it is recommended to explicitly set a log file using
-`loggit2::set_logfile("path/to/your/file")`, as `loggit2` defaults to creating a file in your temporary directory.[^1]
+## Read the result
 
-In order to use the full potential of `loggit2`, it is advisable to take a look at the
-[further configurations](further_configurations.html) after reading this vignette.
-
-## Logging
-There are three ways to populate the log in `loggit2`. First, through wrapper functions of the base `R` condition
-handler, second, via the `loggit()` log function, and third, by logging (external) expressions using `with_loggit()`.
-
-Each function of these three methods has the parameter `echo`, which determines whether the log entries should also
-be echoed to `stdout`.
-
-### Condition Log Handling
-
-`loggit2` provides a set of wrappings for base R’s `message()`, `warning()`, `stop()` and
-`stopifnot()` functions that maintain identical functionality[^2], except the additional logging.
-Thus, it is sufficient to import the `loggit2` namespace, for example by using `library("loggit2")`,
-or by prefixing `loggit2::` at the desired locations.
-
-```{r, error = TRUE}
-base::message("This is another message")
-loggit2::message("This is a message")
-
-base::warning("This is another warning")
-loggit2::warning("This is a warning")
-
-base::stop("This is another error")
-loggit2::stop("This is an error")
-
-base::stopifnot("This is another condition" = FALSE)
-loggit2::stopifnot("This is another condition" = FALSE)
+```{r read-events}
+events <- loggit2::read_logs(logfile)
+events[c("log_lvl", "log_msg", "run_id", "rows")]
 ```
 
-Besides the `echo` parameter, the functions have an additional parameter `.loggit`, which allows to deactivate
-the logging such that the function behaves exactly like the base `R` equivalents.
-```{r}
-loggit2::warning("This is a alternative warning", echo = FALSE)
+Each row represents an event. Fields that were not supplied for an event are
+`NA`. The file itself is newline-delimited JSON: one JSON object per line.
 
-loggit2::warning("This is not part of the log", .loggit = FALSE)
+## Log conditions in your own code
+
+The condition wrappers use the session's default log file. Select it explicitly
+when you want these calls to join the same log:
+
+```{r own-conditions}
+previous_logfile <- loggit2::set_logfile(logfile, confirm = FALSE)
+loggit2::message("Ready for the next input", echo = FALSE)
+loggit2::set_logfile(previous_logfile, confirm = FALSE, create = FALSE)
 ```
 
-<details>
-<summary>Click here to see the generated log</summary>
-```{r, echo = FALSE}
-loggit2::read_logs()
-loggit2::rotate_logs(0L)
+`loggit2::warning()`, `stop()` and `stopifnot()` likewise log their condition and
+retain the corresponding Base R behavior. `echo = FALSE` only switches off the
+additional JSON output; it does not silence the condition.
+
+Attaching `library(loggit2)` masks the corresponding Base R names for ordinary
+calls. Use explicit `loggit2::` calls when you want the choice to be clear.
+To capture code in another package, use `with_loggit()`.
+
+## Choose your next step
+
+- [Log existing code in one call](logging-existing-code.html): conditions,
+  error handling, debug messages and call stacks.
+- [Analyze logs from a data pipeline](structured-logs.html): useful context
+  fields, filtering, CSV export and retaining recent entries.
+- [Configure logging and understand scope](further_configurations.html):
+  persistent paths, log levels, environment variables and per-call settings.
+
+```{r cleanup, include = FALSE}
+loggit2::set_logfile(old_logfile, confirm = FALSE, create = FALSE)
+loggit2::set_log_level(old_level, confirm = FALSE)
+loggit2::set_call_options(.arg_list = old_calls, confirm = FALSE)
+options(old_options)
+unlink(logfile)
 ```
-</details>
-
-### Explicit Log Function
-
-`loggit2` allows direct access to the core logging function `loggit()`.
-This enables setting the log level directly during the call and creating arbitrary fields in the log.
-
-This function does not trigger any conditions; it only populates the log.
-
-```{r}
-loggit2::loggit("INFO", "This is a message", ID = 1L, boole = TRUE)
-
-loggit2::loggit("WARN", "This is a alternative warning", echo = FALSE)
-
-loggit2::loggit("DEBUG", "This is a message", Why = "Because", echo = FALSE)
-```
-
-To allow log levels other than "DEBUG", "INFO", "WARN" or "ERROR" the `custom_log_lvl` parameter must be set.
-
-```{r, error = TRUE}
-loggit2::loggit("CRITICAL", "Critical error")
-
-loggit2::loggit("CRITICAL", "Critical error 2", custom_log_lvl = TRUE)
-```
-
-<details>
-<summary>Click here to see the generated log</summary>
-```{r, echo = FALSE}
-loggit2::read_logs()
-loggit2::rotate_logs(0L)
-```
-</details>
-
-### Log Expressions
-
-One will repeatedly encounter situations where conditions need to be logged from code without wanting to or being able
-to modify it (e.g., when dealing with functions from external packages).
-In this case, `with_loggit()` comes into play. This function allows logging conditions from arbitrary expressions
-without restricting functionality[^3] or needing to modify the code.
-
-```{r, error = TRUE}
-fun_a <- function(x) {
-  base::warning("This is a warning")
-  base::message("This is a message")
-  base::stopifnot("This is true" = 3L == 1L + 2L, "This is not TRUE" = FALSE)
-}
-
-fun_b <- function(x) {
-  base::warning("This is a second warning")
-  5L + 5L
-}
-```
-
-```{r, error = TRUE}
-x <- loggit2::with_loggit(fun_b())
-print(x)
-```
-
-
-```{r, error = TRUE}
-loggit2::with_loggit({
-  x <- fun_b()
-  fun_a()
-}, echo = FALSE)
-```
-Additionally, `with_loggit()` allows alternative settings (logfile, echo, etc.) to be used for a specific section of code.
-
-<details>
-<summary>Click here to see the generated log</summary>
-```{r, echo = FALSE}
-loggit2::read_logs()
-```
-</details>
-
-
-## Post-Processing
-
-A log is of little use without the ability to access and modify it. Here are a few possibilities.
-
-### Accessing the Log
-
-As seen above, the log can be queried as a `data.frame` using `read_logs()`.
-
-```{r}
-loggit2::read_logs()
-```
-
-Alternatively, the log can also be saved as a CSV file using `convert_to_csv()`.
-
-```{r, eval = FALSE}
-loggit2::convert_to_csv("path/to/your/file.csv")
-```
-
-### Rotating the Log
-
-To maintain a clear log even in long-running sessions (e.g., in a Shiny app hosted on a server),
-the log can be restricted to the last `n` entries using `rotate_logs(n)`.
-
-```{r}
-loggit2::rotate_logs(2L)
-```
-
-<details>
-<summary>Click here to see the generated log</summary>
-```{r, echo = FALSE}
-loggit2::read_logs()
-```
-</details>
-
-```{r}
-loggit2::rotate_logs(0L)
-```
-
-<details>
-<summary>Click here to see the generated log</summary>
-```{r, echo = FALSE}
-loggit2::read_logs()
-```
-</details>
-
-
-```{r, include = FALSE}
-options(old)
-```
-
-
-[^1]: This is done to [CRAN Repository Policy](https://cran.r-project.org/web/packages/policies.html):
-
-    > Packages should not write in the user’s home filespace (including clipboards), nor anywhere else on the file
-    > system apart from the R session’s temporary directory `[...]`.
-
-[^2]: This means in particular that `tryCatch` and similar functions can be used as usual.
-
-[^3]: Just like with the direct use of the wrappers for condition handlers, `tryCatch` and similar mechanisms
-can be used as usual.

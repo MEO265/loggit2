@@ -1,0 +1,175 @@
+---
+title: "Log Existing Code in One Call"
+description: "Capture messages, warnings, and errors without editing a function, then add call information when you need to debug."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Log Existing Code in One Call}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", error = FALSE)
+old_options <- options(width = 90L)
+saved_logfile <- loggit2::get_logfile()
+saved_level <- loggit2::set_log_level("DEBUG", confirm = FALSE)
+saved_echo <- loggit2::set_echo(FALSE, confirm = FALSE)
+saved_calls <- loggit2::set_call_options(confirm = FALSE)
+```
+
+You already have a function or script that emits messages, warnings or errors.
+To record those conditions, wrap the call you already make:
+
+```{r one-call, eval = FALSE}
+loggit2::with_loggit(your_function())
+```
+
+No changes inside the function are needed. The default log is in R's temporary
+directory; no logger object or configuration file is required.
+
+## Try it with an unchanged function
+
+Here is a small stand-in for code from an existing script or another package:
+
+```{r existing-function}
+import_data <- function() {
+  base::message("Reading input")
+  base::warning("One row has an empty value")
+  120L
+}
+```
+
+Choose a separate file for this tutorial, then wrap the function call:
+
+```{r capture}
+logfile <- tempfile(fileext = ".ndjson")
+rows <- loggit2::with_loggit(import_data(), logfile = logfile, echo = FALSE)
+rows
+loggit2::read_logs(logfile)[c("log_lvl", "log_msg")]
+```
+
+The function still returns `120L`. The message and warning are still displayed,
+and both appear in the log. The optional `logfile` argument picks the destination;
+`echo = FALSE` removes the extra JSON output to stdout.
+
+`with_loggit()` records signaled R conditions, not ordinary `print()` or `cat()`
+output. It also does not capture conditions already handled inside the expression.
+
+## Handle errors without losing the log
+
+Put recovery logic outside `with_loggit()` so that the error reaches its logging
+handler before the outer `tryCatch()` handles it:
+
+```{r recover}
+read_input <- function() base::stop("Input file is missing")
+
+result <- tryCatch(
+  loggit2::with_loggit(read_input(), logfile = logfile, echo = FALSE),
+  error = function(e) "Use a fallback input"
+)
+result
+tail(loggit2::read_logs(logfile)[c("log_lvl", "log_msg")], 1L)
+```
+
+Without the outer `tryCatch()`, the error stops execution as usual. Conversely,
+if `read_input()` catches the error internally, an outer `with_loggit()` cannot
+record the condition that has already been handled.
+
+The same ordering matters when silencing output. Keep the suppression outside
+the capture if you still want the condition in the log:
+
+```{r quiet-capture}
+suppressMessages(
+  loggit2::with_loggit(base::message("A quiet progress update"),
+                       logfile = logfile, echo = FALSE)
+)
+```
+
+The message is now logged without being displayed. `echo = FALSE` alone would
+only remove the additional JSON output.
+
+## Capture only the detail you need
+
+For a noisy section, set the capture level on that call:
+
+```{r capture-level}
+loggit2::with_loggit({
+  base::message("Progress update: displayed but not logged")
+}, logfile = logfile, log_level = "ERROR", echo = FALSE)
+```
+
+The session's log level is unchanged. These arguments configure the handlers in
+`with_loggit()`; they do not reconfigure a direct `loggit()` or condition wrapper
+inside the expression. See [configuration and scope](further_configurations.html).
+
+## Avoid recording the same condition twice
+
+Choose either a `loggit2` condition wrapper or `with_loggit()` for a given
+condition. For example, this combination can produce two entries:
+
+```{r double-logging, eval = FALSE}
+loggit2::with_loggit(loggit2::warning("Incomplete input"))
+```
+
+Instead, capture an unchanged `base::warning()` call, or use
+`loggit2::warning()` directly. Nested `with_loggit()` calls can likewise record
+the same condition more than once.
+
+## Find the origin of an event
+
+When you need more detail, enable call logging. The condition wrappers and
+`debuginfo()` use the session log file, so select it for this section:
+
+```{r enable-calls}
+previous_logfile <- loggit2::set_logfile(logfile, confirm = FALSE)
+previous_calls <- loggit2::set_call_options(
+  log_call = TRUE, full_stack = FALSE, confirm = FALSE
+)
+
+inspect_input <- function() {
+  loggit2::debuginfo("Inspecting the input header", echo = FALSE)
+}
+run_import <- function() inspect_input()
+
+run_import()
+tail(loggit2::read_logs(logfile)[c("log_lvl", "log_msg", "log_call")], 1L)
+```
+
+`debuginfo()` writes a DEBUG entry without signaling a condition. Unlike a plain
+`loggit("DEBUG", ...)` event, it can record the calling function. It is filtered
+out when the session level is below DEBUG, unless `.loggit = TRUE` is supplied.
+
+To see how the call was reached, enable the full stack and run the same code:
+
+```{r full-stack}
+loggit2::set_call_options(log_call = TRUE, full_stack = TRUE, confirm = FALSE)
+run_import()
+
+last_call <- tail(loggit2::read_logs(logfile)$log_call, 1L)
+cat(tail(strsplit(last_call, "\n", fixed = TRUE)[[1L]], 2L), sep = "\n")
+```
+
+Only the last two stack lines are shown here. Stack details depend on the
+execution environment and the available source information. A condition object
+created earlier cannot generally reconstruct its original full stack. Direct
+`loggit()` events do not infer a condition call: their `log_call` field is `NA`.
+
+Restore the previous session settings when you are done:
+
+```{r restore-calls}
+loggit2::set_call_options(.arg_list = previous_calls, confirm = FALSE)
+loggit2::set_logfile(previous_logfile, confirm = FALSE, create = FALSE)
+```
+
+For run IDs, filenames and other context fields, use explicit events as shown in
+[Analyze Logs from a Data Pipeline](structured-logs.html). Return to
+[Getting Started](loggit2.html) for an overview of all three logging approaches.
+
+```{r cleanup, include = FALSE}
+loggit2::set_logfile(saved_logfile, confirm = FALSE, create = FALSE)
+loggit2::set_log_level(saved_level, confirm = FALSE)
+loggit2::set_echo(saved_echo, confirm = FALSE)
+loggit2::set_call_options(.arg_list = saved_calls, confirm = FALSE)
+options(old_options)
+unlink(logfile)
+```
