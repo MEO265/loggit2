@@ -10,7 +10,7 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", error = FALSE)
-old_options <- options(width = 90)
+old_options <- options(width = 90L)
 old_logfile <- loggit2::get_logfile()
 old_level <- loggit2::set_log_level("DEBUG", confirm = FALSE)
 old_calls <- loggit2::set_call_options(confirm = FALSE)
