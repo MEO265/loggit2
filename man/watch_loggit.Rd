@@ -4,21 +4,18 @@
 \alias{watch_loggit}
 \title{Log Changes to a Variable}
 \usage{
-watch_loggit(
-  variable,
-  message = "{name}: {oldValue} -> {newValue}",
-  where = parent.frame()
-)
+watch_loggit(variable, message = NULL, where = parent.frame())
 }
 \arguments{
 \item{variable}{A bare variable name, such as \code{counter}. Character strings and
 expressions such as \code{state$counter} are not supported; use \code{where = state}
 to watch a binding in an environment.}
 
-\item{message}{A single message template. Supported placeholders are \code{{name}},
-\code{{oldValue}}, and \code{{newValue}}. Double braces (\verb{\{\{} and \verb{\}\}}) produce literal
-braces. Surrounding whitespace in placeholders is ignored. Expressions and
-other placeholders are rejected before the binding is changed.}
+\item{message}{\code{NULL} (the default) to describe the changes automatically, or
+a single message template. Supported placeholders are \code{{name}}, \code{{oldValue}},
+and \code{{newValue}}. Double braces (\verb{\{\{} and \verb{\}\}}) produce literal braces.
+Surrounding whitespace in placeholders is ignored. Expressions and other
+placeholders are rejected before the binding is changed.}
 
 \item{where}{The environment containing the variable. Defaults to the calling
 environment. The variable must exist directly in this environment.}
@@ -41,12 +38,24 @@ are rejected.
 
 Entries use the current session-wide \code{loggit()} configuration with
 \code{echo = FALSE}; local settings of \code{\link[=with_loggit]{with_loggit()}} do not apply. With DEBUG
-disabled, values are still updated but message values are not formatted.
-\code{NULL} is rendered as \code{"NULL"}; nonempty atomic vectors are converted using
-\code{\link[base:as.character]{base::as.character()}} and collapsed with \code{", "}. Other objects are rendered
-using \code{\link[base:deparse]{base::deparse()}}. Formatting or logging errors propagate after the new
-value has been stored. Recursive changes made while this watch is logging
-update the variable without generating another entry from the same watch.
+disabled, the active binding reads or stores the value and returns before
+comparing, formatting or logging. Access still goes through the active binding,
+and R can copy objects during replacement operations. Turning DEBUG back on
+uses the latest stored value.
+
+The default message lists changes to type, class, attributes, and values.
+Changes within equally sized vectors, arrays, lists, and data frames can
+include an element path, such as \verb{[2]} or \verb{[["count"]][2]}. Paths describe the
+resulting difference between values, regardless of the assignment syntax.
+The message shows up to five differences and summarizes deep or resized
+values. Value previews are abbreviated for large objects.
+
+With a custom template, \code{NULL} is rendered as \code{"NULL"}; nonempty atomic vectors
+are converted using \code{\link[base:as.character]{base::as.character()}} and collapsed with \code{", "}. Other
+objects are rendered using \code{\link[base:deparse]{base::deparse()}}. Formatting or logging errors
+propagate after the new value has been stored. Recursive changes made while
+this watch is logging update the variable without generating another entry
+from the same watch.
 
 Only assignments to the registered binding can be observed. Changes inside
 environments, external pointers, or other objects with reference semantics
@@ -64,7 +73,7 @@ before cleanup. Locking the environment prevents restoration permanently.
 set_log_level("DEBUG")
 counter <- 0L
 stop_watch <- watch_loggit(counter)
-counter <- counter + 1L # DEBUG: counter: 0 -> 1
+counter <- counter + 1L # DEBUG: counter: value 0L -> 1L
 counter <- 1L          # No change, so no entry
 stop_watch()           # counter remains 1L
 

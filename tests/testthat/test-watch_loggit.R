@@ -33,7 +33,7 @@ test_that("watching logs changes without changing reads or assignment results", 
   expect_output(result <- withVisible(counter <- counter + 1L), NA)
   expect_identical(result, list(value = 1L, visible = FALSE))
   counter <- 1L
-  expect_identical(read_logs()$log_msg, "counter: 0 -> 1")
+  expect_identical(read_logs()$log_msg, "counter: value 0L -> 1L")
   expect_identical(read_logs()$log_lvl, "DEBUG")
   stop_watch()
   expect_false(bindingIsActive("counter", environment()))
@@ -59,6 +59,67 @@ test_that("identity checks distinguish type, attributes, and missing values", {
   expect_identical(read_logs()$log_msg, rep("changed value", 4L))
 })
 
+test_that("the default message distinguishes type, class, attribute and value changes", {
+  restore <- configure_watch_test()
+  on.exit(restore(), add = TRUE)
+  value <- "42"
+  stop_watch <- watch_loggit(value)
+  on.exit(stop_watch(), add = TRUE)
+  value <- 42L
+  class(value) <- "tagged"
+  attr(value, "label") <- "score"
+  value[1L] <- 43L
+  expect_identical(read_logs()$log_msg, c(
+    'value: type character -> integer; value "42" -> 42L',
+    "value: class integer -> tagged",
+    'value: attribute "label" NULL -> "score"',
+    "value: value 42L -> 43L"
+  ))
+})
+
+test_that("the default message combines metadata and a changed nested value", {
+  restore <- configure_watch_test()
+  on.exit(restore(), add = TRUE)
+  item <- structure(list(count = c(1L, 2L)), class = "before", label = "old")
+  stop_watch <- watch_loggit(item)
+  on.exit(stop_watch(), add = TRUE)
+  item <- structure(list(count = c(1L, 9L)), class = "after", label = "new")
+  expect_identical(read_logs()$log_msg, paste0(
+    'item: class before -> after; attribute "label" "old" -> "new"; ',
+    'value at [["count"]][2] 2L -> 9L'
+  ))
+})
+
+test_that("default messages show data frame and matrix coordinates", {
+  restore <- configure_watch_test()
+  on.exit(restore(), add = TRUE)
+  frame <- data.frame(count = 1:3)
+  mat <- matrix(1:4, nrow = 2L)
+  stop_frame <- watch_loggit(frame)
+  stop_mat <- watch_loggit(mat)
+  on.exit(stop_frame(), add = TRUE)
+  on.exit(stop_mat(), add = TRUE)
+  frame$count[2L] <- 9L
+  mat[1L, 2L] <- 9L
+  expect_identical(read_logs()$log_msg, c(
+    'frame: value at [["count"]][2] 2L -> 9L',
+    "mat: value at [1, 2] 3L -> 9L"
+  ))
+})
+
+test_that("the default message bounds the number of differences", {
+  restore <- configure_watch_test()
+  on.exit(restore(), add = TRUE)
+  x <- rep.int(0L, 8L)
+  stop_watch <- watch_loggit(x)
+  on.exit(stop_watch(), add = TRUE)
+  x <- 1:8
+  expect_identical(read_logs()$log_msg, paste0(
+    "x: value at [1] 0L -> 1L; value at [2] 0L -> 2L; value at [3] 0L -> 3L; ",
+    "value at [4] 0L -> 4L; value at [5] 0L -> 5L; more changes"
+  ))
+})
+
 test_that("failed right-hand sides leave the value and log untouched", {
   restore <- configure_watch_test()
   on.exit(restore(), add = TRUE)
@@ -69,7 +130,7 @@ test_that("failed right-hand sides leave the value and log untouched", {
   expect_identical(value, 1L)
   expect_identical(nrow(read_logs()), 0L)
   value <- 2L
-  expect_identical(read_logs()$log_msg, "value: 1 -> 2")
+  expect_identical(read_logs()$log_msg, "value: value 1L -> 2L")
 })
 
 test_that("assign, superassignment, and replacements target the watched binding", {
@@ -84,7 +145,11 @@ test_that("assign, superassignment, and replacements target the watched binding"
   updater <- evalq(function() x <<- c(6L, 7L), envir = scope)
   updater()
   expect_identical(scope$x, c(6L, 7L))
-  expect_identical(read_logs()$log_msg, c("x: 1, 2 -> 3, 4", "x: 3, 4 -> 3, 5", "x: 3, 5 -> 6, 7"))
+  expect_identical(read_logs()$log_msg, c(
+    "x: value at [1] 1L -> 3L; value at [2] 2L -> 4L",
+    "x: value at [2] 4L -> 5L",
+    "x: value at [1] 3L -> 6L; value at [2] 5L -> 7L"
+  ))
   stop_watch()
   expect_identical(scope$x, c(6L, 7L))
 })
@@ -125,7 +190,7 @@ test_that("disabled DEBUG logging still tracks the most recent value", {
   restore_method <- register_watch_formatter("watch_unprintable", function(...) base::stop("must not format"))
   on.exit(restore_method(), add = TRUE)
   value <- 0L
-  stop_watch <- watch_loggit(value)
+  stop_watch <- watch_loggit(value, "{name}: {oldValue} -> {newValue}")
   on.exit(stop_watch(), add = TRUE)
   set_log_level("INFO", confirm = FALSE)
   value <- structure(1L, class = "watch_unprintable")
@@ -137,6 +202,20 @@ test_that("disabled DEBUG logging still tracks the most recent value", {
   expect_identical(read_logs()$log_msg, "value: 2 -> 3")
 })
 
+test_that("the default formatter resumes from the last value stored with DEBUG disabled", {
+  restore <- configure_watch_test()
+  on.exit(restore(), add = TRUE)
+  x <- rep.int(0L, 100000L)
+  stop_watch <- watch_loggit(x)
+  on.exit(stop_watch(), add = TRUE)
+  set_log_level("INFO", confirm = FALSE)
+  x[100000L] <- 1L
+  expect_identical(nrow(read_logs()), 0L)
+  set_log_level("DEBUG", confirm = FALSE)
+  x[100000L] <- 2L
+  expect_identical(read_logs()$log_msg, "x: value at [100000] 1L -> 2L")
+})
+
 test_that("invalid templates and references leave the original binding intact", {
   value <- 1L
   for (template in c("{unknown}", "{value}", "{newValue + 1}", "{}")) {
@@ -145,7 +224,7 @@ test_that("invalid templates and references leave the original binding intact", 
   for (template in c("{name", "name}", "{{name}")) {
     expect_error(watch_loggit(value, template), "Unmatched brace")
   }
-  for (template in list(NULL, NA_character_, character(), c("a", "b"), 1L)) {
+  for (template in list(NA_character_, character(), c("a", "b"), 1L)) {
     expect_error(watch_loggit(value, template), "single, non-missing character")
   }
   expect_error(watch_loggit("value"), "bare variable name")
@@ -222,7 +301,7 @@ test_that("function arguments and non-syntactic variable names can be watched", 
   stop_watch <- watch_loggit(`odd name`, where = scope)
   on.exit(stop_watch(), add = TRUE)
   scope[["odd name"]] <- 4L
-  expect_identical(read_logs()$log_msg, c("value: 1 -> 2", "odd name: 3 -> 4"))
+  expect_identical(read_logs()$log_msg, c("value: value 1L -> 2L", "odd name: value 3L -> 4L"))
 })
 
 test_that("shadowed variables and in-place reference changes are not binding assignments", {
@@ -304,7 +383,7 @@ test_that("logging failures keep the new value and allow subsequent changes", {
   expect_identical(value, 1L)
   set_logfile(good_file, confirm = FALSE)
   value <- 2L
-  expect_identical(read_logs()$log_msg, "value: 1 -> 2")
+  expect_identical(read_logs()$log_msg, "value: value 1L -> 2L")
 })
 
 test_that("formatters run once per field and recursive changes do not loop", {

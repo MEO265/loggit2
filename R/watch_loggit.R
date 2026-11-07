@@ -6,10 +6,11 @@
 #' @param variable A bare variable name, such as `counter`. Character strings and
 #'   expressions such as `state$counter` are not supported; use `where = state`
 #'   to watch a binding in an environment.
-#' @param message A single message template. Supported placeholders are `{name}`,
-#'   `{oldValue}`, and `{newValue}`. Double braces (`{{` and `}}`) produce literal
-#'   braces. Surrounding whitespace in placeholders is ignored. Expressions and
-#'   other placeholders are rejected before the binding is changed.
+#' @param message `NULL` (the default) to describe the changes automatically, or
+#'   a single message template. Supported placeholders are `{name}`, `{oldValue}`,
+#'   and `{newValue}`. Double braces (`{{` and `}}`) produce literal braces.
+#'   Surrounding whitespace in placeholders is ignored. Expressions and other
+#'   placeholders are rejected before the binding is changed.
 #' @param where The environment containing the variable. Defaults to the calling
 #'   environment. The variable must exist directly in this environment.
 #'
@@ -24,12 +25,24 @@
 #'
 #' Entries use the current session-wide `loggit()` configuration with
 #' `echo = FALSE`; local settings of [with_loggit()] do not apply. With DEBUG
-#' disabled, values are still updated but message values are not formatted.
-#' `NULL` is rendered as `"NULL"`; nonempty atomic vectors are converted using
-#' [base::as.character()] and collapsed with `", "`. Other objects are rendered
-#' using [base::deparse()]. Formatting or logging errors propagate after the new
-#' value has been stored. Recursive changes made while this watch is logging
-#' update the variable without generating another entry from the same watch.
+#' disabled, the active binding reads or stores the value and returns before
+#' comparing, formatting or logging. Access still goes through the active binding,
+#' and R can copy objects during replacement operations. Turning DEBUG back on
+#' uses the latest stored value.
+#'
+#' The default message lists changes to type, class, attributes, and values.
+#' Changes within equally sized vectors, arrays, lists, and data frames can
+#' include an element path, such as `[2]` or `[["count"]][2]`. Paths describe the
+#' resulting difference between values, regardless of the assignment syntax.
+#' The message shows up to five differences and summarizes deep or resized
+#' values. Value previews are abbreviated for large objects.
+#'
+#' With a custom template, `NULL` is rendered as `"NULL"`; nonempty atomic vectors
+#' are converted using [base::as.character()] and collapsed with `", "`. Other
+#' objects are rendered using [base::deparse()]. Formatting or logging errors
+#' propagate after the new value has been stored. Recursive changes made while
+#' this watch is logging update the variable without generating another entry
+#' from the same watch.
 #'
 #' Only assignments to the registered binding can be observed. Changes inside
 #' environments, external pointers, or other objects with reference semantics
@@ -49,7 +62,7 @@
 #' set_log_level("DEBUG")
 #' counter <- 0L
 #' stop_watch <- watch_loggit(counter)
-#' counter <- counter + 1L # DEBUG: counter: 0 -> 1
+#' counter <- counter + 1L # DEBUG: counter: value 0L -> 1L
 #' counter <- 1L          # No change, so no entry
 #' stop_watch()           # counter remains 1L
 #'
@@ -60,7 +73,7 @@
 #' stop_watch()
 #' }
 #' @export
-watch_loggit <- function(variable, message = "{name}: {oldValue} -> {newValue}", where = parent.frame()) {
+watch_loggit <- function(variable, message = NULL, where = parent.frame()) {
   reference <- substitute(variable)
   if (missing(variable) || !is.symbol(reference)) {
     base::stop("Supply a bare variable name.", call. = FALSE)
@@ -69,7 +82,7 @@ watch_loggit <- function(variable, message = "{name}: {oldValue} -> {newValue}",
   if (!is.environment(where)) {
     base::stop("'where' must be an environment.", call. = FALSE)
   }
-  formatter <- compile_watch_message(message)
+  formatter <- if (is.null(message)) describe_watch_changes else compile_watch_message(message)
   if (!exists(name, envir = where, inherits = FALSE)) {
     base::stop("Variable '", name, "' must exist directly in 'where'.", call. = FALSE)
   }
@@ -84,14 +97,24 @@ watch_loggit <- function(variable, message = "{name}: {oldValue} -> {newValue}",
   state$value <- get(name, envir = where, inherits = FALSE)
   state$busy <- FALSE
   binding <- function(value) {
-    if (missing(value)) return(state$value)
+    if (.config$level < 4L) {
+      state$retained <- NULL
+      if (missing(value)) return(state$value)
+      return(invisible(state$value <- value))
+    }
+    if (missing(value)) {
+      # Keep the old value shared so R copies it before a replacement at DEBUG.
+      state$retained <- state$value
+      return(state$value)
+    }
     force(value)
     previous <- state$value
     state$value <- value
-    if (!state$busy && get_log_level() >= 4L && !identical(previous, value)) {
+    state$retained <- NULL
+    if (!state$busy && !identical(previous, value)) {
       state$busy <- TRUE
       on.exit(state$busy <- FALSE)
-      loggit("DEBUG", formatter(list(name = name, oldValue = previous, newValue = value)), echo = FALSE)
+      loggit("DEBUG", formatter(name, previous, value), echo = FALSE)
     }
     invisible(value)
   }
@@ -110,6 +133,8 @@ watch_loggit <- function(variable, message = "{name}: {oldValue} -> {newValue}",
       assign(name, state$value, envir = where)
     }
     state$active <- FALSE
+    state$value <- NULL
+    state$retained <- NULL
     invisible(NULL)
   })
 }
@@ -131,7 +156,8 @@ compile_watch_message <- function(template) {
   parts[parts == "{{"] <- "{"
   parts[parts == "}}"] <- "}"
 
-  function(values) {
+  function(name, old, new) {
+    values <- list(name = name, oldValue = old, newValue = new)
     result <- parts
     # Format each requested value once, even when its placeholder is repeated.
     formatted <- vapply(unique(fields), function(field) {

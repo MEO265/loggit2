@@ -1,7 +1,7 @@
 # loggit2 (development version)
 
 ## New Features
-* Added `watch_loggit()` to log changes to variable bindings at DEBUG level, with old/new value templates and cleanup that preserves the latest value.
+* Added `watch_loggit()` to log changes to variable bindings at DEBUG level. Default messages describe changes to type, class, attributes, and nested values. Custom old/new value templates are supported, and cleanup preserves the latest value. Below DEBUG, reads and assignments skip comparison, formatting and logging.
 
 ## Other Changes
 * The minimum R version is now 4.0.1, which provides `activeBindingFunction()` for safe watch cleanup.
