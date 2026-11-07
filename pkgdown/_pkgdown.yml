@@ -1,8 +1,8 @@
 url: https://r-loggit.org/
 
 home:
-  title: Easy-to-Use, Dependencyless Logger for R
-  description: An easy-to-use 'ndjson' logger, providing logging wrappers for base R's `message()`, `warning()`, and `stop()` functions, among others.
+  title: Structured logging for R with minimal setup
+  description: Add logging to existing R code in one call, capture messages, warnings and errors, or write structured NDJSON events with custom fields. No additional R runtime dependencies.
   sidebar:
     structure: [links, license, dev]
 
@@ -39,6 +39,21 @@ reference:
   - contents:
     - starts_with("set_")
     - starts_with("get_")
+
+articles:
+  - title: Start here
+    navbar: ~
+    contents:
+      - loggit2
+  - title: Follow your use case
+    navbar: Use cases
+    contents:
+      - logging-existing-code
+      - structured-logs
+      - further_configurations
+  - title: Background
+    contents:
+      - articles/fork
 
 development:
   mode: auto

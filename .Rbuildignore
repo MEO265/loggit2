@@ -18,3 +18,4 @@ Makefile
 ^docs$
 ^pkgdown$
 ^\.lintr$
+^planning$
