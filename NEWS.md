@@ -1,8 +1,10 @@
 # loggit2 (development version)
 
+## New Features
 * Multiple processes can now safely share a local log file on Windows, Linux and
   macOS. Concurrent logging and rotation no longer mix entries or accidentally
   overwrite new entries.
+* Added `trace_loggit()` to log function entry and exit at DEBUG level, with validated argument placeholders and `{returnValue}` exit templates.
 
 # loggit2 2.4.0
 

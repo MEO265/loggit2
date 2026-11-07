@@ -144,6 +144,41 @@ loggit2::read_logs()
 </details>
 
 
+### Tracing Function Calls
+
+Use `trace_loggit()` to register DEBUG entries for subsequent calls to a function,
+without changing each call site. Entry templates can refer to explicit formal
+arguments; exit templates can refer only to `{returnValue}`.
+
+```{r, eval = FALSE}
+loggit2::set_log_level("DEBUG")
+double_value <- function(x) x * 2
+stop_trace <- loggit2::trace_loggit(
+  double_value,
+  message = "Start: x={x}",
+  exit = "End: result={returnValue}"
+)
+double_value(21)
+stop_trace()
+```
+
+Templates are validated when the trace is registered. Expressions such as
+`{nrow(x)}`, unknown argument names, and `{...}` are rejected. Double braces
+produce literal braces, for example `{{file}}` becomes `{file}`. Set either
+template to `NULL` to disable that hook. `NULL` return values appear as `"NULL"`;
+an unavailable return value after an error appears as `"<unavailable>"`.
+
+Function references and `where` resolve as in `base::trace()`. Pass a function
+reference such as `utils::write.table`, rather than a character name. For example,
+tracing `utils::write.table` with `message = "Writing to {file}"` also records
+writes made through `write.csv()`. The latter has only `...` in its signature and
+cannot itself use argument placeholders.
+
+Entries use the session-wide log configuration and are not echoed. Referenced
+arguments are forced only when DEBUG logging is enabled. Existing traces are
+replaced, and a target function's `on.exit(..., add = FALSE)` can replace the exit
+hook, as with `base::trace()`.
+
 ## Post-Processing
 
 A log is of little use without the ability to access and modify it. Here are a few possibilities.
