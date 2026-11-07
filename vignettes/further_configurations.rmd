@@ -179,8 +179,8 @@ the log may be in use. Relative paths and symlink aliases to existing targets
 are resolved before locking. New logfiles use their normalized parent directory
 to choose the sidecar. Use the same target path. Hard-link aliases and changing
 symlinks during logging are unsupported. The parent directory must exist.
-Symlinks with missing targets are
-rejected before opening a sidecar; create the target through its own path first.
+Create a symlink's target through its own path before using the symlink for
+logging. The lock rejects symlinks with missing targets before opening a sidecar.
 
 JSON entries are serialized before locking. Encoding and file I/O use the
 existing R operations.

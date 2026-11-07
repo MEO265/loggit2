@@ -165,7 +165,8 @@ double_value <- function(x) x * 2
 stop_trace <- loggit2::trace_loggit(
   double_value,
   message = "Start: x={x}",
-  exit = "End: result={returnValue}"
+  exit = "End: result={returnValue}",
+  where = environment()
 )
 double_value(21)
 stop_trace()

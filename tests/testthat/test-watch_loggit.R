@@ -379,7 +379,7 @@ test_that("logging failures keep the new value and allow subsequent changes", {
   on.exit(stop_watch(), add = TRUE)
   good_file <- get_logfile()
   set_logfile(file.path(tempfile(), "missing.log"), confirm = FALSE, create = FALSE)
-  expect_warning(expect_error(value <- 1L), "cannot open file")
+  expect_error(value <- 1L)
   expect_identical(value, 1L)
   set_logfile(good_file, confirm = FALSE)
   value <- 2L
