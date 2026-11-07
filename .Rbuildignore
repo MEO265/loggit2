@@ -11,6 +11,7 @@ Jenkinsfile
 Makefile
 ^\.travis\.yml
 ^\.github$
+^\.git$
 ^\.covrignore$
 ^\.idea$
 ^_pkgdown\.yml$

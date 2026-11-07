@@ -3,7 +3,7 @@ linters: list(
   any_duplicated_linter(),
   any_is_na_linter(),
   assignment_linter(),
-  backport_linter("4.0.0"),
+  backport_linter("4.0.1"),
   boolean_arithmetic_linter(),
   brace_linter(allow_single_line = TRUE),
   class_equals_linter(),
