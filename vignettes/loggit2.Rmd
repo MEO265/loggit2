@@ -179,6 +179,53 @@ arguments are forced only when DEBUG logging is enabled. Existing traces are
 replaced, and a target function's `on.exit(..., add = FALSE)` can replace the exit
 hook, as with `base::trace()`.
 
+### Watching Variable Changes
+
+Use `watch_loggit()` to register DEBUG entries whenever an existing variable is
+assigned a different value. Reads and assignments of an identical value do not
+add entries. The returned function stops watching and keeps the latest value.
+
+```{r, eval = FALSE}
+loggit2::set_log_level("DEBUG")
+counter <- 0L
+stop_watch <- loggit2::watch_loggit(counter)
+counter <- counter + 1L # counter: value 0L -> 1L
+counter <- 1L          # No change
+stop_watch()           # counter remains 1L
+
+state <- new.env()
+state$status <- "waiting"
+stop_watch <- loggit2::watch_loggit(
+  status, "{name}: {oldValue} => {newValue}", where = state
+)
+state$status <- "ready"
+stop_watch()
+```
+
+The default message describes changes to type, class, attributes and values.
+For example, assigning `42L` to a watched `x` holding `"42"` records
+`x: type character -> integer; value "42" -> 42L`. Changing `x$count[2]` in a
+list or data frame can record `x: value at [["count"]][2] 2L -> 9L`. Each
+message shows up to five differences, with abbreviated value previews and
+summaries for deep or resized values.
+
+Custom templates can use `{name}`, `{oldValue}` and `{newValue}`. Placeholders
+are validated during registration, and double braces escape literal braces.
+Entries use the session-wide log configuration without console echo. Below
+DEBUG, the active binding reads or stores the value and returns before comparison,
+formatting or logging. Turning DEBUG back on uses the latest stored value.
+The active binding still adds a call per access, and R can copy objects during
+replacement operations such as `x[2] <- 9L`.
+
+The variable must exist directly in `where` (the calling environment by default).
+Ordinary assignments, `assign()`, `<<-`, and replacement operations such as
+`counter[1] <- 2` are observed through an active binding. Changes within reference
+objects, such as modifying an environment's contents without reassigning the
+watched variable, cannot be observed. Local variables shadowing the watched
+binding are independent. Stop watching before removing or locking the binding or
+environment. Formatting or logging errors propagate after storing the new value.
+Inside a function, `on.exit(stop_watch(), add = TRUE)` can ensure cleanup on exit.
+
 ## Post-Processing
 
 A log is of little use without the ability to access and modify it. Here are a few possibilities.

@@ -5,6 +5,10 @@
   macOS. Concurrent logging and rotation no longer mix entries or accidentally
   overwrite new entries.
 * Added `trace_loggit()` to log function entry and exit at DEBUG level, with validated argument placeholders and `{returnValue}` exit templates.
+* Added `watch_loggit()` to log changes to variable bindings at DEBUG level. Default messages describe changes to type, class, attributes, and nested values. Custom old/new value templates are supported, and cleanup preserves the latest value. Below DEBUG, reads and assignments skip comparison, formatting and logging.
+
+## Other Changes
+* The minimum R version is now 4.0.1, which provides `activeBindingFunction()` for safe watch cleanup.
 
 # loggit2 2.4.0
 
