@@ -60,14 +60,16 @@ default_ndjson_unsanitizer <- function(string) {
 #' Write ndJSON-formatted log file
 #'
 #' @param log_df A `data.frame`. Entries are converted to `ndjson`, with the columns as the fields.
-#' @param logfile A `connection`, or a character string naming the file to write to.
+#' @param logfile A file path or a file connection. For shared logging, open
+#'   connections in append mode using an absolute path.
 #' @param echo Should the log entry (json) be echoed to `stdout` as well?
 #' @param overwrite Overwrite previous log file?
+#' @param lockfile Internal, precomputed sidecar path. If `NULL`, derive it from `logfile`.
 #'
 #' @return Invisible `NULL`.
 #'
 #' @keywords internal
-write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), overwrite = FALSE) {
+write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), overwrite = FALSE, lockfile = NULL) {
 
   # logdata will be built into a character vector where each element is a valid
   # JSON object, constructed from each row of the log data frame.
@@ -95,7 +97,11 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 
   # Cat out if echo is on, and write to log file
   if (echo) cat(logdata, sep = "\n")
-  write(logdata, file = logfile, append = !overwrite)
+  # Open a lazy connection before taking its write lock.
+  force(logfile)
+  # write()/cat() flushes open connections, including during error cleanup.
+  with_log_lock(logfile, write(logdata, file = logfile, append = !overwrite), lockfile = lockfile)
+  invisible(NULL)
 }
 
 #' Read ndJSON-formatted log file
@@ -110,7 +116,10 @@ write_ndjson <- function(log_df, logfile = get_logfile(), echo = get_echo(), ove
 read_ndjson <- function(logfile, unsanitize = TRUE, last_first = FALSE) {
 
   # Read in lines of log data
-  logdata <- readLines(logfile)
+  logdata <- with_log_lock(logfile, {
+    base::stopifnot("Log file does not exist" = file.exists(logfile))
+    readLines(logfile)
+  })
 
   log_kvs <- split_ndjson(logdata)
 

@@ -16,6 +16,22 @@ test_that("test logfile configuration", {
 
 cleanup()
 
+test_that("multi-process safety defaults to enabled and validates changes", {
+  old <- get_safe_multi_process()
+  on.exit(set_safe_multi_process(old, confirm = FALSE), add = TRUE)
+  expect_true(old)
+  expect_message(previous <- set_safe_multi_process(FALSE), "Multi-process safety set to FALSE")
+  expect_true(previous)
+  expect_false(get_safe_multi_process())
+  for (invalid in list(NA, NULL, logical(), c(TRUE, FALSE), 1L, "FALSE")) {
+    expect_error(set_safe_multi_process(invalid, confirm = FALSE), "must be TRUE or FALSE")
+    expect_false(get_safe_multi_process())
+  }
+  expect_identical(withVisible(set_safe_multi_process(TRUE, confirm = FALSE)),
+                   list(value = FALSE, visible = FALSE))
+  expect_true(get_safe_multi_process())
+})
+
 test_that("test timestamp configuration", {
   old <- get_timestamp_format()
   tmp_ts <- "%Y-%m"

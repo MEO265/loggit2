@@ -26,7 +26,8 @@ The names of the arguments are treated as column names in the log.}
 
 \item{custom_log_lvl}{Allow log levels other than "DEBUG", "INFO", "WARN", and "ERROR"?}
 
-\item{logfile}{Path of log file to write to.}
+\item{logfile}{Path of log file to write to, or a file connection. For shared
+logging, open connections in append mode using an absolute path.}
 
 \item{ignore_log_level}{Ignore the log level set by \code{set_log_level()}?}
 }
@@ -35,6 +36,22 @@ Invisible \code{NULL}.
 }
 \description{
 Log messages and R objects to a \href{https://github.com/ndjson}{ndjson} log file.
+}
+\details{
+Cooperating processes on local filesystems serialize reads, appends and
+\code{rotate_logs()} using a persistent \verb{<logfile>.lock} sidecar while
+\code{\link[=get_safe_multi_process]{get_safe_multi_process()}} is \code{TRUE} (the default). Disabling this with
+\code{\link[=set_safe_multi_process]{set_safe_multi_process()}} removes the multi-process guarantee. Do not remove,
+replace or rotate that sidecar while any process may use the log. Its presence
+does not mean the log is locked. Entries are prepared before locking; the
+existing R write operation opens, writes and closes file paths inside the lock.
+Supplied file connections remain open and are flushed before unlocking.
+Symlinks with missing targets are rejected before locking; create the target
+through its own path before using such an alias.
+This is not a guarantee for NFS/SMB or for non-cooperating writers. It does not
+provide transactional crash or power-loss safety: a crash can leave a partial
+entry or an incomplete rotation. Errors or interrupts during rotation can
+also leave an incomplete file. Readers release the lock before parsing JSON.
 }
 \examples{
 \dontrun{

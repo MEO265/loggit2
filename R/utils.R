@@ -16,8 +16,6 @@
 #' @export
 read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = FALSE) {
 
-  base::stopifnot("Log file does not exist" = file.exists(logfile))
-
   log <- read_ndjson(logfile, unsanitize = unsanitize, last_first = last_first)
 
   if (nrow(log) == 0L) {
@@ -35,6 +33,13 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' @param rotate_lines The number of log entries to keep in the logfile.
 #' @param logfile Log file to truncate.
 #'
+#' @details Rotation keeps the last `rotate_lines` entries, with zero clearing
+#' the file. There are no automatic thresholds or archives. The current file is
+#' read and rewritten under one process lock, using the existing line-based
+#' rotation. The persistent `<logfile>.lock` sidecar is never rotated.
+#' An error or interrupt while rewriting can leave an incomplete file.
+#' See [loggit()] for the scope and limits of process safety.
+#'
 #' @return Invisible `NULL`.
 #'
 #' @examples
@@ -47,7 +52,14 @@ read_logs <- function(logfile = get_logfile(), unsanitize = TRUE, last_first = F
 #' }
 #' @export
 rotate_logs <- function(rotate_lines = 100000L, logfile = get_logfile()) {
-  base::stopifnot(rotate_lines >= 0L, "Log file does not exist" = file.exists(logfile))
+  base::stopifnot(rotate_lines >= 0L)
+  with_log_lock(logfile, rotate_logs_unlocked(rotate_lines, logfile))
+  invisible(NULL)
+}
+
+# Called only inside the same lock that protects appends and reads.
+rotate_logs_unlocked <- function(rotate_lines, logfile) {
+  base::stopifnot("Log file does not exist" = file.exists(logfile))
   if (rotate_lines == 0L) {
     cat(NULL, file = logfile)
     return(invisible(NULL))

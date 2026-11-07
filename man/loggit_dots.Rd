@@ -16,7 +16,8 @@ The names of the arguments are treated as column names in the log.}
 
 \item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
 
-\item{logfile}{A \code{connection}, or a character string naming the file to write to.}
+\item{logfile}{A file path or a file connection. For shared logging, open
+connections in append mode using an absolute path.}
 }
 \value{
 Invisible \code{NULL}.

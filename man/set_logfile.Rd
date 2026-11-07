@@ -24,6 +24,10 @@ Set the log file that loggit will write to by default.
 \details{
 No logs outside of a temporary directory will be written until this is set explicitly, as per CRAN policy.
 Therefore, the default behavior is to create a file named \code{loggit.log} in your system's temporary directory.
+The parent directory must exist. It is normalized even when the log does not
+yet exist, so relative paths and directory aliases share the same lock.
+With \code{create = TRUE}, initialization uses the append lock and never truncates
+a file created by another process. See \code{\link[=loggit]{loggit()}} for locking guarantees.
 }
 \examples{
 \dontrun{
