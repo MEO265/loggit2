@@ -1,112 +1,121 @@
-# Easy-to-use, dependencyless Logger for R
+# loggit2: structured logging for R
 
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/loggit2)](https://cran.r-project.org/package=loggit2)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/loggit2)](https://cran.r-project.org/package=loggit2)
 [![R-CMD-check](https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MEO265/loggit2/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/MEO265/loggit2/graph/badge.svg)](https://codecov.io/gh/MEO265/loggit2)
-
-------------------------------------------------------------------------
-
 <!-- badges: end -->
 
-`loggit2` is an easy-to-use
-[`ndJSON`](https://github.com/ndjson/ndjson-spec) logging library for R,
-with *zero* external dependencies.
+Add logging to existing R code with one call, or write events with your
+own context fields. `loggit2` writes newline-delimited JSON (NDJSON) and
+reads it back as a data frame, with no additional R runtime
+dependencies.
 
-Please see below for some quick examples, and read the
-[vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/)
-for more.
-
-## Why use `loggit2`?
-
-`loggit2` takes a minimalistic but powerful approach to logging in R:
-
-- Easy integration, even into existing code
-- Flexible logs with automatic field creation
-- Logs immediately available as `data.frame` object, ndJSON and CSV file
-- Simple external logging (e.g., in containers) via ndJSON echo to
-  stdout
-- *Zero* external dependencies
-
-Additionally, the boilerplate to get going with `loggit2` is minimal at
-worst.
-
-## Usage
-
-`loggit2` provides, among other functions, a set of wrappings for base
-R’s `message()`, `warning()`, `stop()` and `stopifnot()` functions that
-maintain identical functionality, except the additional logging. Thus,
-it is sufficient to import the `loggit2` namespace, for example by using
-`library("loggit2")`, or by prefixing `loggit2::` at the desired
-locations.
+## Install
 
 ``` r
-base::message("This is another message")
-#> This is another message
-loggit2::message("This is a message")
-#> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "INFO", "log_msg": "This is a message\n"}
-#> This is a message
-
-base::warning("This is another warning")
-#> Warning: This is another warning
-loggit2::warning("This is a warning")
-#> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "WARN", "log_msg": "This is a warning"}
-#> Warning: This is a warning
-
-base::stop("This is another error")
-#> Error in eval(expr, envir, enclos): This is another error
-loggit2::stop("This is an error")
-#> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This is an error"}
-#> Error in eval(expr, envir, enclos): This is an error
-
-base::stopifnot("This is another condition" = FALSE)
-#> Error: This is another condition
-loggit2::stopifnot("This is another condition" = FALSE)
-#> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This is another condition"}
-#> Error: This is another condition
+install.packages("loggit2")
 ```
 
-You can suppress the additional console output by using `echo = FALSE`
-and you won’t notice any difference to the base functions (except that
-the log will be filled in the background).
+## Log existing code in one call
 
-You can also directly use the logging function `loggit()` to compose
-much more custom logs, e.g. to include custom fields or to prevent
-throwing actual conditions.
+Wrap the function you already run:
 
 ``` r
-loggit2::loggit("ERROR", "This will log an error", anything_else = "you want to include")
-#> {"timestamp": "2024-05-26T16:39:20+0200", "log_lvl": "ERROR", "log_msg": "This will log an error", "anything_else": "you want to include"}
-
-# Read log file into data frame to implement logic based on entries
-loggit2::read_logs()
-#>                  timestamp log_lvl                   log_msg       anything_else
-#> 1 2024-05-26T16:39:20+0200    INFO       This is a message\n                <NA>
-#> 2 2024-05-26T16:39:20+0200    WARN         This is a warning                <NA>
-#> 3 2024-05-26T16:39:20+0200   ERROR          This is an error                <NA>
-#> 4 2024-05-26T16:39:20+0200   ERROR This is another condition                <NA>
-#> 5 2024-05-26T16:39:20+0200   ERROR    This will log an error you want to include
+loggit2::with_loggit(your_function())
 ```
 
-No further configurations are necessary for this: just throw nearly
-whatever you want at it, and it’ll become a structured log.
+Messages, warnings and errors are added to the log. The function keeps
+its return value and its normal condition behavior: warnings still warn
+and errors still stop execution. No changes inside the function are
+needed.
 
-Check out the
-[vignettes](https://cran.r-project.org/web/packages/loggit2/vignettes/)
-for more details and features.
+By default, logs go to `loggit2::get_logfile()` in R’s temporary
+directory. JSON entries are also echoed to stdout; use `echo = FALSE` to
+turn off that additional output.
 
-## Installation
+## Write and read a structured event
 
-You can install the latest CRAN release of `loggit2` via
+This complete example uses its own temporary file:
 
-    install.packages("loggit2")
+``` r
+logfile <- tempfile(fileext = ".ndjson")
 
-or, get the latest development version from GitHub via
+loggit2::loggit(
+  "INFO", "Import completed",
+  run_id = "demo-001", rows = 120L,
+  logfile = logfile, echo = FALSE
+)
 
-    devtools::install_github("MEO265/loggit2")
+loggit2::read_logs(logfile)[c("log_lvl", "log_msg", "run_id", "rows")]
+#>   log_lvl          log_msg   run_id rows
+#> 1    INFO Import completed demo-001  120
+```
+
+Each named field becomes a column. Non-missing values are stored as
+strings; `NA` is stored as JSON `null`. Use named scalar values for
+custom fields. `loggit()` records an event without signaling a
+condition, even at level `"ERROR"`.
+
+## Choose how to log
+
+| What you want to do                                     | Use                                                          |
+|---------------------------------------------------------|--------------------------------------------------------------|
+| Log conditions from existing or third-party code        | `with_loggit(your_function())`                               |
+| Write an event with fields such as a run ID or filename | `loggit("INFO", "Finished", run_id = "run-1")`               |
+| Signal a condition and log it in your own code          | `loggit2::message()`, `warning()`, `stop()` or `stopifnot()` |
+| Add a debug entry, optionally with its call or stack    | `debuginfo()` and `set_call_options()`                       |
+
+Use explicit `loggit2::` calls to select the condition wrappers.
+Attaching the package with `library(loggit2)` also masks their Base R
+counterparts for ordinary calls; it does not replace calls inside other
+packages. Avoid combining the wrappers with `with_loggit()` for the same
+condition, as this can log it twice.
+
+## Configure only what you need
+
+No configuration is required to start. For a persistent log, choose a
+path in an existing directory:
+
+``` r
+loggit2::set_logfile("logs/application.ndjson")
+loggit2::set_log_level("INFO")  # omit DEBUG entries
+loggit2::set_echo(FALSE)        # keep file logging; disable the extra JSON output
+```
+
+`echo = FALSE` does not suppress R messages, warnings or errors. You can
+also pass `logfile` and `echo` directly to `loggit()` or `with_loggit()`
+for a single call.
+
+## Follow your use case
+
+- [Get your first log](https://r-loggit.org/articles/loggit2.html): a
+  short tour of the three ways to log.
+- [Log existing code in one
+  call](https://r-loggit.org/articles/logging-existing-code.html):
+  capture conditions, handle errors and investigate calls and stacks.
+- [Analyze logs from a data
+  pipeline](https://r-loggit.org/articles/structured-logs.html): add
+  context fields, filter events and export CSV.
+- [Configure logging and understand
+  scope](https://r-loggit.org/articles/further_configurations.html):
+  environment variables, session defaults and per-call settings.
+- [Function reference](https://r-loggit.org/reference/index.html): all
+  arguments and return values.
+
+The tutorials are also included with the package:
+`browseVignettes("loggit2")`.
+
+## Development version
+
+``` r
+# Requires the remotes package.
+remotes::install_github("MEO265/loggit2")
+```
 
 ## Acknowledgments
 
-This package is based on the [“loggit” package by Ryan
-Price](https://github.com/ryapric/loggit), specifically version 2.1.1.
+`loggit2` is based on Ryan Price’s
+[loggit](https://github.com/ryapric/loggit), version 2.1.1. See [Why the
+fork?](https://r-loggit.org/articles/fork.html) for background.

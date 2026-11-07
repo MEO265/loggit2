@@ -1,0 +1,145 @@
+---
+title: "Analyze Logs from a Data Pipeline"
+description: "Record pipeline events with a run ID and context fields, then filter, summarize, export, and retain the logs using base R."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyze Logs from a Data Pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", error = FALSE)
+old_options <- options(width = 90)
+old_level <- loggit2::set_log_level("DEBUG", confirm = FALSE)
+old_calls <- loggit2::set_call_options(confirm = FALSE)
+```
+
+You want to answer questions such as: which run warned, which input was involved,
+and how many rows were processed? Add named fields to a single `loggit()` call,
+then read the file as a data frame. No separate schema or analysis package is
+required.
+
+## Start with one event
+
+```{r first-event}
+logfile <- tempfile(fileext = ".ndjson")
+
+loggit2::loggit(
+  "INFO", "Import completed",
+  run_id = "demo-001", input_file = "input.csv", rows = 120L,
+  logfile = logfile, echo = FALSE
+)
+
+loggit2::read_logs(logfile)[c("log_lvl", "log_msg", "run_id", "rows")]
+```
+
+Each call records an event with a timestamp, level and message. Each named custom
+field becomes a column when the log is read. `loggit()` does not signal a
+condition, even if you use level `"WARN"` or `"ERROR"`.
+
+## Connect events from the same run
+
+Use a consistent `run_id` to connect events and add fields where they are useful:
+
+```{r pipeline-events}
+loggit2::loggit(
+  "WARN", "Empty values found",
+  run_id = "demo-001", input_file = "input.csv", missing_rows = 3L,
+  logfile = logfile, echo = FALSE
+)
+loggit2::loggit(
+  "INFO", "Import completed",
+  run_id = "demo-002", input_file = "next.csv", rows = 95L,
+  logfile = logfile, echo = FALSE
+)
+
+events <- loggit2::read_logs(logfile)
+events[c("log_lvl", "log_msg", "run_id", "rows", "missing_rows")]
+```
+
+Fields need not be present in every event. Missing fields become `NA`. Prefer a
+small set of stable names such as `run_id`, `step` and `input_file`, with named
+atomic values of length one. Longer vectors can multiply log rows; lists and
+nested objects are not the intended field format. `timestamp` and `log_call` are
+reserved; do not replace the standard level or message fields either.
+
+## Understand the values you read
+
+The file is NDJSON: one JSON object per line. Non-missing field values are stored
+as JSON strings, including numeric and logical values. `read_logs()` consequently
+returns character columns:
+
+```{r field-types}
+is.character(events$rows)
+rows <- as.integer(events$rows)
+sum(rows, na.rm = TRUE)
+```
+
+Convert fields explicitly when you want to calculate with them. `NA` is written
+as JSON `null` and read back as `NA`. A field omitted from an event is also `NA`
+in the data frame, so these two cases cannot be distinguished there.
+
+## Find the run that needs attention
+
+Use ordinary data-frame operations to filter and summarize:
+
+```{r analyze-events}
+warnings <- events[events$log_lvl == "WARN", ]
+warnings[c("run_id", "input_file", "log_msg")]
+
+table(events$log_lvl)
+events[events$run_id == "demo-001", c("log_lvl", "log_msg")]
+```
+
+For the most recent entries first, read with `last_first = TRUE`:
+
+```{r newest-first}
+recent <- loggit2::read_logs(logfile, last_first = TRUE)
+head(recent[c("run_id", "log_msg")], 1L)
+```
+
+This changes the row order of the returned data frame, not the file.
+
+## Export for another tool
+
+```{r csv-export}
+csv_file <- tempfile(fileext = ".csv")
+loggit2::convert_to_csv(csv_file, logfile = logfile)
+utils::read.csv(csv_file)[c("run_id", "log_lvl", "log_msg")]
+```
+
+`convert_to_csv()` forwards additional arguments to `utils::write.csv()`.
+It defaults to `unsanitize = FALSE`, preserving escaped special characters such
+as `\n` inside values. `read_logs()` defaults to `unsanitize = TRUE`, restoring
+them. Choose deliberately if messages contain line breaks and your downstream
+tool expects one physical line per record.
+
+## Keep only recent entries
+
+To keep the last two entries in this example:
+
+```{r retain-events}
+loggit2::rotate_logs(2L, logfile = logfile)
+loggit2::read_logs(logfile)[c("run_id", "log_msg")]
+```
+
+Rotation truncates the current file. It does not create an archive or run on a
+schedule; decide when to call it from your application. To clear the log:
+
+```{r clear-events}
+loggit2::rotate_logs(0L, logfile = logfile)
+nrow(loggit2::read_logs(logfile))
+```
+
+To capture conditions from a function without adding explicit events, see
+[Log Existing Code in One Call](logging-existing-code.html). To choose a
+persistent file or adjust levels, see
+[Configure Logging and Understand Scope](further_configurations.html).
+
+```{r cleanup, include = FALSE}
+loggit2::set_log_level(old_level, confirm = FALSE)
+loggit2::set_call_options(.arg_list = old_calls, confirm = FALSE)
+options(old_options)
+unlink(c(logfile, csv_file))
+```
