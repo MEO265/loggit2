@@ -7,9 +7,9 @@
 set_timestamp_format(ts_format = "\%Y-\%m-\%dT\%H:\%M:\%S\%z", confirm = TRUE)
 }
 \arguments{
-\item{ts_format}{ISO date format.}
+\item{ts_format}{A single character string passed to \code{\link[=format]{format()}} for timestamps.}
 
-\item{confirm}{Print confirmation message of timestamp format?}
+\item{confirm}{\code{TRUE} to print a confirmation message, or \code{FALSE} to suppress it.}
 }
 \value{
 Invisible the previous timestamp format.
@@ -18,8 +18,7 @@ Invisible the previous timestamp format.
 Set timestamp format for use in output logs.
 }
 \details{
-This function performs no time format validations, but will echo out the current time in
-the provided format for manual validation.
+When \code{confirm = TRUE}, the confirmation includes the current time in the supplied format.
 
 This function provides no means of setting a timezone, and instead relies on
 the host system's time configuration to provide this. This is to enforce

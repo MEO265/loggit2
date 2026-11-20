@@ -7,9 +7,9 @@
 set_log_level(level = "DEBUG", confirm = TRUE)
 }
 \arguments{
-\item{level}{Log level to set, as a string or integer.}
+\item{level}{One log level name or a whole number from 0 to 4.}
 
-\item{confirm}{Print confirmation message of log level?}
+\item{confirm}{\code{TRUE} to print a confirmation message, or \code{FALSE} to suppress it.}
 }
 \value{
 Invisible the previous log level.
@@ -21,7 +21,7 @@ Set Log Level
 Log levels are as follows:
 DEBUG: 4
 INFO: 3
-WARNING: 2
+WARN: 2
 ERROR: 1
 NONE: 0
 }

@@ -3,15 +3,22 @@
 #' This function retrieves the logfile path from the environment variable "FILE_LOGGIT2".
 #' If the environment variable is set, it will be used as the logfile path.
 #' If the environment variable is not set, the logfile path will be set to the default value.
+#' Invalid settings warn and fall back to the default path.
 #'
 #' @inherit set_logfile return
 #'
 #' @keywords internal
 setup_logfile <- function() {
   logfile <- Sys.getenv(x = "FILE_LOGGIT2", unset = "")
-  call_arg <- list(confirm = FALSE, create = FALSE)
-  if (nchar(logfile) != 0L) call_arg <- c(logfile = logfile, call_arg)
-  do.call(set_logfile, call_arg)
+  if (!nzchar(logfile)) return(set_logfile(confirm = FALSE, create = FALSE))
+
+  tryCatch(
+    set_logfile(logfile, confirm = FALSE, create = FALSE),
+    error = function(e) {
+      base::warning("Invalid `FILE_LOGGIT2`. ", conditionMessage(e), call. = FALSE)
+      set_logfile(confirm = FALSE, create = FALSE)
+    }
+  )
 }
 
 #' Set up the timestamp format for the application
@@ -19,15 +26,22 @@ setup_logfile <- function() {
 #' This function retrieves the timestamp format from the environment variable "TIMESTAMP_LOGGIT2".
 #' If the environment variable is set, it will be used as the timestamp format.
 #' If the environment variable is not set, the timestamp format will be set to the default value.
+#' Invalid settings warn and fall back to the default format.
 #'
 #' @inherit set_timestamp_format return
 #'
 #' @keywords internal
 setup_timestamp_format <- function() {
   ts_format <- Sys.getenv(x = "TIMESTAMP_LOGGIT2", unset = "")
-  call_arg <- list(confirm = FALSE)
-  if (nchar(ts_format) != 0L) call_arg <- c(ts_format = ts_format, call_arg)
-  do.call(set_timestamp_format, call_arg)
+  if (!nzchar(ts_format)) return(set_timestamp_format(confirm = FALSE))
+
+  tryCatch(
+    set_timestamp_format(ts_format, confirm = FALSE),
+    error = function(e) {
+      base::warning("Invalid `TIMESTAMP_LOGGIT2`. ", conditionMessage(e), call. = FALSE)
+      set_timestamp_format(confirm = FALSE)
+    }
+  )
 }
 
 #' Set up the echo for the application

@@ -7,13 +7,14 @@
 set_logfile(logfile = NULL, confirm = TRUE, create = TRUE)
 }
 \arguments{
-\item{logfile}{Absolut or relative path to log file.
+\item{logfile}{A single absolute or relative file path.
 An attempt is made to convert the path into a canonical absolute form using \code{\link[=normalizePath]{normalizePath()}}.
-If \code{NULL} will set to \verb{<tmpdir>/loggit.log}.}
+Use \code{NULL} to set the path to \verb{<tmpdir>/loggit.log}.}
 
-\item{confirm}{Print confirmation of log file setting?}
+\item{confirm}{\code{TRUE} to print a confirmation message, or \code{FALSE} to suppress it.}
 
-\item{create}{Create the log file if it does not exist?}
+\item{create}{\code{TRUE} to create the log file if it does not exist, or \code{FALSE} to only set the path.
+If the file cannot be created, the function reports an error.}
 }
 \value{
 Invisible the previous log file path.

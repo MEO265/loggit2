@@ -13,5 +13,6 @@ Invisible the previous log file path.
 This function retrieves the logfile path from the environment variable "FILE_LOGGIT2".
 If the environment variable is set, it will be used as the logfile path.
 If the environment variable is not set, the logfile path will be set to the default value.
+Invalid settings warn and fall back to the default path.
 }
 \keyword{internal}

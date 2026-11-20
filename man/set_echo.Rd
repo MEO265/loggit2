@@ -7,9 +7,9 @@
 set_echo(echo = TRUE, confirm = TRUE)
 }
 \arguments{
-\item{echo}{Should log messages be echoed to \code{stdout}?}
+\item{echo}{\code{TRUE} to echo log messages to \code{stdout}, or \code{FALSE} to suppress the echo.}
 
-\item{confirm}{Print confirmation message of echo setting?}
+\item{confirm}{\code{TRUE} to print a confirmation message, or \code{FALSE} to suppress it.}
 }
 \value{
 Invisible the previous echo setting.
