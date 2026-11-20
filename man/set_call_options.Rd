@@ -7,11 +7,11 @@
 set_call_options(..., .arg_list, confirm = TRUE)
 }
 \arguments{
-\item{...}{Named arguments to set.}
+\item{...}{Named arguments to set. Provide each option at most once.}
 
-\item{.arg_list}{A list of named arguments to set.}
+\item{.arg_list}{A list of named arguments to set with unique names.}
 
-\item{confirm}{Print confirmation message of call options setting?}
+\item{confirm}{\code{TRUE} to print a confirmation message, or \code{FALSE} to suppress it.}
 }
 \value{
 Invisible the previous call options.
@@ -22,9 +22,9 @@ Set Call Options
 \details{
 Call options are as follows:
 \itemize{
-\item \code{log_call}: Log the call of an condition?
+\item \code{log_call}: Log the call of a condition?
 \item \code{full_stack}: Log the full stack trace?
 }
 
-Only one of \code{...} or \code{.arg_list} can be provided.
+Options take a single \code{TRUE} or \code{FALSE}. Only one of \code{...} or \code{.arg_list} can be provided.
 }

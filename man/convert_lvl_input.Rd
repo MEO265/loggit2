@@ -4,10 +4,12 @@
 \alias{convert_lvl_input}
 \title{Convert Log Level Input to Integer}
 \usage{
-convert_lvl_input(level)
+convert_lvl_input(level, argument = "level")
 }
 \arguments{
 \item{level}{Log level as character or numeric.}
+
+\item{argument}{Argument name to use in the error message.}
 }
 \value{
 The log level integer.

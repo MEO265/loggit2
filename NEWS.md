@@ -1,3 +1,11 @@
+# loggit2 (development version)
+
+## Bugfixes
+
+* Configuration setters reject invalid options with argument-specific errors before changing settings.
+  Log levels must be single names or whole numbers, and flags must be `TRUE` or `FALSE`.
+* `set_logfile()` and `with_loggit()` report unusable file paths. `with_loggit()` validates options before evaluating its expression.
+
 # loggit2 2.4.0
 
 ## New Features

@@ -13,5 +13,6 @@ Invisible the previous timestamp format.
 This function retrieves the timestamp format from the environment variable "TIMESTAMP_LOGGIT2".
 If the environment variable is set, it will be used as the timestamp format.
 If the environment variable is not set, the timestamp format will be set to the default value.
+Invalid settings warn and fall back to the default format.
 }
 \keyword{internal}

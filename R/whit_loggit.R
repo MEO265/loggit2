@@ -4,8 +4,9 @@
 #' This is particularly useful for code that cannot be customized, e.g. from third-party packages.
 #'
 #' @param exp An `expression` to evaluate.
-#' @param log_level The log level to use.
-#' @inheritParams loggit
+#' @param log_level One log level name or a whole number from 0 to 4.
+#' @inheritParams set_echo
+#' @param logfile A single absolute or relative path to the log file.
 #'
 #' @details If `loggit2` handlers are already used in the expression, this can lead to conditions being logged
 #' twice (in the same or different files).
@@ -30,13 +31,15 @@
 #'
 #' @export
 with_loggit <- function(exp, logfile = get_logfile(), echo = get_echo(), log_level = get_log_level()) {
-  log_level <- convert_lvl_input(log_level)
+  log_level <- convert_lvl_input(log_level, argument = "log_level")
+  check_logical_flag(echo, "echo")
+  check_logfile(logfile)
   log_error <- log_level >= 1L
   log_warn <- log_level >= 2L
   log_info <- log_level >= 3L
 
   exists_on_start <- file.exists(logfile)
-  log_con <- file(description = logfile, open = "a")
+  log_con <- open_logfile(logfile)
   on.exit({
     close(con = log_con)
     if (!exists_on_start && file.size(logfile) == 0L) file.remove(logfile) # nocov

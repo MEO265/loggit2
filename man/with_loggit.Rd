@@ -14,11 +14,11 @@ with_loggit(
 \arguments{
 \item{exp}{An \code{expression} to evaluate.}
 
-\item{logfile}{Path of log file to write to.}
+\item{logfile}{A single absolute or relative path to the log file.}
 
-\item{echo}{Should the log entry (json) be echoed to \code{stdout} as well?}
+\item{echo}{\code{TRUE} to echo log messages to \code{stdout}, or \code{FALSE} to suppress the echo.}
 
-\item{log_level}{The log level to use.}
+\item{log_level}{One log level name or a whole number from 0 to 4.}
 }
 \value{
 The result of the expression.

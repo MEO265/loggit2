@@ -12,6 +12,10 @@ test_that("setup_logfile", {
   expect_silent(setup_logfile())
   expect_true(grepl(get_logfile(), pattern = "my_log\\.log$"))
 
+  Sys.setenv(FILE_LOGGIT2 = tempdir())
+  expect_warning(setup_logfile(), "Invalid `FILE_LOGGIT2`", fixed = TRUE)
+  expect_identical(get_logfile(), normalizePath(file.path(tempdir(), "loggit.log"), winslash = "/", mustWork = FALSE))
+
   # Test that the default logfile is set correctly
   Sys.unsetenv("FILE_LOGGIT2")
   expect_silent(setup_logfile())

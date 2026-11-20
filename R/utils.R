@@ -142,18 +142,24 @@ get_lvl_int <- function(level) {
 #' Convert Log Level Input to Integer
 #'
 #' @param level Log level as character or numeric.
+#' @param argument Argument name to use in the error message.
 #'
 #' @return The log level integer.
 #'
 #' @keywords internal
-convert_lvl_input <- function(level) {
-  if (is.numeric(level)) {
-    level <- as.integer(level)
-    base::stopifnot(level >= 0L, level <= 4L)
-  } else {
-    level <- get_lvl_int(level)
+convert_lvl_input <- function(level, argument = "level") {
+  if (length(level) == 1L) {
+    if (is.character(level)) {
+      level <- match(level, get_lvl_name(0L:4L)) - 1L
+    }
+    if (is.numeric(level) && is.finite(level) && level >= 0L && level <= 4L && level == trunc(level)) {
+      return(as.integer(level))
+    }
   }
-  level
+  base::stop(
+    "`", argument, "` must be one of NONE, ERROR, WARN, INFO or DEBUG, or a whole number from 0 to 4.",
+    call. = FALSE
+  )
 }
 
 #' Convert Call to String
