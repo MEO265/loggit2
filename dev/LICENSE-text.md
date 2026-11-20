@@ -1,0 +1,4 @@
+# License
+
+    YEAR: 2018-2023; 2024
+    COPYRIGHT HOLDER: Ryan J. Price; Matthias Ollech
