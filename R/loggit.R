@@ -107,12 +107,13 @@ loggit_internal <- function(log_lvl, log_msg, log_call = NULL, echo = get_echo()
 loggit_dots <- function(log_lvl, log_msg, ..., echo, logfile = get_logfile()) {
   dots <- list(...)
   # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
-  if (is.null(names(dots)) || anyNA(names(dots)) || !all(nzchar(names(dots)))) {
+  field_names <- names(dots)
+  if (is.null(field_names) || anyNA(field_names) || !all(nzchar(field_names))) {
     base::stop("All custom log fields should be named.")
   }
-  if (any(c("timestamp", "log_call") %in% names(dots))) {
+  if (any(c("timestamp", "log_call") %in% field_names)) {
     base::warning("The 'timestamp' and 'log_call' fields are reserved and will be ignored.")
-    dots <- dots[!names(dots) %in% c("timestamp", "log_call")]
+    dots <- dots[!field_names %in% c("timestamp", "log_call")]
   }
   if (any(lengths(dots) > 1L)) {
     base::warning("Each custom log field should be of length one, or else your logs will be multiplied!")
