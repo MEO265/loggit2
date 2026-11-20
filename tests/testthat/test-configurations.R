@@ -153,6 +153,19 @@ test_that("test call option configuration", {
 })
 cleanup()
 
+test_that("set_call_options rejects NA argument names", {
+  old <- get_call_options()
+  on.exit(set_call_options(.arg_list = old, confirm = FALSE))
+
+  partially_named <- list(TRUE, FALSE)
+  names(partially_named) <- "log_call"
+
+  expect_error(
+    set_call_options(.arg_list = partially_named, confirm = FALSE),
+    "^All arguments must be named\\.$"
+  )
+})
+
 test_that("test call option configuration (effect on call handlers)", {
   old <- set_call_options(log_call = TRUE, full_stack = FALSE, confirm = FALSE)
   on.exit(set_call_options(.arg_list = old, confirm = FALSE))
