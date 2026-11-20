@@ -1,3 +1,7 @@
+# loggit2 (development version)
+
+* Made minor adjustments to improve code style.
+
 # loggit2 2.4.0
 
 ## New Features

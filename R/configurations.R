@@ -191,17 +191,19 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
   # If no .arg_list is provided, use the ... arguments to call with .arg_list
   if (missing(.arg_list)) return(set_call_options(.arg_list = list(...), confirm = confirm))
 
+  base::stopifnot(".arg_list must be a list" = is.list(.arg_list))
+
+  # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
+  arg_names <- names(.arg_list)
   base::stopifnot(
-    ".arg_list must be a list" = is.list(.arg_list),
-    # Avoid using ...names() to remain compatible with versions earlier than 4.1.0
     "All arguments must be named." =
-      length(.arg_list) == 0L || !is.null(names(.arg_list)) && all(names(.arg_list) != "")
+      length(.arg_list) == 0L || !is.null(arg_names) && !anyNA(arg_names) && all(nzchar(arg_names))
   )
 
   # Warn if unexpected arguments are provided
-  if (!all(names(.arg_list) %in% c("log_call", "full_stack"))) {
+  if (!all(arg_names %in% c("log_call", "full_stack"))) {
     base::warning(
-      "Unexpected arguments provided: ", toString(setdiff(names(.arg_list), c("log_call", "full_stack")))
+      "Unexpected arguments provided: ", toString(setdiff(arg_names, c("log_call", "full_stack")))
     )
   }
 
@@ -209,7 +211,7 @@ set_call_options <- function(..., .arg_list, confirm = TRUE) {
 
   default <- list(log_call = FALSE, full_stack = FALSE)
 
-  to_default <- setdiff(c("log_call", "full_stack"), names(.arg_list))
+  to_default <- setdiff(c("log_call", "full_stack"), arg_names)
   .arg_list[to_default] <- default[to_default]
 
   .config[["log_call"]] <- .arg_list[["log_call"]]
